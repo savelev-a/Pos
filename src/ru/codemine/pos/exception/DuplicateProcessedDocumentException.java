@@ -22,15 +22,15 @@ package ru.codemine.pos.exception;
  *
  * @author Alexander Savelev
  */
-public class DuplicateActiveDocumentException extends Exception
+public class DuplicateProcessedDocumentException extends Exception
 {
-    public DuplicateActiveDocumentException()
+    public DuplicateProcessedDocumentException()
     {
         super("Допускается только один проведенный документ данного типа. "
                 + "Чтобы провести этот документ сначала отмените проведение старого.");
     }
     
-    public DuplicateActiveDocumentException(String info)
+    public DuplicateProcessedDocumentException(String info)
     {
         super("Допускается только один проведенный документ данного типа. "
                 + "Чтобы провести этот документ сначала отмените проведение старого.\n"

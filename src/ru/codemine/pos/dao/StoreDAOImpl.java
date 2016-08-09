@@ -19,8 +19,8 @@
 package ru.codemine.pos.dao;
 
 import java.util.List;
-import org.hibernate.Hibernate;
 import org.hibernate.Query;
+import org.hibernate.SQLQuery;
 import org.springframework.stereotype.Repository;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.utils.HibernateUtils;

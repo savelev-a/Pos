@@ -33,7 +33,7 @@ import ru.codemine.pos.entity.User;
 import ru.codemine.pos.entity.document.Document;
 import ru.codemine.pos.entity.document.StartBalance;
 import ru.codemine.pos.exception.ActiveDocumentEditException;
-import ru.codemine.pos.exception.DuplicateActiveDocumentException;
+import ru.codemine.pos.exception.DuplicateProcessedDocumentException;
 import ru.codemine.pos.exception.GeneralException;
 import ru.codemine.pos.exception.NegativeQuantityOnDeactivateException;
 
@@ -102,15 +102,17 @@ public class StartBalanceService
     }
 
     @Transactional
-    public void activate(StartBalance sb) throws DuplicateActiveDocumentException
+    public void process(StartBalance sb) throws DuplicateProcessedDocumentException
     {
         Store store = sb.getStore();
         
         StartBalance test = sbDAO.getByStore(store);
-        if(test != null) throw new DuplicateActiveDocumentException(
+        if(test != null) throw new DuplicateProcessedDocumentException(
                 "Текущий документ начальных остатков по данному складу: №" 
                 + test.getId() + " от " + test.getDocumentTime().toString("dd.MM.YY"));
         if(sb.isProcessed()) return;
+        
+        store = storeDAO.unproxyStocks(store);
         
         for(Map.Entry<Product, Integer> docStocks : sb.getContents().entrySet())
         {
@@ -134,11 +136,13 @@ public class StartBalanceService
         
     }
 
-    public void deactivate(StartBalance sb) throws GeneralException, NegativeQuantityOnDeactivateException
+    public void unprocess(StartBalance sb) throws GeneralException, NegativeQuantityOnDeactivateException
     {
         Store store = sb.getStore();
         
         if(!sb.isProcessed()) return;
+        
+        store = storeDAO.unproxyStocks(store);
         
         for(Map.Entry<Product, Integer> docStocks : sb.getContents().entrySet())
         {
