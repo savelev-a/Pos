@@ -76,7 +76,7 @@ public class StartBalanceDAOImplTest
         sb.setCreationTime(DateTime.now());
         sb.setDocumentTime(DateTime.now());
         sb.setCreator(user);
-        sb.setActive(true);
+        sb.setProcessed(true);
         
         startBalanceDAO.create(sb);
         

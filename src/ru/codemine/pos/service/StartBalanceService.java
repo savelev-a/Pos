@@ -60,7 +60,7 @@ public class StartBalanceService
         User currentUser = application.getActiveUser();
         if(currentUser == null) throw new GeneralException("Отсутствует зарегистрированный пользователь");
         
-        sb.setActive(false);
+        sb.setProcessed(false);
         sb.setCreationTime(DateTime.now());
         if(sb.getDocumentTime() == null) sb.setDocumentTime(sb.getCreationTime());
         sb.setCreator(currentUser);
@@ -78,7 +78,7 @@ public class StartBalanceService
     @Transactional
     public void update(StartBalance sb) throws ActiveDocumentEditException 
     {
-        if(sb.isActive()) throw new ActiveDocumentEditException();
+        if(sb.isProcessed()) throw new ActiveDocumentEditException();
         
         sbDAO.update(sb);
     }
@@ -110,7 +110,7 @@ public class StartBalanceService
         if(test != null) throw new DuplicateActiveDocumentException(
                 "Текущий документ начальных остатков по данному складу: №" 
                 + test.getId() + " от " + test.getDocumentTime().toString("dd.MM.YY"));
-        if(sb.isActive()) return;
+        if(sb.isProcessed()) return;
         
         for(Map.Entry<Product, Integer> docStocks : sb.getContents().entrySet())
         {
@@ -127,7 +127,7 @@ public class StartBalanceService
             }
         }
         
-        sb.setActive(true);
+        sb.setProcessed(true);
         
         sbDAO.update(sb);
         storeDAO.update(store);
@@ -138,7 +138,7 @@ public class StartBalanceService
     {
         Store store = sb.getStore();
         
-        if(!sb.isActive()) return;
+        if(!sb.isProcessed()) return;
         
         for(Map.Entry<Product, Integer> docStocks : sb.getContents().entrySet())
         {
@@ -164,7 +164,7 @@ public class StartBalanceService
             }
         }
         
-        sb.setActive(false);
+        sb.setProcessed(false);
         
         sbDAO.update(sb);
         storeDAO.update(store);

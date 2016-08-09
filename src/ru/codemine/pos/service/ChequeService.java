@@ -69,7 +69,7 @@ public class ChequeService
         
         if(cheque.getId() != null && chequeDAO.getById(cheque.getId()) != null)
         {
-            if(chequeDAO.getById(cheque.getId()).isActive())
+            if(chequeDAO.getById(cheque.getId()).isProcessed())
                 throw new DocumentAlreadyActiveException();
             else
                 checkoutNewCheque = false; //Чек в базе имеется, но не проведен
@@ -94,7 +94,7 @@ public class ChequeService
         cheque.setDocumentTime(cheque.getCreationTime());
         cheque.setCreator(application.getActiveUser());
         cheque.setWorkday(currentWorkday);
-        cheque.setActive(true); //Без ККМ можно сразу отметить проведенным
+        cheque.setProcessed(true); //Без ККМ можно сразу отметить проведенным
         
         // Сохранение чека
         if(checkoutNewCheque) 

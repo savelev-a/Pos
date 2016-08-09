@@ -29,8 +29,6 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.Table;
-import org.hibernate.annotations.Type;
-import org.joda.time.DateTime;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
 

@@ -38,7 +38,7 @@ public class StartBalanceDAOImpl extends GenericDAOImpl<StartBalance, Long> impl
     @Override
     public StartBalance getByStore(Store store)
     {
-        Query query = getSession().createQuery("FROM StartBalance sb WHERE sb.store.id = :idstore AND sb.active = true");
+        Query query = getSession().createQuery("FROM StartBalance sb WHERE sb.store.id = :idstore AND sb.processed = true");
         query.setInteger("idstore", store.getId());
         
         List<StartBalance> list = query.list();

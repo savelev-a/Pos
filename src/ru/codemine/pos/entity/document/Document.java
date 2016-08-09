@@ -64,8 +64,8 @@ public class Document implements Serializable
     @JoinColumn(name = "id_user", referencedColumnName = "id")
     private User creator;
     
-    @Column(name = "active", nullable = false)
-    private boolean active;
+    @Column(name = "processed", nullable = false)
+    private boolean processed;
 
     public Long getId()
     {
@@ -107,14 +107,14 @@ public class Document implements Serializable
         this.creator = creator;
     }
 
-    public boolean isActive()
+    public boolean isProcessed()
     {
-        return active;
+        return processed;
     }
 
-    public void setActive(boolean active)
+    public void setProcessed(boolean processed)
     {
-        this.active = active;
+        this.processed = processed;
     }
 
     @Override
@@ -144,7 +144,7 @@ public class Document implements Serializable
     @Override
     public String toString()
     {
-        return "Document{" + "id=" + id + ", creationTime=" + creationTime + ", documentTime=" + documentTime + ", active=" + active + '}';
+        return "Document{" + "id=" + id + ", creationTime=" + creationTime + ", documentTime=" + documentTime + ", active=" + processed + '}';
     }
     
     

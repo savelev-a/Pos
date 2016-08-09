@@ -84,7 +84,7 @@ public class ChequeDAOImplTest
         cheque.setCreationTime(DateTime.now());
         cheque.setCreator(user);
         cheque.setDocumentTime(DateTime.now());
-        cheque.setActive(true);
+        cheque.setProcessed(true);
         cheque.getContents().put(p1, 5);
         cheque.getContents().put(p2, 4);
         

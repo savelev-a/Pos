@@ -26,10 +26,11 @@ import com.alee.laf.panel.WebPanel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
-import java.awt.Font;
-import java.awt.KeyboardFocusManager;
-import javax.swing.ImageIcon;
 import javax.swing.table.TableColumnModel;
+import javax.swing.table.TableModel;
+import ru.codemine.pos.entity.Product;
+import ru.codemine.pos.entity.document.Cheque;
+import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
 
 /**
  *
@@ -39,6 +40,8 @@ public class ChequeSetupPanel extends WebPanel
 {
     private final WebTable table;
     private final WebTextField inputField;
+    
+    private ChequeSetupTableModel tableModel;
     
     public ChequeSetupPanel()
     {
@@ -52,11 +55,9 @@ public class ChequeSetupPanel extends WebPanel
         });
         setLayout(layout);
         
-        //temp//
-        String[] headers = {"№", "Наименование товара", "Цена", "Кол-во", "Сумма"};
-        String[][] data = {{"1", "Одеяло теплое", "1200.0", "2", "2400.0"}, {"2", "Подушка", "5000.0", "1", "5000.0"}};
-        table = new WebTable(data, headers);
-        table.setEditable(false);
+        tableModel = new ChequeSetupTableModel(new Cheque());
+        table = new WebTable(tableModel);
+        table.setEditable(true); 
         table.setFontSize(22);
         table.setRowHeight(40);
         
@@ -83,6 +84,16 @@ public class ChequeSetupPanel extends WebPanel
     public WebTextField getInputField()
     {
         return inputField;
+    }
+    
+    public TableModel getTableModel()
+    {
+        return tableModel;
+    }
+    
+    public Cheque getCheque()
+    {
+        return tableModel.getCheque();
     }
 
 }
