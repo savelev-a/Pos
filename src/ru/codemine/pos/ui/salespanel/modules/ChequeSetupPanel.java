@@ -26,9 +26,9 @@ import com.alee.laf.panel.WebPanel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableModel;
-import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
 
@@ -79,6 +79,8 @@ public class ChequeSetupPanel extends WebPanel
         add(inputField, "3, 3");
         add(new WebLabel("Поиск по штрих-коду: "), "1, 3");
         
+        setupActionListeners();
+        
     }
     
     public WebTextField getInputField()
@@ -86,7 +88,7 @@ public class ChequeSetupPanel extends WebPanel
         return inputField;
     }
     
-    public TableModel getTableModel()
+    public ChequeSetupTableModel getTableModel()
     {
         return tableModel;
     }
@@ -94,6 +96,41 @@ public class ChequeSetupPanel extends WebPanel
     public Cheque getCheque()
     {
         return tableModel.getCheque();
+    }
+    
+    public void refresh()
+    {
+        tableModel.fireTableDataChanged();
+    }
+    
+    public void newCheque()
+    {
+        tableModel.newCheque();
+        
+        tableModel.fireTableDataChanged();
+    }
+    
+    private void setupActionListeners()
+    {
+        table.addKeyListener(new KeyListener()
+        {
+
+            @Override
+            public void keyTyped(KeyEvent e){}
+
+            @Override
+            public void keyPressed(KeyEvent e)
+            {
+                if(e.getKeyCode() == KeyEvent.VK_DELETE)
+                {
+                    tableModel.deleteRow(table.getSelectedRow());
+                    tableModel.fireTableDataChanged();
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e){}
+        });
     }
 
 }

@@ -28,7 +28,6 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.entity.User;
-import ru.codemine.pos.entity.Workday;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.service.UserService;
 import ru.codemine.pos.ui.LoadingScreen;
@@ -108,7 +107,7 @@ public class Application
                     "<html><p style='width: 300px;'> Для решения проблемы обратитесь к разработчику.<br><br>" 
                             + e.getLocalizedMessage(), 
                     "Ошибка при загрузке контекста!", WebOptionPane.ERROR_MESSAGE);
-            
+            e.printStackTrace();
             System.exit(1);
             
         }

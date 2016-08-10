@@ -19,12 +19,9 @@
 package ru.codemine.pos.tablemodel;
 
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import javax.swing.event.TableModelListener;
-import javax.swing.table.TableModel;
+import javax.swing.table.DefaultTableModel;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.document.Cheque;
 
@@ -32,12 +29,16 @@ import ru.codemine.pos.entity.document.Cheque;
  *
  * @author Alexander Savelev
  */
-public class ChequeSetupTableModel implements TableModel
+public class ChequeSetupTableModel extends DefaultTableModel
 {
-    private Set<TableModelListener> listeners = new HashSet<>();
     private Cheque cheque;
     private List<Map.Entry<Product, Integer>> entrylist;
 
+    public ChequeSetupTableModel()
+    {
+        this.cheque = new Cheque();
+        this.entrylist = new ArrayList<>(cheque.getContents().entrySet());
+    }
     public ChequeSetupTableModel(Cheque cheque)
     {
         this.cheque = cheque;
@@ -47,7 +48,7 @@ public class ChequeSetupTableModel implements TableModel
     @Override
     public int getRowCount()
     {
-        return cheque.getContents().size();
+        return cheque == null ? 0 :cheque.getContents().size();
     }
 
     @Override
@@ -114,19 +115,9 @@ public class ChequeSetupTableModel implements TableModel
         Product p = entrylist.get(rowIndex).getKey();
         Integer quantity = (Integer)aValue;
         cheque.getContents().put(p, quantity);
+        refreshEntryList();
     }
 
-    @Override
-    public void addTableModelListener(TableModelListener l)
-    {
-        listeners.add(l);
-    }
-
-    @Override
-    public void removeTableModelListener(TableModelListener l)
-    {
-        listeners.remove(l);
-    }
     
     public Cheque getCheque()
     {
@@ -136,12 +127,33 @@ public class ChequeSetupTableModel implements TableModel
     public void setCheque(Cheque cheque)
     {
         this.cheque = cheque;
+        refreshEntryList();
     }
     
-    //public void addItem(Product product, Integer quantity)
-    //{
-    //    cheque.getContents().put(product, quantity);
-    //    this.entrylist = new ArrayList<>(cheque.getContents().entrySet());
-    //}
+    public void addItem(Product product, Integer quantity)
+    {
+
+        cheque.getContents().put(product, quantity);
+        refreshEntryList();
+    }
+    
+    public void deleteRow(int row)
+    {
+        Product p = entrylist.get(row).getKey();
+        
+        cheque.getContents().remove(p);
+        refreshEntryList();
+    }
+    
+    private void refreshEntryList()
+    {
+        this.entrylist = new ArrayList<>(cheque.getContents().entrySet());
+    }
+
+    public void newCheque()
+    {
+        cheque = new Cheque();
+        refreshEntryList();
+    }
 
 }

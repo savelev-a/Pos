@@ -41,12 +41,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.application.Application;
 import ru.codemine.pos.entity.Product;
+import ru.codemine.pos.entity.document.Cheque;
+import ru.codemine.pos.exception.DocumentAlreadyActiveException;
 import ru.codemine.pos.exception.GeneralException;
+import ru.codemine.pos.exception.NotEnoughGoodsException;
 import ru.codemine.pos.exception.WorkdayAlreadyOpenedException;
+import ru.codemine.pos.exception.WorkdayNotOpenedException;
+import ru.codemine.pos.service.ChequeService;
 import ru.codemine.pos.service.ProductService;
+import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.service.UserService;
 import ru.codemine.pos.service.WorkdayService;
+import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
+import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
 
 /**
  *
@@ -60,6 +68,8 @@ public class MainWindow extends WebFrame
     @Autowired private UserService userService;
     @Autowired private WorkdayService workdayService;
     @Autowired private ProductService productService;
+    @Autowired private StoreService storeService;
+    @Autowired private ChequeService chequeService;
     
     private final WebTabbedPane tabs;
     private final SalesPanel salesPanel;
@@ -135,7 +145,9 @@ public class MainWindow extends WebFrame
             }
         });
         
-        salesPanel.getButtonsPanel().getOpenWorkdayButton().addActionListener(new ActionListener()
+        final ButtonsPanel buttonsPanel = salesPanel.getButtonsPanel();
+        
+        buttonsPanel.getOpenWorkdayButton().addActionListener(new ActionListener()
         {
 
             @Override
@@ -143,6 +155,7 @@ public class MainWindow extends WebFrame
             {
                 try
                 {
+                    buttonsPanel.getOpenWorkdayButton().setEnabled(false);
                     if(WebOptionPane.showConfirmDialog(rootPane, 
                         "Открыть новую смену?", "Подтвердите действие", 
                         WebOptionPane.YES_NO_OPTION, WebOptionPane.QUESTION_MESSAGE) == 0)
@@ -151,6 +164,7 @@ public class MainWindow extends WebFrame
                     }
                     
                     refreshStatus();
+                    buttonsPanel.getOpenWorkdayButton().setEnabled(true);
                 } 
                 catch (WorkdayAlreadyOpenedException | GeneralException ex)
                 {
@@ -159,7 +173,7 @@ public class MainWindow extends WebFrame
             }
         });
         
-        salesPanel.getButtonsPanel().getCloseWorkdayButton().addActionListener(new ActionListener()
+        buttonsPanel.getCloseWorkdayButton().addActionListener(new ActionListener()
         {
 
             @Override
@@ -167,6 +181,7 @@ public class MainWindow extends WebFrame
             {
                 try
                 {
+                    buttonsPanel.getCloseWorkdayButton().setEnabled(false);
                     if(WebOptionPane.showConfirmDialog(rootPane, 
                         "Напечатать Z-отчет?", "Подтвердите действие", 
                         WebOptionPane.YES_NO_OPTION, WebOptionPane.QUESTION_MESSAGE) == 0)
@@ -175,6 +190,7 @@ public class MainWindow extends WebFrame
                     }
                     
                     refreshStatus();
+                    buttonsPanel.getCloseWorkdayButton().setEnabled(true);
                 } 
                 catch (GeneralException ex)
                 {
@@ -183,6 +199,31 @@ public class MainWindow extends WebFrame
             }
         });
         
+        buttonsPanel.getChequeProcessButton().addActionListener(new ActionListener()
+        {
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                try
+                {
+                    buttonsPanel.getChequeProcessButton().setEnabled(false);
+                    Cheque cheque = salesPanel.getChequeSetupPanel().getCheque();
+                    if(!cheque.getContents().isEmpty())
+                    {
+                        chequeService.CheckoutWithoutKKM(cheque);
+                        salesPanel.getChequeSetupPanel().newCheque();
+                        salesPanel.requestFocus();
+                    }
+                    buttonsPanel.getChequeProcessButton().setEnabled(true);
+                    
+                } 
+                catch (WorkdayNotOpenedException | NotEnoughGoodsException | DocumentAlreadyActiveException ex)
+                {
+                     WebOptionPane.showMessageDialog(rootPane, ex.getLocalizedMessage(), "Ошибка", WebOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
     }
     
     
@@ -200,6 +241,9 @@ public class MainWindow extends WebFrame
         public boolean dispatchKeyEvent(KeyEvent e)
         {
             WebTextField inputField = salesPanel.getChequeSetupPanel().getInputField();
+            ChequeSetupTableModel tableModel = salesPanel.getChequeSetupPanel().getTableModel();
+            Cheque setupCheque = salesPanel.getChequeSetupPanel().getTableModel().getCheque();
+            ButtonsPanel buttonsPanel = salesPanel.getButtonsPanel();
             
             //Если на вводе число, при этом активно и является видимым окно набора чеков - 
             //вводим данное число в строку поиска
@@ -210,21 +254,47 @@ public class MainWindow extends WebFrame
             }
             //Если на вводе Enter и в строке поиска что-то есть
             //Ищем по ШК позицию и вставляем в чек
-            else if(tabs.getSelectedIndex() == 0 && !inputBlocked && !"".equals(inputField.getText())                    && (e.getKeyCode() == KeyEvent.VK_ENTER))
+            else if(tabs.getSelectedIndex() == 0 && !inputBlocked && !"".equals(inputField.getText())
+                    && (e.getKeyCode() == KeyEvent.VK_ENTER))
             {
+                //TODO В отдельный класс/сервис/процедуру
                 String barcode = inputField.getText();
                 inputField.clear();
                 Product product = productService.getByBarcode(barcode);
                 if(product != null)
                 {
-                    WebOptionPane.showMessageDialog(rootPane, "Товар найден: " + product.getName());
+                    // Товар найден, проверка остатков
+                    Integer quantity = setupCheque.getContents().get(product) == null 
+                                ? 1 
+                                : setupCheque.getContents().get(product) + 1;
+                    
+                    if(storeService.checkStocks("Розница", product, quantity))
+                    {
+                        tableModel.addItem(product, quantity);
+                        tableModel.fireTableDataChanged();
+                    }
+                    else
+                    {
+                        WebOptionPane.showMessageDialog(rootPane, "Недостаточно товара на складе");
+                    }
                 }
                 else
                 {
                     WebOptionPane.showMessageDialog(rootPane, "Товар по штрихкоду " + barcode + " не найден!");
                 }
             }
-            
+            else if(tabs.getSelectedIndex() == 0 && !inputBlocked && (e.getKeyCode() == KeyEvent.VK_F2))
+            {
+                buttonsPanel.getOpenWorkdayButton().doClick();
+            }
+            else if(tabs.getSelectedIndex() == 0 && !inputBlocked && (e.getKeyCode() == KeyEvent.VK_F3))
+            {
+                buttonsPanel.getCloseWorkdayButton().doClick();
+            }
+            else if(tabs.getSelectedIndex() == 0 && !inputBlocked && (e.getKeyCode() == KeyEvent.VK_F5))
+            {
+                buttonsPanel.getChequeProcessButton().doClick();
+            }
             return false;
         }
         

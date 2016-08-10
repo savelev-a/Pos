@@ -24,6 +24,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.codemine.pos.dao.StoreDAO;
+import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
 
 /**
@@ -100,6 +101,37 @@ public class StoreService
     public List<Store> getAll()
     {
         return storeDAO.getAll();
+    }
+    
+    /**
+     * Проверяет имеется ли достаточно товара на складе
+     * @param store склад
+     * @param product товар
+     * @param quantity запрашиваемое количество
+     * @return истина, если товара больше или равно запрашиваемому кол-ву
+     */
+    @Transactional
+    public boolean checkStocks(Store store, Product product, Integer quantity)
+    {
+        Store st = storeDAO.unproxyStocks(store);
+        return st.getStocks().get(product) != null && st.getStocks().get(product) >= quantity;
+    }
+    
+    /**
+     * Проверяет имеется ли достаточно товара на складе
+     * @param storeName название склада
+     * @param product товар
+     * @param quantity запрашиваемое количество
+     * @return истина, если товара больше или равно запрашиваемому кол-ву
+     */
+    @Transactional
+    public boolean checkStocks(String storeName, Product product, Integer quantity)
+    {
+        Store store = storeDAO.getByName(storeName);
+        if(store == null) return false;
+        
+        Store st = storeDAO.unproxyStocks(store);
+        return st.getStocks().get(product) != null && st.getStocks().get(product) >= quantity;
     }
     
     /**

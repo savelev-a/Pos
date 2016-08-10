@@ -54,6 +54,9 @@ public class WorkdayDAOImplTest
     @Transactional
     public void testWorkdayDao()
     {
+        
+        if(workdayDAO.getOpen() != null) Assert.fail("Закройте активную смену для этого теста!");
+        
         User user = new User("workdaytestuser", "workdaytestuser");
         userDAO.create(user);
         

@@ -44,8 +44,8 @@ import ru.codemine.pos.exception.NegativeQuantityOnDeactivateException;
 
 // Тест не используется, пока не решена проблема с каскадным удалением коллекций //
 
-@RunWith(SpringJUnit4ClassRunner.class)
-@ContextConfiguration(locations = "classpath:applicationContext.xml")
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@ContextConfiguration(locations = "classpath:applicationContext.xml")
 public class StartBalanceServiceTest 
 {
 //    @Autowired private StartBalanceService sbService;
