@@ -30,8 +30,6 @@ import com.alee.laf.tabbedpane.WebTabbedPane;
 import com.alee.laf.text.WebTextField;
 import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -42,19 +40,17 @@ import org.springframework.stereotype.Component;
 import ru.codemine.pos.application.Application;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.document.Cheque;
-import ru.codemine.pos.exception.DocumentAlreadyActiveException;
-import ru.codemine.pos.exception.GeneralException;
-import ru.codemine.pos.exception.NotEnoughGoodsException;
-import ru.codemine.pos.exception.WorkdayAlreadyOpenedException;
-import ru.codemine.pos.exception.WorkdayNotOpenedException;
-import ru.codemine.pos.service.ChequeService;
 import ru.codemine.pos.service.ProductService;
 import ru.codemine.pos.service.StoreService;
-import ru.codemine.pos.service.UserService;
 import ru.codemine.pos.service.WorkdayService;
 import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
+import ru.codemine.pos.ui.salespanel.listener.ChequeProcessButtonListener;
+import ru.codemine.pos.ui.salespanel.listener.ChequeTableKeyListaner;
+import ru.codemine.pos.ui.salespanel.listener.CloseWorkdayButtonListener;
+import ru.codemine.pos.ui.salespanel.listener.OpenWorkdayButtonListener;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
+import ru.codemine.pos.ui.salespanel.modules.CalcsPanel;
 
 /**
  *
@@ -65,11 +61,13 @@ import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
 public class MainWindow extends WebFrame
 {
     @Autowired private Application application;
-    @Autowired private UserService userService;
     @Autowired private WorkdayService workdayService;
     @Autowired private ProductService productService;
     @Autowired private StoreService storeService;
-    @Autowired private ChequeService chequeService;
+    
+    @Autowired private OpenWorkdayButtonListener openWorkdayButtonListener;
+    @Autowired private CloseWorkdayButtonListener closeWorkdayButtonListener;
+    @Autowired private ChequeProcessButtonListener chequeProcessButtonListener;
     
     private final WebTabbedPane tabs;
     private final SalesPanel salesPanel;
@@ -106,10 +104,7 @@ public class MainWindow extends WebFrame
         
         add(tabs, "0, 0");
         add(statusBar, "0, 2");
-        
-        setupActionListeners();
-        setupKeyboard();
-        
+    
     }
     
     public void showMainWindow()
@@ -117,6 +112,9 @@ public class MainWindow extends WebFrame
         refreshStatus();
         setVisible(true);
         inputBlocked = false;
+        
+        setupActionListeners();
+        setupKeyboard();
     }
     
     public void refreshStatus()
@@ -130,6 +128,14 @@ public class MainWindow extends WebFrame
     
     private void setupActionListeners()
     {
+        ButtonsPanel buttonsPanel = salesPanel.getButtonsPanel();
+
+        buttonsPanel.getOpenWorkdayButton().addActionListener(openWorkdayButtonListener);
+        buttonsPanel.getCloseWorkdayButton().addActionListener(closeWorkdayButtonListener);
+        buttonsPanel.getChequeProcessButton().addActionListener(chequeProcessButtonListener);
+        
+        salesPanel.getChequeSetupPanel().getTable().addKeyListener(new ChequeTableKeyListaner(salesPanel));
+        
         addWindowListener(new WindowAdapter()
         {
             @Override
@@ -144,89 +150,8 @@ public class MainWindow extends WebFrame
                 
             }
         });
-        
-        final ButtonsPanel buttonsPanel = salesPanel.getButtonsPanel();
-        
-        buttonsPanel.getOpenWorkdayButton().addActionListener(new ActionListener()
-        {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                try
-                {
-                    buttonsPanel.getOpenWorkdayButton().setEnabled(false);
-                    if(WebOptionPane.showConfirmDialog(rootPane, 
-                        "Открыть новую смену?", "Подтвердите действие", 
-                        WebOptionPane.YES_NO_OPTION, WebOptionPane.QUESTION_MESSAGE) == 0)
-                    {
-                        workdayService.openNewWorkday();
-                    }
-                    
-                    refreshStatus();
-                    buttonsPanel.getOpenWorkdayButton().setEnabled(true);
-                } 
-                catch (WorkdayAlreadyOpenedException | GeneralException ex)
-                {
-                    WebOptionPane.showMessageDialog(rootPane, ex.getLocalizedMessage(), "Ошибка", WebOptionPane.WARNING_MESSAGE);
-                }
-            }
-        });
-        
-        buttonsPanel.getCloseWorkdayButton().addActionListener(new ActionListener()
-        {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                try
-                {
-                    buttonsPanel.getCloseWorkdayButton().setEnabled(false);
-                    if(WebOptionPane.showConfirmDialog(rootPane, 
-                        "Напечатать Z-отчет?", "Подтвердите действие", 
-                        WebOptionPane.YES_NO_OPTION, WebOptionPane.QUESTION_MESSAGE) == 0)
-                    {
-                        workdayService.closeWorkday();
-                    }
-                    
-                    refreshStatus();
-                    buttonsPanel.getCloseWorkdayButton().setEnabled(true);
-                } 
-                catch (GeneralException ex)
-                {
-                    WebOptionPane.showMessageDialog(rootPane, ex.getLocalizedMessage(), "Ошибка", WebOptionPane.WARNING_MESSAGE);
-                }
-            }
-        });
-        
-        buttonsPanel.getChequeProcessButton().addActionListener(new ActionListener()
-        {
-
-            @Override
-            public void actionPerformed(ActionEvent e)
-            {
-                try
-                {
-                    buttonsPanel.getChequeProcessButton().setEnabled(false);
-                    Cheque cheque = salesPanel.getChequeSetupPanel().getCheque();
-                    if(!cheque.getContents().isEmpty())
-                    {
-                        chequeService.CheckoutWithoutKKM(cheque);
-                        salesPanel.getChequeSetupPanel().newCheque();
-                        salesPanel.requestFocus();
-                    }
-                    buttonsPanel.getChequeProcessButton().setEnabled(true);
-                    
-                } 
-                catch (WorkdayNotOpenedException | NotEnoughGoodsException | DocumentAlreadyActiveException ex)
-                {
-                     WebOptionPane.showMessageDialog(rootPane, ex.getLocalizedMessage(), "Ошибка", WebOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
+  
     }
-    
-    
 
     private void setupKeyboard()
     {
@@ -244,11 +169,12 @@ public class MainWindow extends WebFrame
             ChequeSetupTableModel tableModel = salesPanel.getChequeSetupPanel().getTableModel();
             Cheque setupCheque = salesPanel.getChequeSetupPanel().getTableModel().getCheque();
             ButtonsPanel buttonsPanel = salesPanel.getButtonsPanel();
+            CalcsPanel calcsPanel = salesPanel.getCalcsPanel();
             
             //Если на вводе число, при этом активно и является видимым окно набора чеков - 
             //вводим данное число в строку поиска
             if(tabs.getSelectedIndex() == 0 && !inputBlocked
-                    && ("1234567890".indexOf(e.getKeyChar()) >= 0)) 
+                    && ("1234567890".indexOf(e.getKeyChar()) >= 0))
             {
                 e.setSource(inputField);
             }
@@ -271,6 +197,7 @@ public class MainWindow extends WebFrame
                     if(storeService.checkStocks("Розница", product, quantity))
                     {
                         tableModel.addItem(product, quantity);
+                        calcsPanel.showByCheque(setupCheque);
                         tableModel.fireTableDataChanged();
                     }
                     else
@@ -300,4 +227,8 @@ public class MainWindow extends WebFrame
         
     }
 
+    public SalesPanel getSalesPanel()
+    {
+        return salesPanel;
+    }
 }

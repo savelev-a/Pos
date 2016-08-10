@@ -82,5 +82,16 @@ public class Cheque extends Document
         this.workday = workday;
     }
     
+    public Double getSum()
+    {
+        Double result = 0.0;
+        for(Map.Entry<Product, Integer> entry : contents.entrySet())
+        {
+            result += entry.getKey().getPrice() * entry.getValue();
+        }
+        
+        return result;
+    }
+    
     
 }

@@ -22,6 +22,7 @@ import com.alee.extended.layout.TableLayout;
 import com.alee.global.StyleConstants;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
+import ru.codemine.pos.entity.document.Cheque;
 
 /**
  *
@@ -65,14 +66,38 @@ public class CalcsPanel extends WebPanel
         bottomLabel.setFontSize(18);
         add(bottomLabel, "1, 13, 3, 13");
         
-        
+        showByCheque(new Cheque());
+    }
+    
+    public void showChequeSum(Double value)
+    {
         labels[0][0].setText("Сумма:");
-        labels[1][0].setText("<html><b>7400.0 руб.</b></html>");
+        labels[1][0].setText("<html><b>" + value + " руб.</b></html>");
+    }
+    
+    public void showNds(Double value)
+    {
         labels[0][1].setText("НДС:");
-        labels[1][1].setText("<html><b>1332.0 руб.</b></html>");
+        labels[1][1].setText("<html><b>" + value + " руб.</b></html>");
+    }
+    
+    public void showDiscounts(Double value)
+    {
         labels[0][2].setText("Скидки:");
-        labels[1][2].setText("<html><b>0.0 руб.</b></html>");
-        
-        bottomLabel.setText("Итого: 7400.0 руб.");
+        labels[1][2].setText("<html><b>" + value + " руб.</b></html>");
+    }
+    
+    public void showTotals(Double value)
+    {
+        bottomLabel.setText("Итого: " + value + " руб.");
+    }
+    
+    public void showByCheque(Cheque cheque)
+    {
+        Double sum = cheque.getSum();
+        showChequeSum(sum);
+        showNds(sum * 0.18);
+        showDiscounts(0.0);
+        showTotals(sum);
     }
 }

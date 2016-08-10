@@ -90,7 +90,7 @@ public class ChequeSetupTableModel extends DefaultTableModel
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex)
     {
-        return columnIndex == 3;
+        return false;
     }
 
     @Override

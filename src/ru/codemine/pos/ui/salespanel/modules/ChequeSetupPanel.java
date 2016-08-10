@@ -20,7 +20,9 @@ package ru.codemine.pos.ui.salespanel.modules;
 
 import com.alee.extended.image.WebImage;
 import com.alee.extended.layout.TableLayout;
+import com.alee.extended.panel.WebButtonGroup;
 import com.alee.global.StyleConstants;
+import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.scroll.WebScrollPane;
@@ -28,6 +30,7 @@ import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
+import javax.swing.ImageIcon;
 import javax.swing.table.TableColumnModel;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
@@ -50,14 +53,17 @@ public class ChequeSetupPanel extends WebPanel
         setRound(StyleConstants.largeRound);
         
         TableLayout layout = new TableLayout(new double[][]{
-            {10, TableLayout.PREFERRED, 10, TableLayout.FILL, 10},
+            {10, TableLayout.PREFERRED,         // Надпись "Поиск"
+                10, TableLayout.FILL,           // Поле ввода
+                10, TableLayout.PREFERRED,      // Кнопка "Кол-во"
+                5, TableLayout.PREFERRED, 10}, 
             {10, TableLayout.FILL, 5, TableLayout.PREFERRED, 10}
         });
         setLayout(layout);
         
         tableModel = new ChequeSetupTableModel(new Cheque());
         table = new WebTable(tableModel);
-        table.setEditable(true); 
+        table.setEditable(false); 
         table.setFontSize(22);
         table.setRowHeight(40);
         
@@ -79,8 +85,7 @@ public class ChequeSetupPanel extends WebPanel
         add(inputField, "3, 3");
         add(new WebLabel("Поиск по штрих-коду: "), "1, 3");
         
-        setupActionListeners();
-        
+
     }
     
     public WebTextField getInputField()
@@ -110,27 +115,32 @@ public class ChequeSetupPanel extends WebPanel
         tableModel.fireTableDataChanged();
     }
     
-    private void setupActionListeners()
+//    private void setupActionListeners()
+//    {
+//        table.addKeyListener(new KeyListener()
+//        {
+//
+//            @Override
+//            public void keyTyped(KeyEvent e){}
+//
+//            @Override
+//            public void keyPressed(KeyEvent e)
+//            {
+//                if(e.getKeyCode() == KeyEvent.VK_DELETE)
+//                {
+//                    tableModel.deleteRow(table.getSelectedRow());
+//                    tableModel.fireTableDataChanged();
+//                }
+//            }
+//
+//            @Override
+//            public void keyReleased(KeyEvent e){}
+//        });
+//    }
+
+    public WebTable getTable()
     {
-        table.addKeyListener(new KeyListener()
-        {
-
-            @Override
-            public void keyTyped(KeyEvent e){}
-
-            @Override
-            public void keyPressed(KeyEvent e)
-            {
-                if(e.getKeyCode() == KeyEvent.VK_DELETE)
-                {
-                    tableModel.deleteRow(table.getSelectedRow());
-                    tableModel.fireTableDataChanged();
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e){}
-        });
+        return table;
     }
 
 }
