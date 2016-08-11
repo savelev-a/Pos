@@ -23,10 +23,13 @@ import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.document.Cheque;
+import ru.codemine.pos.exception.ChequeProcessByKkmException;
 import ru.codemine.pos.exception.DocumentAlreadyActiveException;
+import ru.codemine.pos.exception.KkmException;
 import ru.codemine.pos.exception.NotEnoughGoodsException;
 import ru.codemine.pos.exception.WorkdayNotOpenedException;
 import ru.codemine.pos.service.ChequeService;
+import ru.codemine.pos.service.kkm.ChequePrinter;
 import ru.codemine.pos.ui.MainWindow;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
@@ -53,7 +56,7 @@ public class ChequeProcessButtonListener implements ActionListener
             Cheque cheque = salesPanel.getChequeSetupPanel().getCheque();
             if (!cheque.getContents().isEmpty())
             {
-                chequeService.CheckoutWithoutKKM(cheque);
+                chequeService.checkoutWithKKM(cheque, new ChequePrinter());
                 salesPanel.getChequeSetupPanel().newCheque();
                 salesPanel.getCalcsPanel().showByCheque(salesPanel.getChequeSetupPanel().getCheque());
                 salesPanel.requestFocus();
@@ -61,7 +64,7 @@ public class ChequeProcessButtonListener implements ActionListener
             
 
         } 
-        catch (WorkdayNotOpenedException | NotEnoughGoodsException | DocumentAlreadyActiveException ex)
+        catch (WorkdayNotOpenedException | NotEnoughGoodsException | DocumentAlreadyActiveException | ChequeProcessByKkmException ex)
         {
             WebOptionPane.showMessageDialog(mainWindow.getRootPane(), ex.getLocalizedMessage(), "Ошибка", WebOptionPane.ERROR_MESSAGE);
         }

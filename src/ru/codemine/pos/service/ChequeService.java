@@ -32,9 +32,12 @@ import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.entity.Workday;
 import ru.codemine.pos.entity.document.Cheque;
+import ru.codemine.pos.exception.ChequeProcessByKkmException;
 import ru.codemine.pos.exception.DocumentAlreadyActiveException;
+import ru.codemine.pos.exception.KkmException;
 import ru.codemine.pos.exception.NotEnoughGoodsException;
 import ru.codemine.pos.exception.WorkdayNotOpenedException;
+import ru.codemine.pos.service.kkm.Kkm;
 
 /**
  *
@@ -59,7 +62,7 @@ public class ChequeService
      * @throws DocumentAlreadyActiveException если это попытка провести уже пробитый чек
      */
     @Transactional
-    public void CheckoutWithoutKKM(Cheque cheque) throws WorkdayNotOpenedException, NotEnoughGoodsException, DocumentAlreadyActiveException
+    public void checkoutWithoutKKM(Cheque cheque) throws WorkdayNotOpenedException, NotEnoughGoodsException, DocumentAlreadyActiveException
     {
         // Подготовка - проверка валидности чека, наличия смены, итд //
         boolean checkoutNewCheque = true; // истина - пробивается новый чек, ложь - ранее сохраненный
@@ -84,7 +87,7 @@ public class ChequeService
             }
             else
             {
-                // Без ККМ можно сразу уменьшать остатки на складе - тк. это все в одной транзакции
+                // Без ККМ можно сразу уменьшать остатки на складе
                 retailStore.getStocks().put(entry.getKey(), quantityAfterProcess);
             }
         }
@@ -94,13 +97,60 @@ public class ChequeService
         cheque.setDocumentTime(cheque.getCreationTime());
         cheque.setCreator(application.getActiveUser());
         cheque.setWorkday(currentWorkday);
-        cheque.setProcessed(true); //Без ККМ можно сразу отметить проведенным
+        cheque.setProcessed(true); 
         
         // Сохранение чека
         if(checkoutNewCheque) 
             chequeDAO.create(cheque);
         else
             chequeDAO.update(cheque);
+
+        // Сохранение остатков
+        storeDAO.update(retailStore);
+    }
+    
+    @Transactional
+    public void checkoutWithKKM(Cheque cheque, Kkm kkm) throws WorkdayNotOpenedException, DocumentAlreadyActiveException, NotEnoughGoodsException, ChequeProcessByKkmException
+    {
+       // Подготовка - проверка валидности чека, наличия смены, итд //
+        
+        Workday currentWorkday = workdayDAO.getOpen();
+        if(currentWorkday == null) throw new WorkdayNotOpenedException();
+        
+        if(cheque.getId() != null && chequeDAO.getById(cheque.getId()) != null)
+            throw new DocumentAlreadyActiveException();
+
+        Store retailStore = storeDAO.getByName("Розница");
+        for(Map.Entry<Product, Integer> entry : cheque.getContents().entrySet())
+        {
+            Integer quantityAfterProcess = retailStore.getStocks().get(entry.getKey()) - entry.getValue();
+            if(quantityAfterProcess < 0)
+            {
+                throw new NotEnoughGoodsException(retailStore, entry.getKey(), quantityAfterProcess);
+            }
+
+        }
+        
+        // Заполнение метаданных чека //
+        cheque.setCreationTime(DateTime.now());
+        cheque.setDocumentTime(cheque.getCreationTime());
+        cheque.setCreator(application.getActiveUser());
+        cheque.setWorkday(currentWorkday);
+        cheque.setProcessed(true); 
+        
+        //Пробитие чека по ККМ
+        try
+        {
+            kkm.printCheque(cheque);
+        } 
+        catch (KkmException e)
+        {
+            throw new ChequeProcessByKkmException(e.getLocalizedMessage());
+        }
+        
+        
+        // Сохранение чека
+        chequeDAO.create(cheque);
 
         // Сохранение остатков
         storeDAO.update(retailStore);
