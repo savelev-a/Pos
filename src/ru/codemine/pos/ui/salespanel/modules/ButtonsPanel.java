@@ -22,7 +22,6 @@ import com.alee.extended.layout.TableLayout;
 import com.alee.global.StyleConstants;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.panel.WebPanel;
-import javax.swing.ImageIcon;
 
 /**
  *

@@ -20,17 +20,12 @@ package ru.codemine.pos.ui.salespanel.modules;
 
 import com.alee.extended.image.WebImage;
 import com.alee.extended.layout.TableLayout;
-import com.alee.extended.panel.WebButtonGroup;
 import com.alee.global.StyleConstants;
-import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
-import javax.swing.ImageIcon;
 import javax.swing.table.TableColumnModel;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.tablemodel.ChequeSetupTableModel;

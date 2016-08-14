@@ -44,6 +44,7 @@ import ru.codemine.pos.service.ProductService;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.service.WorkdayService;
 import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
+import ru.codemine.pos.ui.docspanel.DocumentsPanel;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.salespanel.listener.ChequeProcessButtonListener;
 import ru.codemine.pos.ui.salespanel.listener.ChequeTableKeyListaner;
@@ -71,6 +72,7 @@ public class MainWindow extends WebFrame
     
     private final WebTabbedPane tabs;
     private final SalesPanel salesPanel;
+    private final DocumentsPanel documentsPanel;
     private final WebStatusBar statusBar;
     
     private boolean inputBlocked;
@@ -84,10 +86,11 @@ public class MainWindow extends WebFrame
         inputBlocked = true;
         
         salesPanel = new SalesPanel();
+        documentsPanel = new DocumentsPanel();
         
         tabs = new WebTabbedPane(WebTabbedPane.BOTTOM);
         tabs.addTab("Продажи", new ImageIcon("images/icons/32x32/Coffee-01.png"), salesPanel);
-        tabs.addTab("Документы", new ImageIcon("images/icons/32x32/Library-01.png"), new WebPanel());
+        tabs.addTab("Документы", new ImageIcon("images/icons/32x32/Library-01.png"), documentsPanel);
         tabs.addTab("Отчеты", new ImageIcon("images/icons/32x32/Document-01.png"), new WebPanel());
         tabs.addTab("Настройки", new ImageIcon("images/icons/32x32/Gear-01.png"), new WebPanel());
         

@@ -16,39 +16,42 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.docspanel;
+package ru.codemine.pos.ui.docspanel.modules;
 
 import com.alee.extended.layout.TableLayout;
-import com.alee.laf.menu.MenuBarStyle;
-import com.alee.laf.menu.WebMenu;
-import com.alee.laf.menu.WebMenuBar;
-import com.alee.laf.menu.WebMenuItem;
+import com.alee.extended.panel.WebTitledPanel;
+import com.alee.global.StyleConstants;
+import com.alee.laf.button.WebButton;
+import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
-import ru.codemine.pos.ui.docspanel.modules.ChequesPanel;
-import ru.codemine.pos.ui.docspanel.modules.StoresPanel;
+import java.awt.Color;
+import javax.swing.border.TitledBorder;
 
 /**
  *
  * @author Alexander Savelev
  */
-public class DocumentsPanel extends WebPanel
+public class ChequesPanel extends WebPanel
 {
-    private final StoresPanel storesPanel;
-    private final ChequesPanel chequesPanel;
+    private final WebButton showOpenWdChequesBtn;
     
-    public DocumentsPanel()
+    public ChequesPanel()
     {
+        setMargin(5);
+        setUndecorated(false);
+        setRound(StyleConstants.largeRound);
+        
+        
         TableLayout layout = new TableLayout(new double[][]{
-            {10, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, 10},
-            {10, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, 10}
+            {10, TableLayout.FILL, 10},
+            {5, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, 10}
         });
         setLayout(layout);
         
-        storesPanel = new StoresPanel();
-        chequesPanel = new ChequesPanel();
+        showOpenWdChequesBtn = new WebButton("Показать Чеки открытой смены");
         
-        add(storesPanel, "1, 1");
-        add(chequesPanel, "1, 3");
-        
+
+        add(new WebLabel("-----Чеки-----"), "1, 1, C, T");
+        add(showOpenWdChequesBtn, "1, 3");
     }
 }
