@@ -22,11 +22,14 @@ import com.alee.extended.layout.TableLayout;
 import com.alee.extended.panel.WebButtonGroup;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
+import com.alee.laf.scroll.WebScrollPane;
+import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.service.StoreService;
+import ru.codemine.pos.tablemodel.StoreStocksTableModel;
 import ru.codemine.pos.ui.windows.document.GenericDocumentWindow;
 import ru.codemine.pos.ui.windows.document.stores.listener.DontSaveStore;
 import ru.codemine.pos.ui.windows.document.stores.listener.SaveStore;
@@ -47,6 +50,7 @@ public class StoreWindow extends GenericDocumentWindow
     private final WebLabel idLabel;
     private final WebLabel storeIdField;
     private final WebTextField storeNameField;
+    private final WebTable table;
     private final WebButton saveButton;
     private final WebButton cancelButton;
     
@@ -61,19 +65,20 @@ public class StoreWindow extends GenericDocumentWindow
         idLabel = new WebLabel("№ склада");
         storeIdField = new WebLabel();
         storeNameField = new WebTextField();
+        table = new WebTable();
         saveButton = new WebButton("Сохранить");
         cancelButton = new WebButton("Закрыть");
         
         setTitle("");
-        setSize(400, 200);
+        setSize(640, 400);
         setLocationRelativeTo(null);
         
         TableLayout layout = new TableLayout(new double[][]{
             {10, TableLayout.PREFERRED, 10, TableLayout.FILL, 10},
-            {10, TableLayout.PREFERRED,             // Id
-             10, TableLayout.PREFERRED,             // Название
-             TableLayout.FILL,                      // Разделитель
-             TableLayout.PREFERRED, 10}             // Кнопки
+            {10, TableLayout.PREFERRED,                 // Id
+             10, TableLayout.PREFERRED,                 // Название
+             10, TableLayout.FILL,                      // Таблица
+             10, TableLayout.PREFERRED, 10}             // Кнопки
         });
         setLayout(layout);
         
@@ -81,7 +86,8 @@ public class StoreWindow extends GenericDocumentWindow
         add(storeIdField, "3, 1");
         add(nameLabel, "1, 3");
         add(storeNameField, "3, 3");
-        add(new WebButtonGroup(saveButton, cancelButton), "1, 5, 3, 5, C, T");
+        add(new WebScrollPane(table), "3, 5");
+        add(new WebButtonGroup(saveButton, cancelButton), "1, 7, 3, 7, C, T");
         
     }
     
@@ -94,10 +100,12 @@ public class StoreWindow extends GenericDocumentWindow
         storeIdField.setText(store.getId().toString());
         storeNameField.setText(store.getName());
         
-        setVisible(true);
+        table.setModel(new StoreStocksTableModel(store));
         
         saveButton.addActionListener(saveStore);
         cancelButton.addActionListener(dontSaveStore);
+        
+        setVisible(true);
     }
 
     public Store getStore()

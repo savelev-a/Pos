@@ -20,6 +20,9 @@ package ru.codemine.pos.ui.windows.document.stores;
 
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.table.WebTable;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.table.TableColumnModel;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -52,6 +55,7 @@ public class StoresListWindow extends GenericDocumentListWindow
     {
         super();
         setTitle("Склады");
+        menuItemEdit.setText("Просмотр остатков");
     }
     
     public void showWindow()
@@ -72,6 +76,20 @@ public class StoresListWindow extends GenericDocumentListWindow
         setEditActionListener(editStore);
         setDeleteActionListener(deleteStore);
         setRefreshActionListener(refreshStoreList);
+        
+        table.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                Point p = e.getPoint();
+                int row = table.rowAtPoint(p);
+                if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
+                {
+                    menuItemEdit.doClick();
+                }
+            }
+        });
     }
     
     public StoresListTableModel getTableModel()

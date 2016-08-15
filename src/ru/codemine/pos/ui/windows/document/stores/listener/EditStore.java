@@ -24,6 +24,7 @@ import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
+import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.ui.windows.document.stores.StoreWindow;
 import ru.codemine.pos.ui.windows.document.stores.StoresListWindow;
 
@@ -37,6 +38,7 @@ public class EditStore implements ActionListener
 {
     @Autowired private StoreWindow storeWindow;
     @Autowired private StoresListWindow storesListWindow;
+    @Autowired private StoreService storeService;
 
     @Override
     public void actionPerformed(ActionEvent e)
@@ -45,7 +47,7 @@ public class EditStore implements ActionListener
         
         if(store != null)
         {
-            storeWindow.showWindow(store);
+            storeWindow.showWindow(storeService.unproxyStocks(store));
         }
         else
         {
