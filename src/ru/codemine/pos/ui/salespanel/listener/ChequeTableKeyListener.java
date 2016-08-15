@@ -26,11 +26,11 @@ import ru.codemine.pos.ui.salespanel.SalesPanel;
  *
  * @author Alexander Savelev
  */
-public class ChequeTableKeyListaner implements KeyListener
+public class ChequeTableKeyListener implements KeyListener
 {
     private final SalesPanel salesPanel;
     
-    public ChequeTableKeyListaner(SalesPanel sp)
+    public ChequeTableKeyListener(SalesPanel sp)
     {
         salesPanel = sp;
     }

@@ -19,10 +19,6 @@
 package ru.codemine.pos.ui.docspanel;
 
 import com.alee.extended.layout.TableLayout;
-import com.alee.laf.menu.MenuBarStyle;
-import com.alee.laf.menu.WebMenu;
-import com.alee.laf.menu.WebMenuBar;
-import com.alee.laf.menu.WebMenuItem;
 import com.alee.laf.panel.WebPanel;
 import ru.codemine.pos.ui.docspanel.modules.ChequesPanel;
 import ru.codemine.pos.ui.docspanel.modules.StoresPanel;
@@ -50,5 +46,10 @@ public class DocumentsPanel extends WebPanel
         add(storesPanel, "1, 1");
         add(chequesPanel, "1, 3");
         
+    }
+    
+    public StoresPanel getStoresPanel()
+    {
+        return storesPanel;
     }
 }

@@ -18,29 +18,20 @@
 
 package ru.codemine.pos.ui.windows.document;
 
-import com.alee.laf.menu.WebMenuItem;
+import com.alee.extended.layout.TableLayout;
+import com.alee.laf.rootpane.WebFrame;
 
 /**
  *
  * @author Alexander Savelev
  */
-public class StoresListWindow extends GenericDocumentListWindow
+public class GenericDocumentWindow extends WebFrame
 {
-    private final WebMenuItem newStoreMenuItem;
-    private final WebMenuItem editStoreMenuItem;
-    private final WebMenuItem deleteStoreMenuItem;
-    
-    public StoresListWindow()
+    public GenericDocumentWindow()
     {
-        super();
-        
-        newStoreMenuItem = new WebMenuItem("Новый склад");
-        editStoreMenuItem = new WebMenuItem("Редактировать склад");
-        deleteStoreMenuItem = new WebMenuItem("Удалить склад");
-        
-        operationsMenu.add(newStoreMenuItem);
-        operationsMenu.addSeparator();
-        operationsMenu.add(editStoreMenuItem);
-        operationsMenu.add(deleteStoreMenuItem);
+        setTitle("");
+        setSize(640, 400);
+        setLocationRelativeTo(null);
     }
+    
 }

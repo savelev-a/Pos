@@ -45,9 +45,10 @@ import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.service.WorkdayService;
 import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
 import ru.codemine.pos.ui.docspanel.DocumentsPanel;
+import ru.codemine.pos.ui.docspanel.listener.ShowStoresButtonListener;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.salespanel.listener.ChequeProcessButtonListener;
-import ru.codemine.pos.ui.salespanel.listener.ChequeTableKeyListaner;
+import ru.codemine.pos.ui.salespanel.listener.ChequeTableKeyListener;
 import ru.codemine.pos.ui.salespanel.listener.CloseWorkdayButtonListener;
 import ru.codemine.pos.ui.salespanel.listener.OpenWorkdayButtonListener;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
@@ -69,6 +70,8 @@ public class MainWindow extends WebFrame
     @Autowired private OpenWorkdayButtonListener openWorkdayButtonListener;
     @Autowired private CloseWorkdayButtonListener closeWorkdayButtonListener;
     @Autowired private ChequeProcessButtonListener chequeProcessButtonListener;
+    
+    @Autowired private ShowStoresButtonListener showStoresButtonListener;
     
     private final WebTabbedPane tabs;
     private final SalesPanel salesPanel;
@@ -137,7 +140,9 @@ public class MainWindow extends WebFrame
         buttonsPanel.getCloseWorkdayButton().addActionListener(closeWorkdayButtonListener);
         buttonsPanel.getChequeProcessButton().addActionListener(chequeProcessButtonListener);
         
-        salesPanel.getChequeSetupPanel().getTable().addKeyListener(new ChequeTableKeyListaner(salesPanel));
+        documentsPanel.getStoresPanel().getShowStoresBtn().addActionListener(showStoresButtonListener);
+        
+        salesPanel.getChequeSetupPanel().getTable().addKeyListener(new ChequeTableKeyListener(salesPanel));
         
         addWindowListener(new WindowAdapter()
         {

@@ -16,13 +16,13 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.docspanel.listener;
+package ru.codemine.pos.ui.windows.document.stores.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.ui.windows.document.stores.StoresListWindow;
+import ru.codemine.pos.ui.windows.document.stores.StoreWindow;
 
 /**
  *
@@ -30,15 +30,14 @@ import ru.codemine.pos.ui.windows.document.stores.StoresListWindow;
  */
 
 @Component
-public class ShowStoresButtonListener implements ActionListener
+public class DontSaveStore implements ActionListener
 {
+    @Autowired private StoreWindow storeWindow;
     
-    @Autowired private StoresListWindow window;
-
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        window.showWindow();
+        storeWindow.setVisible(false);
     }
 
 }

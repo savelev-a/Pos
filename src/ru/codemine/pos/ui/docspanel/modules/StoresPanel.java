@@ -53,11 +53,15 @@ public class StoresPanel extends WebTitledPanel
         add(showStoresBtn, "1, 3");
         add(showStartBalancesBtn, "1, 5");
         
-        setupActionListeners();
     }
     
-    private void setupActionListeners()
+    public WebButton getShowStoresBtn()
     {
-        showStoresBtn.addActionListener(new ShowStoresButtonListener());
+        return showStoresBtn;
+    }
+    
+    public WebButton getShowStartBalancesBtn()
+    {
+        return showStartBalancesBtn;
     }
 }

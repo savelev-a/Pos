@@ -1,0 +1,109 @@
+/*
+ * Copyright (C) 2016 Alexander Savelev
+ *
+ * This program is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU General Public License
+ * as published by the Free Software Foundation; either version 2
+ * of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with this program; if not, write to the Free Software
+ * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
+ */
+
+package ru.codemine.pos.ui.windows.document.stores;
+
+import com.alee.extended.layout.TableLayout;
+import com.alee.extended.panel.WebButtonGroup;
+import com.alee.laf.button.WebButton;
+import com.alee.laf.label.WebLabel;
+import com.alee.laf.text.WebTextField;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.codemine.pos.entity.Store;
+import ru.codemine.pos.service.StoreService;
+import ru.codemine.pos.ui.windows.document.GenericDocumentWindow;
+import ru.codemine.pos.ui.windows.document.stores.listener.DontSaveStore;
+import ru.codemine.pos.ui.windows.document.stores.listener.SaveStore;
+
+/**
+ *
+ * @author Alexander Savelev
+ */
+
+@Component
+public class StoreWindow extends GenericDocumentWindow
+{
+    @Autowired private StoreService storeService;
+    @Autowired private SaveStore saveStore;
+    @Autowired private DontSaveStore dontSaveStore;
+    
+    private final WebLabel nameLabel;
+    private final WebLabel idLabel;
+    private final WebLabel storeIdField;
+    private final WebTextField storeNameField;
+    private final WebButton saveButton;
+    private final WebButton cancelButton;
+    
+    private Store store;
+    
+    public StoreWindow()
+    {
+        super();
+        setTitle("Склад");
+        
+        nameLabel = new WebLabel("Название");
+        idLabel = new WebLabel("№ склада");
+        storeIdField = new WebLabel();
+        storeNameField = new WebTextField();
+        saveButton = new WebButton("Сохранить");
+        cancelButton = new WebButton("Закрыть");
+        
+        setTitle("");
+        setSize(400, 200);
+        setLocationRelativeTo(null);
+        
+        TableLayout layout = new TableLayout(new double[][]{
+            {10, TableLayout.PREFERRED, 10, TableLayout.FILL, 10},
+            {10, TableLayout.PREFERRED,             // Id
+             10, TableLayout.PREFERRED,             // Название
+             TableLayout.FILL,                      // Разделитель
+             TableLayout.PREFERRED, 10}             // Кнопки
+        });
+        setLayout(layout);
+        
+        add(idLabel, "1, 1");
+        add(storeIdField, "3, 1");
+        add(nameLabel, "1, 3");
+        add(storeNameField, "3, 3");
+        add(new WebButtonGroup(saveButton, cancelButton), "1, 5, 3, 5, C, T");
+        
+    }
+    
+    public void showWindow(Store store)
+    {
+        this.store = store;
+        
+        setTitle("Склад - " + store.getName());
+        
+        storeIdField.setText(store.getId().toString());
+        storeNameField.setText(store.getName());
+        
+        setVisible(true);
+        
+        saveButton.addActionListener(saveStore);
+        cancelButton.addActionListener(dontSaveStore);
+    }
+
+    public Store getStore()
+    {
+        store.setName(storeNameField.getText());
+        
+        return store;
+    }
+}
