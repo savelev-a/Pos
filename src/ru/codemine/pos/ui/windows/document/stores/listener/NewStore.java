@@ -16,19 +16,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.service.kkm;
+package ru.codemine.pos.ui.windows.document.stores.listener;
 
-import java.util.List;
-import ru.codemine.pos.entity.Workday;
-import ru.codemine.pos.entity.document.Cheque;
-import ru.codemine.pos.exception.KkmException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.codemine.pos.entity.Store;
+import ru.codemine.pos.ui.windows.document.stores.StoreWindow;
 
 /**
  *
  * @author Alexander Savelev
  */
-public interface Kkm 
+
+@Component
+public class NewStore implements ActionListener
 {
-    public void printCheque(Cheque cheque) throws KkmException;
-    public void printXReport(Workday currentWorkday, List<Cheque> cheques) throws KkmException;
+    @Autowired private StoreWindow storeWindow;
+    
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        storeWindow.showWindow(new Store());
+    }
+
 }

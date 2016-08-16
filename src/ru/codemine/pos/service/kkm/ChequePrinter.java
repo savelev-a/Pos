@@ -18,11 +18,14 @@
 
 package ru.codemine.pos.service.kkm;
 
+import java.util.List;
 import javax.print.PrintException;
 import org.apache.log4j.Logger;
+import ru.codemine.pos.entity.Workday;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.exception.KkmException;
 import ru.codemine.pos.service.kkm.template.SimpleChequeTemplate;
+import ru.codemine.pos.service.kkm.template.SimpleXReportTemplate;
 import ru.codemine.pos.service.printer.PrinterService;
 
 /**
@@ -59,6 +62,21 @@ public class ChequePrinter implements Kkm
             throw new KkmException(ex.getLocalizedMessage());
         }
 
+    }
+
+    @Override
+    public void printXReport(Workday currentWorkday, List<Cheque> cheques) throws KkmException
+    {
+        SimpleXReportTemplate template = new SimpleXReportTemplate(currentWorkday, cheques);
+        
+        try
+        {
+            printerService.printPlainText(template.toString(), "Star-TSP100");
+        } 
+        catch (PrintException ex)
+        {
+            throw new KkmException(ex.getLocalizedMessage());
+        }
     }
 
 }

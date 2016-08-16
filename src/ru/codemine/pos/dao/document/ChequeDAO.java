@@ -43,5 +43,7 @@ public interface ChequeDAO extends GenericDAO<Cheque, Long>
      * @return чписок чеков
      */
     public List<Cheque> getByOpenWorkday();
+
+    public Cheque unproxyContents(Cheque cheque);
     
 }

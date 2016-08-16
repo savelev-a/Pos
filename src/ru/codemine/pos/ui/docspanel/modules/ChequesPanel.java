@@ -19,13 +19,10 @@
 package ru.codemine.pos.ui.docspanel.modules;
 
 import com.alee.extended.layout.TableLayout;
-import com.alee.extended.panel.WebTitledPanel;
 import com.alee.global.StyleConstants;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.panel.WebPanel;
-import java.awt.Color;
-import javax.swing.border.TitledBorder;
 
 /**
  *

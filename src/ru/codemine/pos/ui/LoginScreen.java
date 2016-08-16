@@ -78,8 +78,8 @@ public class LoginScreen
         passwordField = new WebPasswordField();
         passwordField.setInputPrompt("Введите пароль...");
         
-        okButton = new WebButton("Ок", new ImageIcon("images/icons/16x16/Button Check-01.png"));
-        cancelButton = new WebButton("Отмена", new ImageIcon("images/icons/16x16/Button Close-01.png"));
+        okButton     = new WebButton("Ок",     new ImageIcon("images/icons/default/16x16/button-ok.png"));
+        cancelButton = new WebButton("Отмена", new ImageIcon("images/icons/default/16x16/button-cancel.png"));
         GroupPanel buttonsGroupPanel = new GroupPanel(10, okButton, cancelButton);
         
         frame.add(usernameLabel, "1, 1");

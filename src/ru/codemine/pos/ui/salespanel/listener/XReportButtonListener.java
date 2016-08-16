@@ -16,16 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document.stores.listener;
+package ru.codemine.pos.ui.salespanel.listener;
 
 import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.entity.Store;
-import ru.codemine.pos.service.StoreService;
-import ru.codemine.pos.ui.windows.document.stores.StoresListWindow;
+import ru.codemine.pos.exception.KkmException;
+import ru.codemine.pos.service.kkm.ChequePrinter;
+import ru.codemine.pos.service.kkm.KkmService;
+import ru.codemine.pos.ui.MainWindow;
+import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
 
 /**
  *
@@ -33,32 +35,30 @@ import ru.codemine.pos.ui.windows.document.stores.StoresListWindow;
  */
 
 @Component
-public class DeleteStore implements ActionListener
+public class XReportButtonListener implements ActionListener
 {
-    @Autowired private StoresListWindow window;
-    @Autowired private StoreService storeService;
-
+    @Autowired private KkmService kkmService;
+    @Autowired private MainWindow mainWindow;
+    
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        Store store = window.getSelectedStore();
-        if(store != null)
+        ButtonsPanel buttonsPanel = mainWindow.getSalesPanel().getButtonsPanel();
+        
+        try
         {
-            if(storeService.unproxyStocks(store).getStocks().isEmpty())
-            {
-                storeService.delete(store);
-            }
-            else
-            {
-                WebOptionPane.showMessageDialog(window, "Невозможно удалить склад с товаром на остатках!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
-            }
-        }
-        else
+            buttonsPanel.getChequeProcessButton().setEnabled(false);
+            kkmService.printXReport(new ChequePrinter());
+        } 
+        catch (KkmException ex)
         {
-            WebOptionPane.showMessageDialog(window, "Не выбран склад!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+            WebOptionPane.showMessageDialog(mainWindow.getRootPane(), ex.getLocalizedMessage(), "Ошибка", WebOptionPane.ERROR_MESSAGE);
         }
-
-        window.refresh();
+        finally
+        {
+            buttonsPanel.getChequeProcessButton().setEnabled(true);
+            mainWindow.getSalesPanel().requestFocus();
+        }
     }
 
 }

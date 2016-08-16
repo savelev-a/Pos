@@ -22,6 +22,7 @@ import com.alee.extended.layout.TableLayout;
 import com.alee.extended.statusbar.WebStatusBar;
 import com.alee.extended.statusbar.WebStatusLabel;
 import com.alee.laf.button.WebButton;
+import com.alee.laf.label.WebLabel;
 import com.alee.laf.menu.MenuBarStyle;
 import com.alee.laf.menu.WebMenu;
 import com.alee.laf.menu.WebMenuBar;
@@ -31,8 +32,11 @@ import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
 import com.alee.laf.toolbar.ToolbarStyle;
 import com.alee.laf.toolbar.WebToolBar;
+import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 /**
  *
@@ -52,12 +56,19 @@ public class GenericDocumentListWindow extends WebFrame
     protected WebMenuItem menuItemNew;
     protected WebMenuItem menuItemEdit;
     protected WebMenuItem menuItemDelete;
+    protected WebMenuItem menuItemProcess;
+    protected WebMenuItem menuItemUnprocess;
     protected WebMenuItem menuItemRefresh;
+    protected WebMenuItem menuItemClose;
     
     protected WebButton toolButtonNew;
     protected WebButton toolButtonEdit;
     protected WebButton toolButtonDelete;
+    protected WebButton toolButtonProcess;
+    protected WebButton toolButtonUnprocess;
     protected WebButton toolButtonRefresh; 
+    
+    protected boolean actionListenersInit;
     
     public GenericDocumentListWindow()
     {
@@ -77,7 +88,7 @@ public class GenericDocumentListWindow extends WebFrame
         statusBar = new WebStatusBar();
         statusLabel = new WebStatusLabel();
         
-        operationsMenu = new WebMenu("Действия");
+        operationsMenu = new WebMenu("Документ");
         viewMenu = new WebMenu("Вид");
         menuBar.add(operationsMenu);
         menuBar.add(viewMenu);
@@ -90,25 +101,37 @@ public class GenericDocumentListWindow extends WebFrame
         add(scrollPane, "0, 2");
         add(statusBar,  "0, 3");
         
-        menuItemNew     = new WebMenuItem("Создать",       new ImageIcon("images/icons/16x16/Document New-01.png"));
-        menuItemEdit    = new WebMenuItem("Редактировать", new ImageIcon("images/icons/16x16/Tool-01.png"));
-        menuItemDelete  = new WebMenuItem("Удалить",       new ImageIcon("images/icons/16x16/Document Delete-01.png"));
-        menuItemRefresh = new WebMenuItem("Обновить",      new ImageIcon("images/icons/16x16/Button Refresh-01.png"));
+        menuItemNew       = new WebMenuItem("Создать",  new ImageIcon("images/icons/default/16x16/document-new.png"));
+        menuItemEdit      = new WebMenuItem("Просмотр", new ImageIcon("images/icons/default/16x16/document-edit.png"));
+        menuItemDelete    = new WebMenuItem("Удалить",  new ImageIcon("images/icons/default/16x16/document-delete.png"));
+        menuItemProcess   = new WebMenuItem("Провести");
+        menuItemUnprocess = new WebMenuItem("Отмена проведения");
+        menuItemRefresh   = new WebMenuItem("Обновить", new ImageIcon("images/icons/default/16x16/button-refresh.png"));
+        menuItemClose     = new WebMenuItem("Выход");
         
-        toolButtonNew     = new WebButton(new ImageIcon("images/icons/16x16/Document New-01.png"));
-        toolButtonEdit    = new WebButton(new ImageIcon("images/icons/16x16/Tool-01.png"));
-        toolButtonDelete  = new WebButton(new ImageIcon("images/icons/16x16/Document Delete-01.png"));
-        toolButtonRefresh = new WebButton(new ImageIcon("images/icons/16x16/Button Refresh-01.png"));
+        toolButtonNew       = new WebButton(new ImageIcon("images/icons/default/16x16/document-new.png"));
+        toolButtonEdit      = new WebButton(new ImageIcon("images/icons/default/16x16/document-edit.png"));
+        toolButtonDelete    = new WebButton(new ImageIcon("images/icons/default/16x16/document-delete.png"));
+        toolButtonProcess   = new WebButton(new ImageIcon("images/icons/default/16x16/document-process.png"));
+        toolButtonUnprocess = new WebButton(new ImageIcon("images/icons/default/16x16/document-unprocess.png"));
+        toolButtonRefresh   = new WebButton(new ImageIcon("images/icons/default/16x16/button-refresh.png"));
         
         toolButtonNew.setRolloverDecoratedOnly(true);
         toolButtonEdit.setRolloverDecoratedOnly(true);
         toolButtonDelete.setRolloverDecoratedOnly(true);
+        toolButtonProcess.setRolloverDecoratedOnly(true);
+        toolButtonUnprocess.setRolloverDecoratedOnly(true);
         toolButtonRefresh.setRolloverDecoratedOnly(true);
         
         operationsMenu.add(menuItemNew);
         operationsMenu.addSeparator();
         operationsMenu.add(menuItemEdit);
         operationsMenu.add(menuItemDelete);
+        operationsMenu.addSeparator();
+        operationsMenu.add(menuItemProcess);
+        operationsMenu.add(menuItemUnprocess);
+        operationsMenu.addSeparator();
+        operationsMenu.add(menuItemClose);
 
         viewMenu.add(menuItemRefresh);
         
@@ -117,7 +140,22 @@ public class GenericDocumentListWindow extends WebFrame
         toolBar.add(toolButtonEdit);
         toolBar.add(toolButtonDelete);
         toolBar.addSeparator();
+        toolBar.add(toolButtonProcess);
+        toolBar.add(toolButtonUnprocess);
+        toolBar.addSeparator();
         toolBar.add(toolButtonRefresh);
+        
+        actionListenersInit = false;
+        
+        menuItemClose.addActionListener(new ActionListener()
+        {
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                setVisible(false);
+            }
+        });
     }
     
     public void setNewActionListener(ActionListener al)
@@ -138,9 +176,37 @@ public class GenericDocumentListWindow extends WebFrame
         toolButtonDelete.addActionListener(al);
     }
     
+    public void setProcessActionListener(ActionListener al)
+    {
+        menuItemProcess.addActionListener(al);
+        toolButtonProcess.addActionListener(al);
+    }
+    
+    public void setUnprocessActionListener(ActionListener al)
+    {
+        menuItemUnprocess.addActionListener(al);
+        toolButtonUnprocess.addActionListener(al);
+    }
+    
     public void setRefreshActionListener(ActionListener al)
     {
         menuItemRefresh.addActionListener(al);
         toolButtonRefresh.addActionListener(al);
+    }
+    
+    public WebLabel getStatusLabel()
+    {
+        return statusLabel;
+    }
+    
+    public void setupSorter()
+    {
+        TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+        table.setRowSorter(sorter);
+    }
+    
+    public void refresh()
+    {
+        menuItemRefresh.doClick();
     }
 }

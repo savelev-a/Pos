@@ -18,7 +18,6 @@
 
 package ru.codemine.pos.ui.windows.document;
 
-import com.alee.extended.layout.TableLayout;
 import com.alee.laf.rootpane.WebFrame;
 
 /**
@@ -27,11 +26,16 @@ import com.alee.laf.rootpane.WebFrame;
  */
 public class GenericDocumentWindow extends WebFrame
 {
+    
+    protected boolean actionListenersInit;
+    
     public GenericDocumentWindow()
     {
         setTitle("");
         setSize(640, 400);
         setLocationRelativeTo(null);
+        
+        actionListenersInit = false;
     }
     
 }

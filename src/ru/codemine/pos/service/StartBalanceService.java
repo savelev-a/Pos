@@ -65,6 +65,12 @@ public class StartBalanceService
         if(sb.getDocumentTime() == null) sb.setDocumentTime(sb.getCreationTime());
         sb.setCreator(currentUser);
         
+        sb.setTotal(0.0);
+        for(Map.Entry<Product, Integer> entry : sb.getContents().entrySet())
+        {
+            sb.setTotal(sb.getTotal() + entry.getKey().getPrice() * entry.getValue());
+        }
+        
         sbDAO.create(sb);
     }
     
@@ -79,6 +85,13 @@ public class StartBalanceService
     public void update(StartBalance sb) throws ActiveDocumentEditException 
     {
         if(sb.isProcessed()) throw new ActiveDocumentEditException();
+        
+        sb = sbDAO.unproxyContents(sb);
+        sb.setTotal(0.0);
+        for(Map.Entry<Product, Integer> entry : sb.getContents().entrySet())
+        {
+            sb.setTotal(sb.getTotal() + entry.getKey().getPrice() * entry.getValue());
+        }
         
         sbDAO.update(sb);
     }
@@ -113,6 +126,7 @@ public class StartBalanceService
         if(sb.isProcessed()) return;
         
         store = storeDAO.unproxyStocks(store);
+        sb = sbDAO.unproxyContents(sb);
         
         for(Map.Entry<Product, Integer> docStocks : sb.getContents().entrySet())
         {
@@ -136,6 +150,7 @@ public class StartBalanceService
         
     }
 
+    @Transactional
     public void unprocess(StartBalance sb) throws GeneralException, NegativeQuantityOnDeactivateException
     {
         Store store = sb.getStore();
@@ -143,6 +158,7 @@ public class StartBalanceService
         if(!sb.isProcessed()) return;
         
         store = storeDAO.unproxyStocks(store);
+        sb = sbDAO.unproxyContents(sb);
         
         for(Map.Entry<Product, Integer> docStocks : sb.getContents().entrySet())
         {
@@ -154,6 +170,9 @@ public class StartBalanceService
                     //Если хватает остатков на складе - уменьшаем кол-во
                     store.getStocks().put(product, 
                             store.getStocks().get(product) - docStocks.getValue());
+                    //Если остаток ноль - убираем позицию
+                    if(store.getStocks().get(product) == 0)
+                        store.getStocks().remove(product);
                 }
                 else
                 {

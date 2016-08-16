@@ -51,6 +51,8 @@ public class StartBalance extends Document
     @JoinColumn(name = "id_store", nullable = false)
     private Store store;
     
+    @Column(name = "total", nullable = false)
+    private Double total;
     
     public StartBalance()
     {
@@ -81,6 +83,16 @@ public class StartBalance extends Document
     public void setStore(Store store)
     {
         this.store = store;
+    }
+
+    public Double getTotal()
+    {
+        return total;
+    }
+
+    public void setTotal(Double total)
+    {
+        this.total = total;
     }
     
     

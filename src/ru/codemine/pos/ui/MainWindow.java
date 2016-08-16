@@ -46,11 +46,13 @@ import ru.codemine.pos.service.WorkdayService;
 import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
 import ru.codemine.pos.ui.docspanel.DocumentsPanel;
 import ru.codemine.pos.ui.docspanel.listener.ShowStoresButtonListener;
+import ru.codemine.pos.ui.docspanel.listener.showStartBalancesButtonListener;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.salespanel.listener.ChequeProcessButtonListener;
 import ru.codemine.pos.ui.salespanel.listener.ChequeTableKeyListener;
 import ru.codemine.pos.ui.salespanel.listener.CloseWorkdayButtonListener;
 import ru.codemine.pos.ui.salespanel.listener.OpenWorkdayButtonListener;
+import ru.codemine.pos.ui.salespanel.listener.XReportButtonListener;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
 import ru.codemine.pos.ui.salespanel.modules.CalcsPanel;
 
@@ -70,8 +72,10 @@ public class MainWindow extends WebFrame
     @Autowired private OpenWorkdayButtonListener openWorkdayButtonListener;
     @Autowired private CloseWorkdayButtonListener closeWorkdayButtonListener;
     @Autowired private ChequeProcessButtonListener chequeProcessButtonListener;
+    @Autowired private XReportButtonListener xReportButtonListener;
     
     @Autowired private ShowStoresButtonListener showStoresButtonListener;
+    @Autowired private showStartBalancesButtonListener showBalancesButtonListener;
     
     private final WebTabbedPane tabs;
     private final SalesPanel salesPanel;
@@ -92,10 +96,10 @@ public class MainWindow extends WebFrame
         documentsPanel = new DocumentsPanel();
         
         tabs = new WebTabbedPane(WebTabbedPane.BOTTOM);
-        tabs.addTab("Продажи", new ImageIcon("images/icons/32x32/Coffee-01.png"), salesPanel);
-        tabs.addTab("Документы", new ImageIcon("images/icons/32x32/Library-01.png"), documentsPanel);
-        tabs.addTab("Отчеты", new ImageIcon("images/icons/32x32/Document-01.png"), new WebPanel());
-        tabs.addTab("Настройки", new ImageIcon("images/icons/32x32/Gear-01.png"), new WebPanel());
+        tabs.addTab("Продажи",   new ImageIcon("images/icons/default/32x32/tab-sales.png"), salesPanel);
+        tabs.addTab("Документы", new ImageIcon("images/icons/default/32x32/tab-docs.png"), documentsPanel);
+        tabs.addTab("Отчеты",    new ImageIcon("images/icons/default/32x32/tab-reports.png"), new WebPanel());
+        tabs.addTab("Настройки", new ImageIcon("images/icons/default/32x32/tab-settings.png"), new WebPanel());
         
         //tabs.setRound(StyleConstants.largeRound);
         
@@ -139,8 +143,10 @@ public class MainWindow extends WebFrame
         buttonsPanel.getOpenWorkdayButton().addActionListener(openWorkdayButtonListener);
         buttonsPanel.getCloseWorkdayButton().addActionListener(closeWorkdayButtonListener);
         buttonsPanel.getChequeProcessButton().addActionListener(chequeProcessButtonListener);
+        buttonsPanel.getXReportButton().addActionListener(xReportButtonListener);
         
         documentsPanel.getStoresPanel().getShowStoresBtn().addActionListener(showStoresButtonListener);
+        documentsPanel.getStoresPanel().getShowStartBalancesBtn().addActionListener(showBalancesButtonListener);
         
         salesPanel.getChequeSetupPanel().getTable().addKeyListener(new ChequeTableKeyListener(salesPanel));
         

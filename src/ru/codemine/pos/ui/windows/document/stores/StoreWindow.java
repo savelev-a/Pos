@@ -93,17 +93,25 @@ public class StoreWindow extends GenericDocumentWindow
     
     public void showWindow(Store store)
     {
+        if(!actionListenersInit) setupActionListeners();
+        
         this.store = store;
         
         setTitle("Склад - " + store.getName());
         
-        storeIdField.setText(store.getId().toString());
+        storeIdField.setText(store.getId() == null ? "" : store.getId().toString());
         storeNameField.setText(store.getName());
         
         table.setModel(new StoreStocksTableModel(store));
         
-        saveButton.addActionListener(saveStore);
-        cancelButton.addActionListener(dontSaveStore);
+        if("Розница".equals(store.getName())) 
+        {
+            storeNameField.setEditable(false);
+        }
+        else
+        {
+            storeNameField.setEditable(true);
+        }
         
         setVisible(true);
     }
@@ -113,5 +121,13 @@ public class StoreWindow extends GenericDocumentWindow
         store.setName(storeNameField.getText());
         
         return store;
+    }
+    
+    private void setupActionListeners()
+    {
+        saveButton.addActionListener(saveStore);
+        cancelButton.addActionListener(dontSaveStore);
+        
+        actionListenersInit = true;
     }
 }

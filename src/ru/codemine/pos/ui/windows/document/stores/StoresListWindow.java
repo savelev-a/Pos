@@ -33,6 +33,7 @@ import ru.codemine.pos.tablemodel.StoresListTableModel;
 import ru.codemine.pos.ui.windows.document.GenericDocumentListWindow;
 import ru.codemine.pos.ui.windows.document.stores.listener.DeleteStore;
 import ru.codemine.pos.ui.windows.document.stores.listener.EditStore;
+import ru.codemine.pos.ui.windows.document.stores.listener.NewStore;
 import ru.codemine.pos.ui.windows.document.stores.listener.RefreshStoreList;
 
 /**
@@ -45,6 +46,7 @@ public class StoresListWindow extends GenericDocumentListWindow
 {
     @Autowired private StoreService storeService;
     
+    @Autowired private NewStore newStore;
     @Autowired private EditStore editStore;
     @Autowired private DeleteStore deleteStore;
     @Autowired private RefreshStoreList refreshStoreList;
@@ -55,7 +57,10 @@ public class StoresListWindow extends GenericDocumentListWindow
     {
         super();
         setTitle("Склады");
-        menuItemEdit.setText("Просмотр остатков");
+        menuItemProcess.setEnabled(false);
+        menuItemUnprocess.setEnabled(false);
+        toolButtonProcess.setEnabled(false);
+        toolButtonUnprocess.setEnabled(false);
     }
     
     public void showWindow()
@@ -69,10 +74,19 @@ public class StoresListWindow extends GenericDocumentListWindow
         columnModel.getColumn(0).setMaxWidth(10);
         columnModel.getColumn(1).setMaxWidth(50);
         
+        if(!actionListenersInit) setupActionListeners();
+        
         statusLabel.setText("Загружено " + stores.size() + " строк");
         
+        setupSorter();
         setVisible(true);
+
         
+    }
+    
+    private void setupActionListeners()
+    {
+        setNewActionListener(newStore);
         setEditActionListener(editStore);
         setDeleteActionListener(deleteStore);
         setRefreshActionListener(refreshStoreList);
@@ -90,6 +104,8 @@ public class StoresListWindow extends GenericDocumentListWindow
                 }
             }
         });
+        
+        actionListenersInit = true;
     }
     
     public StoresListTableModel getTableModel()
@@ -97,10 +113,6 @@ public class StoresListWindow extends GenericDocumentListWindow
         return tableModel;
     }
 
-    public WebLabel getStatusLabel()
-    {
-        return statusLabel;
-    }
 
     public WebTable getTable()
     {
@@ -114,8 +126,4 @@ public class StoresListWindow extends GenericDocumentListWindow
         return tableModel.getStoreAt(table.getSelectedRow());
     }
 
-    public void refresh()
-    {
-        menuItemRefresh.doClick();
-    }
 }

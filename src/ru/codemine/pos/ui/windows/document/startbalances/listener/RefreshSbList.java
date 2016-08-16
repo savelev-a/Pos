@@ -16,16 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document.stores.listener;
+package ru.codemine.pos.ui.windows.document.startbalances.listener;
 
-import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
+import ru.codemine.pos.entity.document.StartBalance;
+import ru.codemine.pos.service.StartBalanceService;
 import ru.codemine.pos.service.StoreService;
-import ru.codemine.pos.ui.windows.document.stores.StoresListWindow;
+import ru.codemine.pos.ui.windows.document.startbalances.StartBalancesListWindow;
 
 /**
  *
@@ -33,32 +35,23 @@ import ru.codemine.pos.ui.windows.document.stores.StoresListWindow;
  */
 
 @Component
-public class DeleteStore implements ActionListener
+public class RefreshSbList implements ActionListener
 {
-    @Autowired private StoresListWindow window;
+    @Autowired private StartBalancesListWindow window;
+    @Autowired private StartBalanceService sbservice;
     @Autowired private StoreService storeService;
-
+    
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        Store store = window.getSelectedStore();
-        if(store != null)
-        {
-            if(storeService.unproxyStocks(store).getStocks().isEmpty())
-            {
-                storeService.delete(store);
-            }
-            else
-            {
-                WebOptionPane.showMessageDialog(window, "Невозможно удалить склад с товаром на остатках!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
-            }
-        }
-        else
-        {
-            WebOptionPane.showMessageDialog(window, "Не выбран склад!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
-        }
-
-        window.refresh();
+        String storeName = (String)window.getStoreChooseBox().getSelectedItem();
+        Store store = storeService.getByName(storeName);
+        
+        List<StartBalance> sblist = sbservice.getAllByStore(store);
+        window.getTableModel().setStartBalancesList(sblist);
+        window.getTableModel().fireTableDataChanged();
+        
+        window.getStatusLabel().setText("Загружено " + sblist.size() + " строк");
     }
 
 }

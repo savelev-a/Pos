@@ -16,19 +16,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.service.kkm;
+package ru.codemine.pos.ui.windows.document.startbalances.listener;
 
-import java.util.List;
-import ru.codemine.pos.entity.Workday;
-import ru.codemine.pos.entity.document.Cheque;
-import ru.codemine.pos.exception.KkmException;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Alexander Savelev
  */
-public interface Kkm 
+
+@Component
+public class NewSb implements ActionListener
 {
-    public void printCheque(Cheque cheque) throws KkmException;
-    public void printXReport(Workday currentWorkday, List<Cheque> cheques) throws KkmException;
+
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        
+    }
+
 }

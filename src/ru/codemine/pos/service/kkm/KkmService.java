@@ -18,17 +18,38 @@
 
 package ru.codemine.pos.service.kkm;
 
+import java.util.ArrayList;
 import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import ru.codemine.pos.entity.Workday;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.exception.KkmException;
+import ru.codemine.pos.service.ChequeService;
+import ru.codemine.pos.service.WorkdayService;
 
 /**
  *
  * @author Alexander Savelev
  */
-public interface Kkm 
+
+@Service
+public class KkmService 
 {
-    public void printCheque(Cheque cheque) throws KkmException;
-    public void printXReport(Workday currentWorkday, List<Cheque> cheques) throws KkmException;
+    @Autowired private WorkdayService workdayService;
+    @Autowired private ChequeService chequeService;
+    
+    public void printXReport(Kkm kkm) throws KkmException
+    {
+        Workday currentWorkday = workdayService.getOpenWorkday();
+        List<Cheque> proxedCheques = chequeService.getByOpenWorkday();
+        List<Cheque> cheques = new ArrayList<>();
+        
+        for(Cheque c : proxedCheques)
+        {
+            cheques.add(chequeService.unproxyContents(c));
+        }
+        
+        kkm.printXReport(currentWorkday, cheques);
+    }
 }

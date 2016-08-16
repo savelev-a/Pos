@@ -61,6 +61,7 @@ public class ButtonsPanel extends WebPanel
         buttons[0][0].setText("Открыть смену (F2)");
         buttons[0][1].setText("Закрыть смену (Z-отчет) (F3)");
         buttons[1][0].setText("Пробить чек (F5)");
+        buttons[1][1].setText("Отчет без гашения");
         
         
     }
@@ -83,5 +84,10 @@ public class ButtonsPanel extends WebPanel
     public WebButton getChequeProcessButton()
     {
         return buttons[1][0];
+    }
+    
+    public WebButton getXReportButton()
+    {
+        return buttons[1][1];
     }
 }

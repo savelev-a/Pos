@@ -89,6 +89,8 @@ public class ChequeService
             {
                 // Без ККМ можно сразу уменьшать остатки на складе
                 retailStore.getStocks().put(entry.getKey(), quantityAfterProcess);
+                if(retailStore.getStocks().get(entry.getKey()) == 0)
+                    retailStore.getStocks().remove(entry.getKey());
             }
         }
         
@@ -127,6 +129,13 @@ public class ChequeService
             if(quantityAfterProcess < 0)
             {
                 throw new NotEnoughGoodsException(retailStore, entry.getKey(), quantityAfterProcess);
+            }
+            else
+            {
+                // Уменьшение остатков и удаление пустых позиций
+                retailStore.getStocks().put(entry.getKey(), quantityAfterProcess);
+                if(retailStore.getStocks().get(entry.getKey()) == 0)
+                    retailStore.getStocks().remove(entry.getKey());
             }
 
         }
@@ -175,5 +184,16 @@ public class ChequeService
     public List<Cheque> getByOpenWorkday()
     {
         return chequeDAO.getByOpenWorkday();
+    }
+    
+    /**
+     * Депроксирует и загружает данные по содержимому чека
+     * @param cheque Чек, содержимое которого нужно депроксировать
+     * @return чек с депроксированным содержимым
+     */
+    @Transactional
+    public Cheque unproxyContents(Cheque cheque)
+    {
+        return chequeDAO.unproxyContents(cheque);
     }
 }

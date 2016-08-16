@@ -31,7 +31,7 @@ import ru.codemine.pos.entity.Store;
 public class StoresListTableModel extends DefaultTableModel
 {
     private List<Store> stores;
-    private static final ImageIcon ICON_IMAGE = new ImageIcon("images/icons/16x16/Document-01.png");
+    private static final ImageIcon ICON_IMAGE = new ImageIcon("images/icons/default/16x16/store.png");
     
     public StoresListTableModel(List<Store> stores)
     {
@@ -86,7 +86,7 @@ public class StoresListTableModel extends DefaultTableModel
         switch(columnIndex)
         {
             case 0 : return ICON_IMAGE; 
-            case 1 : return stores.get(rowIndex).getId();
+            case 1 : return stores.get(rowIndex).getId().toString();
             case 2 : return stores.get(rowIndex).getName();
         }
         

@@ -19,17 +19,16 @@
 package ru.codemine.pos.ui.docspanel.modules;
 
 import com.alee.extended.layout.TableLayout;
-import com.alee.extended.panel.WebTitledPanel;
 import com.alee.global.StyleConstants;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
-import ru.codemine.pos.ui.docspanel.listener.ShowStoresButtonListener;
+import com.alee.laf.panel.WebPanel;
 
 /**
  *
  * @author Alexander Savelev
  */
-public class StoresPanel extends WebTitledPanel
+public class StoresPanel extends WebPanel
 {
     private final WebButton showStoresBtn;
     private final WebButton showStartBalancesBtn;
