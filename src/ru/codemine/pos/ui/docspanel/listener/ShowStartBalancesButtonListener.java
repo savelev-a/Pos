@@ -30,7 +30,7 @@ import ru.codemine.pos.ui.windows.document.startbalances.StartBalancesListWindow
  */
 
 @Component
-public class showStartBalancesButtonListener implements ActionListener
+public class ShowStartBalancesButtonListener implements ActionListener
 {
     @Autowired private StartBalancesListWindow window;
     

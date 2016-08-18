@@ -51,8 +51,6 @@ public class StoreWindow extends GenericDocumentWindow
     private final WebLabel storeIdField;
     private final WebTextField storeNameField;
     private final WebTable table;
-    private final WebButton saveButton;
-    private final WebButton cancelButton;
     
     private Store store;
     
@@ -66,12 +64,6 @@ public class StoreWindow extends GenericDocumentWindow
         storeIdField = new WebLabel();
         storeNameField = new WebTextField();
         table = new WebTable();
-        saveButton = new WebButton("Сохранить");
-        cancelButton = new WebButton("Закрыть");
-        
-        setTitle("");
-        setSize(640, 400);
-        setLocationRelativeTo(null);
         
         TableLayout layout = new TableLayout(new double[][]{
             {10, TableLayout.PREFERRED, 10, TableLayout.FILL, 10},

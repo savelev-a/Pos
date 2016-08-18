@@ -21,6 +21,7 @@ package ru.codemine.pos.ui.docspanel;
 import com.alee.extended.layout.TableLayout;
 import com.alee.laf.panel.WebPanel;
 import ru.codemine.pos.ui.docspanel.modules.ChequesPanel;
+import ru.codemine.pos.ui.docspanel.modules.ProductsPanel;
 import ru.codemine.pos.ui.docspanel.modules.StoresPanel;
 
 /**
@@ -31,25 +32,40 @@ public class DocumentsPanel extends WebPanel
 {
     private final StoresPanel storesPanel;
     private final ChequesPanel chequesPanel;
+    private final ProductsPanel productsPanel;
     
     public DocumentsPanel()
     {
         TableLayout layout = new TableLayout(new double[][]{
             {10, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, 10},
-            {10, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, 10}
+            {10, TableLayout.PREFERRED, 
+             10, TableLayout.PREFERRED, 
+             10, TableLayout.PREFERRED, 
+             10}
         });
         setLayout(layout);
         
         storesPanel = new StoresPanel();
         chequesPanel = new ChequesPanel();
+        productsPanel = new ProductsPanel();
         
         add(storesPanel, "1, 1");
         add(chequesPanel, "1, 3");
-        
+        add(productsPanel, "1, 5");
     }
     
     public StoresPanel getStoresPanel()
     {
         return storesPanel;
+    }
+    
+    public ChequesPanel getChequesPanel()
+    {
+        return chequesPanel;
+    }
+    
+    public ProductsPanel getProductsPanel()
+    {
+        return productsPanel;
     }
 }

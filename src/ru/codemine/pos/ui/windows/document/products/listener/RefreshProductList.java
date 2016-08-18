@@ -16,33 +16,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document;
+package ru.codemine.pos.ui.windows.document.products.listener;
 
-import com.alee.laf.button.WebButton;
-import com.alee.laf.rootpane.WebFrame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.springframework.stereotype.Component;
 
 /**
  *
  * @author Alexander Savelev
  */
-public class GenericDocumentWindow extends WebFrame
+
+@Component
+public class RefreshProductList implements ActionListener
 {
-    
-    protected boolean actionListenersInit;
-    
-    protected WebButton saveButton;
-    protected WebButton cancelButton;
-    
-    public GenericDocumentWindow()
+
+    @Override
+    public void actionPerformed(ActionEvent e)
     {
-        setTitle("");
-        setSize(640, 400);
-        setLocationRelativeTo(null);
-        
-        actionListenersInit = false;
-        
-        saveButton = new WebButton("Сохранить");
-        cancelButton = new WebButton("Закрыть");
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
-    
+
 }

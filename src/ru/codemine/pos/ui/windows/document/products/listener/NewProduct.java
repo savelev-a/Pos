@@ -16,33 +16,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document;
+package ru.codemine.pos.ui.windows.document.products.listener;
 
-import com.alee.laf.button.WebButton;
-import com.alee.laf.rootpane.WebFrame;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.codemine.pos.entity.Product;
+import ru.codemine.pos.ui.windows.document.products.ProductWindow;
 
 /**
  *
  * @author Alexander Savelev
  */
-public class GenericDocumentWindow extends WebFrame
+
+@Component
+public class NewProduct implements ActionListener 
 {
-    
-    protected boolean actionListenersInit;
-    
-    protected WebButton saveButton;
-    protected WebButton cancelButton;
-    
-    public GenericDocumentWindow()
+    @Autowired private ProductWindow productWindow;
+
+    @Override
+    public void actionPerformed(ActionEvent e)
     {
-        setTitle("");
-        setSize(640, 400);
-        setLocationRelativeTo(null);
-        
-        actionListenersInit = false;
-        
-        saveButton = new WebButton("Сохранить");
-        cancelButton = new WebButton("Закрыть");
+        productWindow.showWindow(new Product());
     }
-    
+
 }
