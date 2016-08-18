@@ -18,7 +18,6 @@
 
 package ru.codemine.pos.service.kkm;
 
-import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -42,13 +41,7 @@ public class KkmService
     public void printXReport(Kkm kkm) throws KkmException
     {
         Workday currentWorkday = workdayService.getOpenWorkday();
-        List<Cheque> proxedCheques = chequeService.getByOpenWorkday();
-        List<Cheque> cheques = new ArrayList<>();
-        
-        for(Cheque c : proxedCheques)
-        {
-            cheques.add(chequeService.unproxyContents(c));
-        }
+        List<Cheque> cheques = chequeService.getByOpenWorkday();
         
         kkm.printXReport(currentWorkday, cheques);
     }

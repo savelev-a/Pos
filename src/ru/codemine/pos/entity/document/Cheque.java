@@ -18,16 +18,15 @@
 
 package ru.codemine.pos.entity.document;
 
-import java.util.HashMap;
-import java.util.Map;
-import javax.persistence.CollectionTable;
-import javax.persistence.Column;
-import javax.persistence.ElementCollection;
+import java.util.Iterator;
+import java.util.LinkedHashSet;
+import java.util.Set;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
-import javax.persistence.MapKeyJoinColumn;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Workday;
@@ -41,35 +40,44 @@ import ru.codemine.pos.entity.Workday;
 @Table(name = "cheques")
 public class Cheque extends Document
 {
-    @ElementCollection(fetch = FetchType.LAZY)
-    @CollectionTable(name = "cdocCheque", joinColumns = @JoinColumn(name = "id_cheque"))
-    @Column(name = "quantity", nullable = false)
-    @MapKeyJoinColumn(name = "id_product", referencedColumnName = "id")
-    private Map<Product, Integer> contents;
+//    @ElementCollection(fetch = FetchType.LAZY)
+//    @CollectionTable(name = "cdocCheque", joinColumns = @JoinColumn(name = "id_cheque"))
+//    @Column(name = "quantity", nullable = false)
+//    @MapKeyJoinColumn(name = "id_product", referencedColumnName = "id")
+//    private Map<Product, Integer> contents;
+    
+    @OneToMany(fetch = FetchType.EAGER, mappedBy = "cheque", cascade = CascadeType.ALL)
+    private Set<ChequeLine> content;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_workday", nullable = false)
     private Workday workday;
     
+    private Double chequeTotal;
+    
     public Cheque()
     {
-        this.contents = new HashMap<>();
+        this.content = new LinkedHashSet<>();
+        this.chequeTotal = 0.0;
     }
     
     public Cheque(Workday wd)
     {
-        this.contents = new HashMap<>();
+        this.content = new LinkedHashSet<>();
+        this.chequeTotal = 0.0;
         this.workday = wd;
     }
 
-    public Map<Product, Integer> getContents()
+    public Set<ChequeLine> getContent()
     {
-        return contents;
+        return content;
     }
 
-    public void setContents(Map<Product, Integer> contents)
+    public void setContent(Set<ChequeLine> content)
     {
-        this.contents = contents;
+        this.content = content;
+        
+        recalculateCheque();
     }
 
     public Workday getWorkday()
@@ -81,17 +89,113 @@ public class Cheque extends Document
     {
         this.workday = workday;
     }
-    
-    public Double getSum()
+
+    public Double getChequeTotal()
     {
-        Double result = 0.0;
-        for(Map.Entry<Product, Integer> entry : contents.entrySet())
-        {
-            result += entry.getKey().getPrice() * entry.getValue();
-        }
-        
-        return result;
+        recalculateCheque();
+        return chequeTotal;
+    }
+
+    public void setChequeTotal(Double chequeTotal)
+    {
+        this.chequeTotal = chequeTotal;
+    }
+
+    @Override
+    public String toString()
+    {
+        return "Cheque{" + "content=" + content + ", workday=" + workday + ", chequeTotal=" + chequeTotal + '}';
     }
     
     
+    // Вычисляемые методы //
+    
+    public Integer getQuantityOf(Product product)
+    {
+        Integer quantity = 0;
+        for(ChequeLine line : content)
+        {
+            if(product != null && product.equals(line.getProduct()))
+            {
+                quantity += line.getQuantity();
+            }
+        }
+        
+        return quantity;
+    }
+    
+//    public Double getPriceOf(Product product)
+//    {
+//        Double price = 0.0;
+//        for(ChequeLine line : content)
+//        {
+//            if(line.getProduct() == product)
+//            {
+//                price = line.getPrice();
+//            }
+//        }
+//        
+//        return price;
+//    }
+    
+    public boolean hasProduct(Product product)
+    {
+        for(ChequeLine line : content)
+        {
+            if(line.getProduct() == product) return true;
+        }
+        
+        return false;
+    }
+    
+    public void addItem(Product product, Integer quantity)
+    {
+        if(product == null) return;
+        
+        boolean found = false;
+        for(ChequeLine line : content)
+        {
+            if(product.equals(line.getProduct()) && !found)
+            {
+                line.setQuantity(line.getQuantity() + quantity);
+                found = true;
+            }
+        }
+        
+        if(!found)
+        {
+            ChequeLine newLine = new ChequeLine(this, product, product.getPrice(), quantity);
+            content.add(newLine);
+        }
+
+        recalculateCheque();
+    }
+    
+    public void removeItem(Product product) //,Discount discount
+    {
+        Iterator<ChequeLine> iterator = content.iterator();
+        while(iterator.hasNext())
+        {
+            ChequeLine line = iterator.next();
+            if(line.getProduct() == product) // && discount == discount
+            {
+                iterator.remove();   
+            }
+        }
+        
+        recalculateCheque();
+    }
+    
+    public void recalculateCheque()
+    {
+        if(content != null && !content.isEmpty())
+        {
+            chequeTotal = 0.0;
+            for(ChequeLine line : content)
+            {
+                chequeTotal += line.getLineTotal();
+            }
+        }
+    }
+
 }

@@ -44,6 +44,5 @@ public interface ChequeDAO extends GenericDAO<Cheque, Long>
      */
     public List<Cheque> getByOpenWorkday();
 
-    public Cheque unproxyContents(Cheque cheque);
     
 }

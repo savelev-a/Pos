@@ -204,13 +204,11 @@ public class MainWindow extends WebFrame
                 if(product != null)
                 {
                     // Товар найден, проверка остатков
-                    Integer quantity = setupCheque.getContents().get(product) == null 
-                                ? 1 
-                                : setupCheque.getContents().get(product) + 1;
+                    Integer quantity = setupCheque.getQuantityOf(product) + 1;
                     
                     if(storeService.checkStocks("Розница", product, quantity))
                     {
-                        tableModel.addItem(product, quantity);
+                        tableModel.addItem(product, 1);
                         calcsPanel.showByCheque(setupCheque);
                         tableModel.fireTableDataChanged();
                     }

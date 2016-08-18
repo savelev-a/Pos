@@ -24,7 +24,6 @@ import org.springframework.stereotype.Repository;
 import ru.codemine.pos.dao.GenericDAOImpl;
 import ru.codemine.pos.entity.Workday;
 import ru.codemine.pos.entity.document.Cheque;
-import ru.codemine.pos.utils.HibernateUtils;
 
 /**
  *
@@ -52,15 +51,6 @@ public class ChequeDAOImpl extends GenericDAOImpl<Cheque, Long> implements Chequ
         Workday wd = list.get(0);
         
         return getByWorkday(wd);
-    }
-
-    @Override
-    public Cheque unproxyContents(Cheque cheque)
-    {
-        Cheque c = (Cheque)getSession().merge(cheque);
-        HibernateUtils.initAndUnproxy(c.getContents());
-        
-        return c;
     }
 
 }

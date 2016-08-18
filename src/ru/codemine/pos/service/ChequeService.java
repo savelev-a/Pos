@@ -32,6 +32,7 @@ import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.entity.Workday;
 import ru.codemine.pos.entity.document.Cheque;
+import ru.codemine.pos.entity.document.ChequeLine;
 import ru.codemine.pos.exception.ChequeProcessByKkmException;
 import ru.codemine.pos.exception.DocumentAlreadyActiveException;
 import ru.codemine.pos.exception.KkmException;
@@ -78,19 +79,19 @@ public class ChequeService
                 checkoutNewCheque = false; //Чек в базе имеется, но не проведен
         }
         Store retailStore = storeDAO.getByName("Розница");
-        for(Map.Entry<Product, Integer> entry : cheque.getContents().entrySet())
+        for(ChequeLine line : cheque.getContent())
         {
-            Integer quantityAfterProcess = retailStore.getStocks().get(entry.getKey()) - entry.getValue();
+            Integer quantityAfterProcess = retailStore.getStocks().get(line.getProduct()) - line.getQuantity();
             if(quantityAfterProcess < 0)
             {
-                throw new NotEnoughGoodsException(retailStore, entry.getKey(), quantityAfterProcess);
+                throw new NotEnoughGoodsException(retailStore, line.getProduct(), quantityAfterProcess);
             }
             else
             {
                 // Без ККМ можно сразу уменьшать остатки на складе
-                retailStore.getStocks().put(entry.getKey(), quantityAfterProcess);
-                if(retailStore.getStocks().get(entry.getKey()) == 0)
-                    retailStore.getStocks().remove(entry.getKey());
+                retailStore.getStocks().put(line.getProduct(), quantityAfterProcess);
+                if(retailStore.getStocks().get(line.getProduct()) == 0)
+                    retailStore.getStocks().remove(line.getProduct());
             }
         }
         
@@ -100,6 +101,7 @@ public class ChequeService
         cheque.setCreator(application.getActiveUser());
         cheque.setWorkday(currentWorkday);
         cheque.setProcessed(true); 
+        cheque.recalculateCheque();
         
         // Сохранение чека
         if(checkoutNewCheque) 
@@ -123,19 +125,19 @@ public class ChequeService
             throw new DocumentAlreadyActiveException();
 
         Store retailStore = storeDAO.getByName("Розница");
-        for(Map.Entry<Product, Integer> entry : cheque.getContents().entrySet())
+        for(ChequeLine line : cheque.getContent())
         {
-            Integer quantityAfterProcess = retailStore.getStocks().get(entry.getKey()) - entry.getValue();
+            Integer quantityAfterProcess = retailStore.getStocks().get(line.getProduct()) - line.getQuantity();
             if(quantityAfterProcess < 0)
             {
-                throw new NotEnoughGoodsException(retailStore, entry.getKey(), quantityAfterProcess);
+                throw new NotEnoughGoodsException(retailStore, line.getProduct(), quantityAfterProcess);
             }
             else
             {
                 // Уменьшение остатков и удаление пустых позиций
-                retailStore.getStocks().put(entry.getKey(), quantityAfterProcess);
-                if(retailStore.getStocks().get(entry.getKey()) == 0)
-                    retailStore.getStocks().remove(entry.getKey());
+                retailStore.getStocks().put(line.getProduct(), quantityAfterProcess);
+                if(retailStore.getStocks().get(line.getProduct()) == 0)
+                    retailStore.getStocks().remove(line.getProduct());
             }
 
         }
@@ -146,6 +148,7 @@ public class ChequeService
         cheque.setCreator(application.getActiveUser());
         cheque.setWorkday(currentWorkday);
         cheque.setProcessed(true); 
+        cheque.recalculateCheque();
         
         //Пробитие чека по ККМ
         try
@@ -186,14 +189,4 @@ public class ChequeService
         return chequeDAO.getByOpenWorkday();
     }
     
-    /**
-     * Депроксирует и загружает данные по содержимому чека
-     * @param cheque Чек, содержимое которого нужно депроксировать
-     * @return чек с депроксированным содержимым
-     */
-    @Transactional
-    public Cheque unproxyContents(Cheque cheque)
-    {
-        return chequeDAO.unproxyContents(cheque);
-    }
 }

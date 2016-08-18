@@ -25,7 +25,6 @@ import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.exception.ChequeProcessByKkmException;
 import ru.codemine.pos.exception.DocumentAlreadyActiveException;
-import ru.codemine.pos.exception.KkmException;
 import ru.codemine.pos.exception.NotEnoughGoodsException;
 import ru.codemine.pos.exception.WorkdayNotOpenedException;
 import ru.codemine.pos.service.ChequeService;
@@ -54,7 +53,7 @@ public class ChequeProcessButtonListener implements ActionListener
         {
             buttonsPanel.getChequeProcessButton().setEnabled(false);
             Cheque cheque = salesPanel.getChequeSetupPanel().getCheque();
-            if (!cheque.getContents().isEmpty())
+            if (!cheque.getContent().isEmpty())
             {
                 chequeService.checkoutWithKKM(cheque, new ChequePrinter());
                 salesPanel.getChequeSetupPanel().newCheque();

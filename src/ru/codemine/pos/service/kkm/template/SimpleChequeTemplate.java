@@ -18,9 +18,8 @@
 
 package ru.codemine.pos.service.kkm.template;
 
-import java.util.Map;
-import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.document.Cheque;
+import ru.codemine.pos.entity.document.ChequeLine;
 
 /**
  *
@@ -44,12 +43,12 @@ public class SimpleChequeTemplate
                 + "ИНН 123456789 КПП 000000000 \n"
                 + "----------------------------\n"
                 + "                            \n";
-        for(Map.Entry<Product, Integer> entry : cheque.getContents().entrySet())
+        for(ChequeLine line : cheque.getContent())
         {
-            String productName = entry.getKey().getName();
+            String productName = line.getProduct().getName();
             String spaces = "";
-            String priceStr = entry.getKey().getPrice() + " руб.";
-            String quantityStr = "x" + entry.getValue();
+            String priceStr = line.getPrice() + " руб.";
+            String quantityStr = "x" + line.getQuantity();
             
             if(productName.length() > 14) productName = productName.substring(0, 13);
             int spaceNum = 29 - (productName.length() + quantityStr.length() + priceStr.length() + 2);
@@ -61,7 +60,7 @@ public class SimpleChequeTemplate
         
         String itogo = "ИТОГО:";
         String spaces = "";
-        String sumStr = cheque.getSum() + " руб.";
+        String sumStr = cheque.getChequeTotal()+ " руб.";
         int spaceNum = 28 - (itogo.length() + sumStr.length());
         
         for(int i = 0; i < spaceNum; i++) spaces = spaces + " ";

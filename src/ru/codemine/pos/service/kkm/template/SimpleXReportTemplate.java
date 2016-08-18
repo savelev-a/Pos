@@ -56,7 +56,7 @@ public class SimpleXReportTemplate
         
         Double salesVal = 0.0;
         for(Cheque cheque : cheques)
-            salesVal += cheque.getSum();
+            salesVal += cheque.getChequeTotal();
         String sales = formTab("Выручка", String.valueOf(salesVal), 28);
         
         String total = formTab("Сменный итог", String.valueOf(salesVal), 28);

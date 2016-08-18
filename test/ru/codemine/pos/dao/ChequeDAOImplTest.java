@@ -85,15 +85,15 @@ public class ChequeDAOImplTest
         cheque.setCreator(user);
         cheque.setDocumentTime(DateTime.now());
         cheque.setProcessed(true);
-        cheque.getContents().put(p1, 5);
-        cheque.getContents().put(p2, 4);
+        cheque.addItem(p1, 5);
+        cheque.addItem(p2, 4);
         
         chequeDAO.create(cheque);
         
         log.info("Тестирование загрузки из открытой смены в БД...");
         Cheque c1 = chequeDAO.getByOpenWorkday().get(0);
         Assert.assertNotNull(c1);
-        Assert.assertTrue(c1.getContents().get(p1) == 5);
+        Assert.assertTrue(c1.getQuantityOf(p1) == 5);
         log.info("...ok");
         
         log.info("Тестирование загрузки из закрытой смены в БД...");
@@ -103,7 +103,7 @@ public class ChequeDAOImplTest
         workdayDAO.update(wd);
         Cheque c2 = chequeDAO.getByWorkday(wd).get(0);
         Assert.assertNotNull(c2);
-        Assert.assertTrue(c2.getContents().get(p2) == 4);
+        Assert.assertTrue(c2.getQuantityOf(p2) == 4);
         log.info("...ok");
         
     }

@@ -94,7 +94,7 @@ public class CalcsPanel extends WebPanel
     
     public void showByCheque(Cheque cheque)
     {
-        Double sum = cheque.getSum();
+        Double sum = cheque.getChequeTotal();
         showChequeSum(sum);
         showNds(sum * 0.18);
         showDiscounts(0.0);

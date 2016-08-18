@@ -18,7 +18,6 @@
 
 package ru.codemine.pos.service.printer;
 
-import java.util.logging.Level;
 import javax.print.PrintException;
 import org.apache.log4j.Logger;
 import org.junit.Test;
@@ -50,8 +49,8 @@ public class PrinterServiceTest
         try
         {
             Cheque cheque = new Cheque();
-            cheque.getContents().put(new Product("123456", "Рога пластиковые настенные", "123", 1200.0), 1);
-            cheque.getContents().put(new Product("1234576", "Копыта стальные кухонные", "1237", 2400.0), 1);
+            cheque.addItem(new Product("123456", "Рога пластиковые настенные", "123", 1200.0), 1);
+            cheque.addItem(new Product("1234576", "Копыта стальные кухонные", "1237", 2400.0), 1);
             printerService.printPlainText(new SimpleChequeTemplate(cheque).toString(), "Star-TSP100");
             log.info("Printing: ok");
         } 
