@@ -114,4 +114,9 @@ public class ProductsListWindow extends GenericDocumentListWindow
     }
     
     
+    public ProductCatalogTableModel getTableModel()
+    {
+        return tableModel;
+    }
+    
 }

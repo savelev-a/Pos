@@ -20,7 +20,12 @@ package ru.codemine.pos.ui.windows.document.products.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.entity.Product;
+import ru.codemine.pos.service.ProductService;
+import ru.codemine.pos.ui.windows.document.products.ProductsListWindow;
 
 /**
  *
@@ -30,11 +35,17 @@ import org.springframework.stereotype.Component;
 @Component
 public class RefreshProductList implements ActionListener
 {
+    @Autowired private ProductService productService;
+    @Autowired private ProductsListWindow window;
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        List<Product> products = productService.getAll();
+        window.getTableModel().setProducts(products);
+        window.getTableModel().fireTableDataChanged();
+        
+        window.getStatusLabel().setText("Загружено " + products.size() + " строк");
     }
 
 }

@@ -58,4 +58,10 @@ public class ProductDAOImpl extends GenericDAOImpl<Product, Long> implements Pro
         return query.list();
     }
 
+    @Override
+    public void evict(Product product)
+    {
+        if(product != null) getSession().evict(product);
+    }
+
 }

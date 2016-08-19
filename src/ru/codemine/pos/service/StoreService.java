@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import ru.codemine.pos.dao.StoreDAO;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
+import ru.codemine.pos.exception.DuplicateStoreDataException;
 
 /**
  *
@@ -44,10 +45,14 @@ public class StoreService
     /**
      * Создает новый склад и сохраняет его в БД
      * @param store склад
+     * @throws ru.codemine.pos.exception.DuplicateStoreDataException при совпадении уникальных данных склада
      */
     @Transactional
-    public void create(Store store)
+    public void create(Store store) throws DuplicateStoreDataException
     {
+        if(store == null) return;
+        
+        if(storeDAO.getByName(store.getName()) != null) throw new DuplicateStoreDataException("Имя", store.getName());
         storeDAO.create(store);
     }
     
@@ -75,10 +80,15 @@ public class StoreService
     /**
      * Обновляет склад в БД
      * @param store склад
+     * @throws ru.codemine.pos.exception.DuplicateStoreDataException при совпадении уникальных данных склада
      */
     @Transactional
-    public void update(Store store)
+    public void update(Store store) throws DuplicateStoreDataException
     {
+        if(store == null) return;
+        
+        Store testName = storeDAO.getByName(store.getName());
+        if(testName != null && !testName.getId().equals(store.getId())) throw new DuplicateStoreDataException("Имя", store.getName());
         storeDAO.update(store);
     }
     

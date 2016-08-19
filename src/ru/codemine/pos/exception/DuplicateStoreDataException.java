@@ -16,28 +16,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document.products.listener;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import ru.codemine.pos.ui.windows.document.products.ProductWindow;
+package ru.codemine.pos.exception;
 
 /**
  *
  * @author Alexander Savelev
  */
-
-@Component
-public class DontSaveProduct implements ActionListener
+public class DuplicateStoreDataException extends Exception
 {
-    @Autowired private ProductWindow window;
-
-    @Override
-    public void actionPerformed(ActionEvent e)
+    public DuplicateStoreDataException()
     {
-        window.setVisible(false);
+        super("Такой склад уже существует!");
+    }
+    
+    public DuplicateStoreDataException(String fieldName, String fieldData)
+    {
+        super("Склад с такими параметрами уже существует!\n"
+                + "Совпадение по: " + fieldName + ", значение: " + fieldData);
     }
 
 }

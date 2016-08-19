@@ -18,9 +18,17 @@
 
 package ru.codemine.pos.ui.windows.document.products.listener;
 
+import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.hibernate.exception.ConstraintViolationException;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.entity.Product;
+import ru.codemine.pos.service.ProductService;
+import ru.codemine.pos.ui.windows.document.products.ProductWindow;
+import ru.codemine.pos.ui.windows.document.products.ProductsListWindow;
 
 /**
  *
@@ -30,10 +38,31 @@ import org.springframework.stereotype.Component;
 @Component
 public class DeleteProduct implements ActionListener
 {
-
+    @Autowired private ProductsListWindow window;
+    @Autowired private ProductService productService;
+    
     @Override
     public void actionPerformed(ActionEvent e)
     {
+        Product product = window.getSelectedProduct();
+        if(product != null)
+        {
+            try
+            {
+                productService.delete(product);
+            } 
+            catch (DataIntegrityViolationException ex)
+            {
+                WebOptionPane.showMessageDialog(window, "Невозможно удалить данный товар - по нему имеются остатки и/или движения!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+            }
+            
+        }
+        else
+        {
+            WebOptionPane.showMessageDialog(window, "Не выбран склад!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+        }
+        
+        window.refresh();
     }
 
 }

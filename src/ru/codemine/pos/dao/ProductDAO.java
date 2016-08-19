@@ -47,4 +47,6 @@ public interface ProductDAO extends GenericDAO<Product, Long>
      * @return
      */
     public List<Product> getAll();
+
+    public void evict(Product product);
 }

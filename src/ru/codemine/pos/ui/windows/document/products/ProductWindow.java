@@ -21,13 +21,20 @@ package ru.codemine.pos.ui.windows.document.products;
 import com.alee.extended.layout.TableLayout;
 import com.alee.extended.panel.WebButtonGroup;
 import com.alee.laf.label.WebLabel;
+import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.table.TableColumnModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Product;
+import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.service.ProductService;
+import ru.codemine.pos.service.StoreService;
+import ru.codemine.pos.tablemodel.ProductByStoresTableModel;
 import ru.codemine.pos.ui.windows.document.GenericDocumentWindow;
 import ru.codemine.pos.ui.windows.document.products.listener.DontSaveProduct;
 import ru.codemine.pos.ui.windows.document.products.listener.SaveProduct;
@@ -40,7 +47,7 @@ import ru.codemine.pos.ui.windows.document.products.listener.SaveProduct;
 @Component
 public class ProductWindow extends GenericDocumentWindow
 {
-    @Autowired private ProductService productService;
+    @Autowired private StoreService storeService;
     
     @Autowired private SaveProduct saveProduct;
     @Autowired private DontSaveProduct dontSaveProduct;
@@ -133,12 +140,43 @@ public class ProductWindow extends GenericDocumentWindow
             artikulField.setEditable(false);
         }
         
+        List<Store> proxedStores = storeService.getAll();
+        List<Store> stores = new ArrayList<>();
+        for(Store s : proxedStores)
+        {
+            stores.add(storeService.unproxyStocks(s));
+        }
+        stocksTable.setModel(new ProductByStoresTableModel(product, stores));
+        
+        TableColumnModel columnModel = stocksTable.getColumnModel();
+        columnModel.getColumn(0).setMaxWidth(10);
+        
         setVisible(true);
     }
     
     private void setupActionListeners()
     {
+        saveButton.addActionListener(saveProduct);
+        cancelButton.addActionListener(dontSaveProduct);
         actionListenersInit = true;
+    }
+
+    public Product getProduct()
+    {
+        product.setArtikul(artikulField.getText());
+        product.setBarcode(barcodeField.getText());
+        product.setName(nameField.getText());
+        try
+        {
+            product.setPrice(Double.parseDouble(priceField.getText()));
+        } 
+        catch (NumberFormatException ex)
+        {
+            WebOptionPane.showMessageDialog(rootPane, "Цена должна быть числом, копейки отделены точкой", "Неверный формат цены", WebOptionPane.ERROR_MESSAGE);
+            return null;
+        }
+        
+        return product;
     }
     
 }

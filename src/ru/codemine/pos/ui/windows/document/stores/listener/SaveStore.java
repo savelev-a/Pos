@@ -21,9 +21,12 @@ package ru.codemine.pos.ui.windows.document.stores.listener;
 import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
+import ru.codemine.pos.exception.DuplicateStoreDataException;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.ui.windows.document.stores.StoreWindow;
 import ru.codemine.pos.ui.windows.document.stores.StoresListWindow;
@@ -46,11 +49,27 @@ public class SaveStore implements ActionListener
         Store store = storeWindow.getStore();
         if(store.getId() == null)
         {
-            storeService.create(store);
+            try
+            {
+                storeService.create(store);
+            } 
+            catch (DuplicateStoreDataException ex)
+            {
+                WebOptionPane.showMessageDialog(storeWindow, ex.getLocalizedMessage(), "Ошибка сохранения склада", WebOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
         else
         {
-            storeService.update(store);
+            try
+            {
+                storeService.update(store);
+            } 
+            catch (DuplicateStoreDataException ex)
+            {
+                WebOptionPane.showMessageDialog(storeWindow, ex.getLocalizedMessage(), "Ошибка сохранения склада", WebOptionPane.ERROR_MESSAGE);
+                return;
+            }
         }
 
         storeWindow.setVisible(false);

@@ -40,6 +40,8 @@ public class ProductService
     @Transactional
     public void create(Product product) throws DuplicateProductDataException
     {
+        if(product == null) return;
+        
         if(productDAO.getByArtikul(product.getArtikul()) != null) throw new DuplicateProductDataException("Артикул", product.getArtikul());
         if(productDAO.getByBarcode(product.getBarcode()) != null) throw new DuplicateProductDataException("Штрихкод", product.getBarcode());
         
@@ -55,8 +57,15 @@ public class ProductService
     @Transactional
     public void update(Product product) throws DuplicateProductDataException
     {
-        if(productDAO.getByArtikul(product.getArtikul()) != null) throw new DuplicateProductDataException("Артикул", product.getArtikul());
-        if(productDAO.getByBarcode(product.getBarcode()) != null) throw new DuplicateProductDataException("Штрихкод", product.getBarcode());
+        if(product == null) return;
+        
+        Product testArtikul = productDAO.getByArtikul(product.getArtikul());
+        Product testBarcode = productDAO.getByBarcode(product.getBarcode());
+        if(testArtikul != null && !testArtikul.getId().equals(product.getId())) throw new DuplicateProductDataException("Артикул", product.getArtikul());
+        if(testBarcode != null && !testBarcode.getId().equals(product.getId())) throw new DuplicateProductDataException("Штрихкод", product.getBarcode());
+        
+        productDAO.evict(testArtikul);
+        productDAO.evict(testBarcode);
         
         productDAO.update(product);
     }
