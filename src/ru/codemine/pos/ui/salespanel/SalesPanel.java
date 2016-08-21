@@ -20,6 +20,10 @@ package ru.codemine.pos.ui.salespanel;
 
 import com.alee.extended.layout.TableLayout;
 import com.alee.laf.panel.WebPanel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.codemine.pos.ui.GenericPanelComponent;
+import ru.codemine.pos.ui.salespanel.listener.ChequeTableKeyListener;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
 import ru.codemine.pos.ui.salespanel.modules.CalcsPanel;
 import ru.codemine.pos.ui.salespanel.modules.ChequeSetupPanel;
@@ -30,31 +34,45 @@ import ru.codemine.pos.ui.salespanel.modules.UpperStatusPanel;
  * @author Alexander Savelev
  */
 
-public class SalesPanel extends WebPanel
+@Component
+public class SalesPanel extends WebPanel implements GenericPanelComponent
 {
+    @Autowired
+    private ButtonsPanel buttonsPanel;
     
     private final UpperStatusPanel upperStatusPanel;
     private final ChequeSetupPanel chequeSetupPanel;
     private final CalcsPanel calcsPanel;
-    private final ButtonsPanel buttonsPanel;
+    
     
     public SalesPanel()
     {
         TableLayout layout = new TableLayout(new double[][]{
             {10, TableLayout.FILL, 10, TableLayout.PREFERRED, 10},
-            {10, TableLayout.PREFERRED, 10, TableLayout.FILL, 10, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, 10}
+            {10, TableLayout.PREFERRED, 
+             10, TableLayout.FILL, 
+             10, TableLayout.PREFERRED, 
+             10, TableLayout.PREFERRED, 10}
         });
         setLayout(layout);
         
         upperStatusPanel = new UpperStatusPanel();
         chequeSetupPanel = new ChequeSetupPanel();
         calcsPanel = new CalcsPanel();
-        buttonsPanel = new ButtonsPanel();
         
         add(upperStatusPanel, "1, 1, 3, 1");
         add(chequeSetupPanel, "1, 3");
         add(calcsPanel, "3, 3");
+        
+    }
+    
+    @Override
+    public void init()
+    {
         add(buttonsPanel, "1, 5, 3, 5");
+        buttonsPanel.init();
+        
+        setupActionListeners();
     }
 
     public UpperStatusPanel getUpperStatusPanel()
@@ -72,11 +90,10 @@ public class SalesPanel extends WebPanel
         return calcsPanel;
     }
 
-    public ButtonsPanel getButtonsPanel()
+    @Override
+    public void setupActionListeners()
     {
-        return buttonsPanel;
+        chequeSetupPanel.getTable().addKeyListener(new ChequeTableKeyListener(this));
     }
-    
-    
 
 }

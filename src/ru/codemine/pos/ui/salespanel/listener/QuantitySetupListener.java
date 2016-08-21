@@ -18,17 +18,12 @@
 
 package ru.codemine.pos.ui.salespanel.listener;
 
-import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.exception.KkmException;
-import ru.codemine.pos.service.kkm.ChequePrinter;
-import ru.codemine.pos.service.kkm.KkmService;
 import ru.codemine.pos.ui.MainWindow;
-import ru.codemine.pos.ui.salespanel.SalesPanel;
-import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
+import ru.codemine.pos.ui.salespanel.QuantitySetupWindow;
 
 /**
  *
@@ -36,30 +31,15 @@ import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
  */
 
 @Component
-public class XReportButtonListener implements ActionListener
+public class QuantitySetupListener implements ActionListener
 {
-    @Autowired private KkmService kkmService;
+    @Autowired private QuantitySetupWindow quantityWindow;
     @Autowired private MainWindow mainWindow;
-    @Autowired private SalesPanel salesPanel;
-    @Autowired private ButtonsPanel buttonsPanel;
-    
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        try
-        {
-            buttonsPanel.getChequeProcessButton().setEnabled(false);
-            kkmService.printXReport(new ChequePrinter());
-        } 
-        catch (KkmException ex)
-        {
-            WebOptionPane.showMessageDialog(mainWindow.getRootPane(), ex.getLocalizedMessage(), "Ошибка", WebOptionPane.ERROR_MESSAGE);
-        }
-        finally
-        {
-            buttonsPanel.getChequeProcessButton().setEnabled(true);
-            salesPanel.requestFocus();
-        }
+        quantityWindow.showWindow();
     }
 
 }

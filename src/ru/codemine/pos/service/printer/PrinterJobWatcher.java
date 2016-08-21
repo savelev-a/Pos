@@ -18,8 +18,6 @@
 
 package ru.codemine.pos.service.printer;
 
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.print.DocPrintJob;
 import javax.print.event.PrintJobAdapter;
 import javax.print.event.PrintJobEvent;

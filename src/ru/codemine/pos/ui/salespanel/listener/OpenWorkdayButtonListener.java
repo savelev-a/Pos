@@ -26,6 +26,7 @@ import ru.codemine.pos.exception.GeneralException;
 import ru.codemine.pos.exception.WorkdayAlreadyOpenedException;
 import ru.codemine.pos.service.WorkdayService;
 import ru.codemine.pos.ui.MainWindow;
+import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
 
 /**
@@ -37,13 +38,13 @@ public class OpenWorkdayButtonListener implements ActionListener
 {
 
     @Autowired private WorkdayService workdayService;
+    @Autowired private SalesPanel salesPanel;
+    @Autowired private ButtonsPanel buttonsPanel;
     @Autowired private MainWindow mainWindow;
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        ButtonsPanel buttonsPanel = mainWindow.getSalesPanel().getButtonsPanel();
-
         try
         {
             buttonsPanel.getOpenWorkdayButton().setEnabled(false);
@@ -62,7 +63,7 @@ public class OpenWorkdayButtonListener implements ActionListener
         finally
         {
             buttonsPanel.getOpenWorkdayButton().setEnabled(true);
-            mainWindow.getSalesPanel().requestFocus();
+            salesPanel.requestFocus();
         }
     }
 

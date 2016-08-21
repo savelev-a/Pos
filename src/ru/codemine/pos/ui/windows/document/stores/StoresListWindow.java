@@ -18,7 +18,6 @@
 
 package ru.codemine.pos.ui.windows.document.stores;
 
-import com.alee.laf.label.WebLabel;
 import com.alee.laf.table.WebTable;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;

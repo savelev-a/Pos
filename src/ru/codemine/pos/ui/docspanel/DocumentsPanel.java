@@ -20,6 +20,12 @@ package ru.codemine.pos.ui.docspanel;
 
 import com.alee.extended.layout.TableLayout;
 import com.alee.laf.panel.WebPanel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.codemine.pos.ui.GenericPanelComponent;
+import ru.codemine.pos.ui.docspanel.listener.ShowProductsButtonListener;
+import ru.codemine.pos.ui.docspanel.listener.ShowStartBalancesButtonListener;
+import ru.codemine.pos.ui.docspanel.listener.ShowStoresButtonListener;
 import ru.codemine.pos.ui.docspanel.modules.ChequesPanel;
 import ru.codemine.pos.ui.docspanel.modules.ProductsPanel;
 import ru.codemine.pos.ui.docspanel.modules.StoresPanel;
@@ -28,8 +34,14 @@ import ru.codemine.pos.ui.docspanel.modules.StoresPanel;
  *
  * @author Alexander Savelev
  */
-public class DocumentsPanel extends WebPanel
+
+@Component
+public class DocumentsPanel extends WebPanel implements GenericPanelComponent
 {
+    @Autowired private ShowStoresButtonListener showStoresButtonListener;
+    @Autowired private ShowStartBalancesButtonListener showBalancesButtonListener;
+    @Autowired private ShowProductsButtonListener showProductsButtonListener;
+    
     private final StoresPanel storesPanel;
     private final ChequesPanel chequesPanel;
     private final ProductsPanel productsPanel;
@@ -67,5 +79,20 @@ public class DocumentsPanel extends WebPanel
     public ProductsPanel getProductsPanel()
     {
         return productsPanel;
+    }
+
+    @Override
+    public void init()
+    {
+        setupActionListeners();
+    }
+
+    @Override
+    public void setupActionListeners()
+    {
+        storesPanel.getShowStoresBtn().addActionListener(showStoresButtonListener);
+        storesPanel.getShowStartBalancesBtn().addActionListener(showBalancesButtonListener);
+        productsPanel.getShowCatalogBtn().addActionListener(showProductsButtonListener);
+        
     }
 }

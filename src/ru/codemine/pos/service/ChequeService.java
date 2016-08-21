@@ -19,7 +19,6 @@
 package ru.codemine.pos.service;
 
 import java.util.List;
-import java.util.Map;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -28,7 +27,6 @@ import ru.codemine.pos.application.Application;
 import ru.codemine.pos.dao.StoreDAO;
 import ru.codemine.pos.dao.WorkdayDAO;
 import ru.codemine.pos.dao.document.ChequeDAO;
-import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.entity.Workday;
 import ru.codemine.pos.entity.document.Cheque;

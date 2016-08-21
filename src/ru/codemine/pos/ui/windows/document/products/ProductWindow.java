@@ -32,7 +32,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
-import ru.codemine.pos.service.ProductService;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.tablemodel.ProductByStoresTableModel;
 import ru.codemine.pos.ui.windows.document.GenericDocumentWindow;

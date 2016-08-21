@@ -25,6 +25,7 @@ import org.springframework.stereotype.Component;
 import ru.codemine.pos.exception.GeneralException;
 import ru.codemine.pos.service.WorkdayService;
 import ru.codemine.pos.ui.MainWindow;
+import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
 
 /**
@@ -37,12 +38,12 @@ public class CloseWorkdayButtonListener implements ActionListener
 
     @Autowired private WorkdayService workdayService;
     @Autowired private MainWindow mainWindow;
+    @Autowired private SalesPanel salesPanel;
+    @Autowired private ButtonsPanel buttonsPanel;
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        ButtonsPanel buttonsPanel = mainWindow.getSalesPanel().getButtonsPanel();
-
         try
         {
             buttonsPanel.getCloseWorkdayButton().setEnabled(false);
@@ -61,7 +62,7 @@ public class CloseWorkdayButtonListener implements ActionListener
         finally
         {
             buttonsPanel.getCloseWorkdayButton().setEnabled(true);
-            mainWindow.getSalesPanel().requestFocus();
+            salesPanel.requestFocus();
         }
     }
 

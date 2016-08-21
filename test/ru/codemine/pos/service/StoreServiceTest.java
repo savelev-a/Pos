@@ -18,6 +18,7 @@
 
 package ru.codemine.pos.service;
 
+import java.util.logging.Level;
 import junit.framework.Assert;
 import org.apache.log4j.Logger;
 import org.junit.After;
@@ -29,6 +30,7 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
+import ru.codemine.pos.exception.DuplicateStoreDataException;
 
 /**
  *
@@ -79,7 +81,14 @@ public class StoreServiceTest
     {
         log.info("---Подготовка к тестированию StoreService---");
         
-        storeService.create(store);
+        try
+        {
+            storeService.create(store);
+        } 
+        catch (DuplicateStoreDataException ex)
+        {
+            ex.printStackTrace();
+        }
         
         log.info("Проверка загрузки склада из БД...");
         Store s1 = storeService.getByName("TheTestStore");
@@ -90,7 +99,14 @@ public class StoreServiceTest
         
         log.info("Проверка обновления остатков склада в БД...");
         store.getStocks().put(p3, 10);
-        storeService.update(store);
+        try
+        {
+            storeService.update(store);
+        } 
+        catch (DuplicateStoreDataException ex)
+        {
+            ex.printStackTrace();
+        }
         Store s2 = storeService.getByName("TheTestStore");
         Store unproxedS2 = storeService.unproxyStocks(s2);
         Assert.assertNotNull(unproxedS2);

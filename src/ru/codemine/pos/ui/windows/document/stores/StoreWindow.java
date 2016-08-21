@@ -20,7 +20,6 @@ package ru.codemine.pos.ui.windows.document.stores;
 
 import com.alee.extended.layout.TableLayout;
 import com.alee.extended.panel.WebButtonGroup;
-import com.alee.laf.button.WebButton;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
@@ -40,7 +39,7 @@ import ru.codemine.pos.ui.windows.document.stores.listener.SaveStore;
  */
 
 @Component
-public class StoreWindow extends GenericDocumentWindow
+public class StoreWindow extends GenericDocumentWindow 
 {
     @Autowired private StoreService storeService;
     @Autowired private SaveStore saveStore;

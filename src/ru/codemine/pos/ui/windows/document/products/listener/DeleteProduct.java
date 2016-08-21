@@ -21,13 +21,11 @@ package ru.codemine.pos.ui.windows.document.products.listener;
 import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.service.ProductService;
-import ru.codemine.pos.ui.windows.document.products.ProductWindow;
 import ru.codemine.pos.ui.windows.document.products.ProductsListWindow;
 
 /**

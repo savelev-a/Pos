@@ -27,10 +27,7 @@ import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.tabbedpane.WebTabbedPane;
-import com.alee.laf.text.WebTextField;
-import java.awt.KeyEventDispatcher;
 import java.awt.KeyboardFocusManager;
-import java.awt.event.KeyEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import javax.swing.ImageIcon;
@@ -38,24 +35,10 @@ import javax.swing.WindowConstants;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.application.Application;
-import ru.codemine.pos.entity.Product;
-import ru.codemine.pos.entity.document.Cheque;
-import ru.codemine.pos.service.ProductService;
-import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.service.WorkdayService;
-import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
 import ru.codemine.pos.ui.docspanel.DocumentsPanel;
-import ru.codemine.pos.ui.docspanel.listener.ShowProductsButtonListener;
-import ru.codemine.pos.ui.docspanel.listener.ShowStoresButtonListener;
-import ru.codemine.pos.ui.docspanel.listener.ShowStartBalancesButtonListener;
+import ru.codemine.pos.ui.keydispatcher.MainKeyDispatcher;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
-import ru.codemine.pos.ui.salespanel.listener.ChequeProcessButtonListener;
-import ru.codemine.pos.ui.salespanel.listener.ChequeTableKeyListener;
-import ru.codemine.pos.ui.salespanel.listener.CloseWorkdayButtonListener;
-import ru.codemine.pos.ui.salespanel.listener.OpenWorkdayButtonListener;
-import ru.codemine.pos.ui.salespanel.listener.XReportButtonListener;
-import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
-import ru.codemine.pos.ui.salespanel.modules.CalcsPanel;
 
 /**
  *
@@ -67,21 +50,12 @@ public class MainWindow extends WebFrame
 {
     @Autowired private Application application;
     @Autowired private WorkdayService workdayService;
-    @Autowired private ProductService productService;
-    @Autowired private StoreService storeService;
-    
-    @Autowired private OpenWorkdayButtonListener openWorkdayButtonListener;
-    @Autowired private CloseWorkdayButtonListener closeWorkdayButtonListener;
-    @Autowired private ChequeProcessButtonListener chequeProcessButtonListener;
-    @Autowired private XReportButtonListener xReportButtonListener;
-    
-    @Autowired private ShowStoresButtonListener showStoresButtonListener;
-    @Autowired private ShowStartBalancesButtonListener showBalancesButtonListener;
-    @Autowired private ShowProductsButtonListener showProductsButtonListener;
+
+    @Autowired private SalesPanel salesPanel;
+    @Autowired private DocumentsPanel documentsPanel;
+    @Autowired private MainKeyDispatcher keyDispatcher;
     
     private final WebTabbedPane tabs;
-    private final SalesPanel salesPanel;
-    private final DocumentsPanel documentsPanel;
     private final WebStatusBar statusBar;
     
     private boolean inputBlocked;
@@ -94,16 +68,7 @@ public class MainWindow extends WebFrame
         setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         inputBlocked = true;
         
-        salesPanel = new SalesPanel();
-        documentsPanel = new DocumentsPanel();
-        
         tabs = new WebTabbedPane(WebTabbedPane.BOTTOM);
-        tabs.addTab("Продажи",   new ImageIcon("images/icons/default/32x32/tab-sales.png"), salesPanel);
-        tabs.addTab("Документы", new ImageIcon("images/icons/default/32x32/tab-docs.png"), documentsPanel);
-        tabs.addTab("Отчеты",    new ImageIcon("images/icons/default/32x32/tab-reports.png"), new WebPanel());
-        tabs.addTab("Настройки", new ImageIcon("images/icons/default/32x32/tab-settings.png"), new WebPanel());
-        
-        //tabs.setRound(StyleConstants.largeRound);
         
         statusBar = new WebStatusBar();
         statusBar.add(new WebStatusLabel("Статус: готов"));
@@ -125,13 +90,21 @@ public class MainWindow extends WebFrame
         setVisible(true);
         inputBlocked = false;
         
+        tabs.addTab("Продажи",   new ImageIcon("images/icons/default/32x32/tab-sales.png"), salesPanel);
+        salesPanel.init();
+        
+        tabs.addTab("Документы", new ImageIcon("images/icons/default/32x32/tab-docs.png"), documentsPanel);
+        documentsPanel.init();
+        
+        tabs.addTab("Отчеты",    new ImageIcon("images/icons/default/32x32/tab-reports.png"), new WebPanel());
+        tabs.addTab("Настройки", new ImageIcon("images/icons/default/32x32/tab-settings.png"), new WebPanel());
+        
         setupActionListeners();
         setupKeyboard();
     }
     
     public void refreshStatus()
     {
-
         salesPanel.getUpperStatusPanel().setCurrentUserStatus(application.getActiveUser().getUsername());
         salesPanel.getUpperStatusPanel().setRightTopStatus(workdayService.isWorkdayOpened() ? "Смена открыта" : "Смена закрыта");
         salesPanel.getUpperStatusPanel().setLeftBottomStatus("Статус чека итд.");
@@ -140,19 +113,6 @@ public class MainWindow extends WebFrame
     
     private void setupActionListeners()
     {
-        ButtonsPanel buttonsPanel = salesPanel.getButtonsPanel();
-
-        buttonsPanel.getOpenWorkdayButton().addActionListener(openWorkdayButtonListener);
-        buttonsPanel.getCloseWorkdayButton().addActionListener(closeWorkdayButtonListener);
-        buttonsPanel.getChequeProcessButton().addActionListener(chequeProcessButtonListener);
-        buttonsPanel.getXReportButton().addActionListener(xReportButtonListener);
-        
-        documentsPanel.getStoresPanel().getShowStoresBtn().addActionListener(showStoresButtonListener);
-        documentsPanel.getStoresPanel().getShowStartBalancesBtn().addActionListener(showBalancesButtonListener);
-        documentsPanel.getProductsPanel().getShowCatalogBtn().addActionListener(showProductsButtonListener);
-        
-        salesPanel.getChequeSetupPanel().getTable().addKeyListener(new ChequeTableKeyListener(salesPanel));
-        
         addWindowListener(new WindowAdapter()
         {
             @Override
@@ -173,77 +133,26 @@ public class MainWindow extends WebFrame
     private void setupKeyboard()
     {
         KeyboardFocusManager manager = KeyboardFocusManager.getCurrentKeyboardFocusManager();
-        manager.addKeyEventDispatcher(new KeyDispatcher());
+        manager.addKeyEventDispatcher(keyDispatcher);
     }
     
-    private class KeyDispatcher implements KeyEventDispatcher
+    public int getActiveTabIndex()
     {
-
-        @Override
-        public boolean dispatchKeyEvent(KeyEvent e)
-        {
-            WebTextField inputField = salesPanel.getChequeSetupPanel().getInputField();
-            ChequeSetupTableModel tableModel = salesPanel.getChequeSetupPanel().getTableModel();
-            Cheque setupCheque = salesPanel.getChequeSetupPanel().getTableModel().getCheque();
-            ButtonsPanel buttonsPanel = salesPanel.getButtonsPanel();
-            CalcsPanel calcsPanel = salesPanel.getCalcsPanel();
-            
-            //Если на вводе число, при этом активно и является видимым окно набора чеков - 
-            //вводим данное число в строку поиска
-            if(tabs.getSelectedIndex() == 0 && !inputBlocked
-                    && ("1234567890".indexOf(e.getKeyChar()) >= 0))
-            {
-                e.setSource(inputField);
-            }
-            //Если на вводе Enter и в строке поиска что-то есть
-            //Ищем по ШК позицию и вставляем в чек
-            else if(tabs.getSelectedIndex() == 0 && !inputBlocked && !"".equals(inputField.getText())
-                    && (e.getKeyCode() == KeyEvent.VK_ENTER))
-            {
-                //TODO В отдельный класс/сервис/процедуру
-                String barcode = inputField.getText();
-                inputField.clear();
-                Product product = productService.getByBarcode(barcode);
-                if(product != null)
-                {
-                    // Товар найден, проверка остатков
-                    Integer quantity = setupCheque.getQuantityOf(product) + 1;
-                    
-                    if(storeService.checkStocks("Розница", product, quantity))
-                    {
-                        tableModel.addItem(product, 1);
-                        calcsPanel.showByCheque(setupCheque);
-                        tableModel.fireTableDataChanged();
-                    }
-                    else
-                    {
-                        WebOptionPane.showMessageDialog(rootPane, "Недостаточно товара на складе");
-                    }
-                }
-                else
-                {
-                    WebOptionPane.showMessageDialog(rootPane, "Товар по штрихкоду " + barcode + " не найден!");
-                }
-            }
-            else if(tabs.getSelectedIndex() == 0 && !inputBlocked && (e.getKeyCode() == KeyEvent.VK_F2))
-            {
-                buttonsPanel.getOpenWorkdayButton().doClick();
-            }
-            else if(tabs.getSelectedIndex() == 0 && !inputBlocked && (e.getKeyCode() == KeyEvent.VK_F3))
-            {
-                buttonsPanel.getCloseWorkdayButton().doClick();
-            }
-            else if(tabs.getSelectedIndex() == 0 && !inputBlocked && (e.getKeyCode() == KeyEvent.VK_F5))
-            {
-                buttonsPanel.getChequeProcessButton().doClick();
-            }
-            return false;
-        }
-        
+        return tabs.getSelectedIndex();
     }
-
-    public SalesPanel getSalesPanel()
+    
+    public boolean isBarcodeInputBlocked()
     {
-        return salesPanel;
+        return inputBlocked;
+    }
+    
+    public void blockBarcodeInput()
+    {
+        inputBlocked = true;
+    }
+    
+    public void unblockBarcodeInput()
+    {
+        inputBlocked = false;
     }
 }

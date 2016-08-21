@@ -22,13 +22,29 @@ import com.alee.extended.layout.TableLayout;
 import com.alee.global.StyleConstants;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.panel.WebPanel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.codemine.pos.ui.GenericPanelComponent;
+import ru.codemine.pos.ui.salespanel.listener.ChequeProcessButtonListener;
+import ru.codemine.pos.ui.salespanel.listener.CloseWorkdayButtonListener;
+import ru.codemine.pos.ui.salespanel.listener.OpenWorkdayButtonListener;
+import ru.codemine.pos.ui.salespanel.listener.QuantitySetupListener;
+import ru.codemine.pos.ui.salespanel.listener.XReportButtonListener;
 
 /**
  *
  * @author Alexander Savelev
  */
-public class ButtonsPanel extends WebPanel
+
+@Component
+public class ButtonsPanel extends WebPanel implements GenericPanelComponent
 {
+    @Autowired private OpenWorkdayButtonListener openWorkdayButtonListener;
+    @Autowired private CloseWorkdayButtonListener closeWorkdayButtonListener;
+    @Autowired private QuantitySetupListener quantitySetupListener;
+    @Autowired private ChequeProcessButtonListener chequeProcessButtonListener;
+    @Autowired private XReportButtonListener xReportButtonListener;
+    
     private final WebButton[][] buttons;
     public ButtonsPanel()
     {
@@ -60,10 +76,21 @@ public class ButtonsPanel extends WebPanel
         
         buttons[0][0].setText("Открыть смену (F2)");
         buttons[0][1].setText("Закрыть смену (Z-отчет) (F3)");
-        buttons[1][0].setText("Пробить чек (F5)");
+        buttons[1][0].setText("Количество (F4)");
         buttons[1][1].setText("Отчет без гашения");
+        buttons[2][0].setText("Пробить чек (F5)");
         
         
+    }
+    
+    @Override
+    public void setupActionListeners()
+    {
+        getOpenWorkdayButton().addActionListener(openWorkdayButtonListener);
+        getCloseWorkdayButton().addActionListener(closeWorkdayButtonListener);
+        getQuantitySetupButton().addActionListener(quantitySetupListener);
+        getChequeProcessButton().addActionListener(chequeProcessButtonListener);
+        getXReportButton().addActionListener(xReportButtonListener);
     }
     
     public WebButton[][] getButtons()
@@ -81,7 +108,7 @@ public class ButtonsPanel extends WebPanel
         return buttons[0][1];
     }
 
-    public WebButton getChequeProcessButton()
+    public WebButton getQuantitySetupButton()
     {
         return buttons[1][0];
     }
@@ -89,5 +116,16 @@ public class ButtonsPanel extends WebPanel
     public WebButton getXReportButton()
     {
         return buttons[1][1];
+    }
+    
+    public WebButton getChequeProcessButton()
+    {
+        return buttons[2][0];
+    }
+
+    @Override
+    public void init()
+    {
+        setupActionListeners();
     }
 }
