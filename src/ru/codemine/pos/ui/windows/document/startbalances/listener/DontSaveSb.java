@@ -20,7 +20,9 @@ package ru.codemine.pos.ui.windows.document.startbalances.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.ui.windows.document.startbalances.StartBalanceWindow;
 
 /**
  *
@@ -30,11 +32,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class DontSaveSb implements ActionListener
 {
-
+    @Autowired private StartBalanceWindow window;
+    
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        window.setVisible(false);
     }
 
 }

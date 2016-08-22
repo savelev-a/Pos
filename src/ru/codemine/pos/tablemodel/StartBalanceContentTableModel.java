@@ -19,6 +19,7 @@
 package ru.codemine.pos.tablemodel;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.swing.ImageIcon;
@@ -116,6 +117,17 @@ public class StartBalanceContentTableModel extends DefaultTableModel
     {
         this.startBalance = sb;
         stocks = new ArrayList<>(sb.getContents().entrySet());
+    }
+    
+    public Map<Product, Integer> getContentMap()
+    {
+        Map<Product, Integer> result = new HashMap<>();
+        for(Map.Entry<Product, Integer> entry : stocks)
+        {
+            result.put(entry.getKey(), entry.getValue());
+        }
+        
+        return result;
     }
     
     

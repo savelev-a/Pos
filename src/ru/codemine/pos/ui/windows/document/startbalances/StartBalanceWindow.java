@@ -34,6 +34,7 @@ import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.entity.document.StartBalance;
 import ru.codemine.pos.service.StartBalanceService;
 import ru.codemine.pos.service.StoreService;
+import ru.codemine.pos.service.UserService;
 import ru.codemine.pos.tablemodel.StartBalanceContentTableModel;
 import ru.codemine.pos.ui.windows.document.GenericDocumentWindow;
 import ru.codemine.pos.ui.windows.document.startbalances.listener.DontSaveSb;
@@ -50,6 +51,7 @@ public class StartBalanceWindow extends GenericDocumentWindow<StartBalance>
     @Autowired private Application application;
     @Autowired private StoreService storeService;
     @Autowired private StartBalanceService sbservice;
+    @Autowired private UserService userService;
     
     @Autowired private SaveSb saveSb;
     @Autowired private DontSaveSb dontSaveSb;
@@ -147,10 +149,13 @@ public class StartBalanceWindow extends GenericDocumentWindow<StartBalance>
     public StartBalance getDocument()
     {
         startBalance.setStore(storeService.getByName((String)storeFieldComboBox.getSelectedItem()));
+        startBalance.setCreationTime(new DateTime(creationTimeField.getDate()));
         startBalance.setDocumentTime(new DateTime(documentTimeField.getDate()));
-        //TODO закончил тут
+        startBalance.setCreator(userService.getByUsername(creatorField.getText()));
+        startBalance.setContents(((StartBalanceContentTableModel)documentContent.getModel()).getContentMap());
+        startBalance.calculateTotals();
         
-        return null;
+        return startBalance;
     }
 
 }

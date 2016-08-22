@@ -98,5 +98,25 @@ public class StartBalance extends Document
         this.total = total;
     }
     
+    public void calculateTotals()
+    {
+        total = 0.0;
+        
+        for (Map.Entry<Product, Integer> entrySet : contents.entrySet())
+        {
+            Product product = entrySet.getKey();
+            Integer quantity = entrySet.getValue();
+            
+            total += product.getPrice() * quantity;
+        }
+    }
+
+    @Override
+    public String toString()
+    {
+        return "StartBalance{" + "contents=" + contents + ", store=" + store + ", total=" + total + '}';
+    }
+    
+    
     
 }

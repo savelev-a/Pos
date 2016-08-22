@@ -18,9 +18,19 @@
 
 package ru.codemine.pos.ui.windows.document.startbalances.listener;
 
+import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.entity.document.StartBalance;
+import ru.codemine.pos.exception.ActiveDocumentEditException;
+import ru.codemine.pos.exception.GeneralException;
+import ru.codemine.pos.service.StartBalanceService;
+import ru.codemine.pos.ui.windows.document.startbalances.StartBalanceWindow;
+import ru.codemine.pos.ui.windows.document.startbalances.StartBalancesListWindow;
 
 /**
  *
@@ -30,11 +40,44 @@ import org.springframework.stereotype.Component;
 @Component
 public class SaveSb implements ActionListener
 {
-
+    @Autowired private StartBalanceWindow sbWindow;
+    @Autowired private StartBalancesListWindow sblistWindow;
+    @Autowired private StartBalanceService sbService;
+    
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        StartBalance startBalance = sbWindow.getDocument();
+        
+        if(startBalance == null) return;
+        
+        if(startBalance.getId() == null)
+        {
+            try
+            {
+                sbService.create(startBalance);
+            } 
+            catch (GeneralException ex)
+            {
+                WebOptionPane.showMessageDialog(sbWindow, ex.getLocalizedMessage(), "Ошибка сохранения документа", WebOptionPane.ERROR_MESSAGE);
+                return;            
+            }
+        }
+        else
+        {
+            try
+            {
+                sbService.update(startBalance);
+            } 
+            catch (ActiveDocumentEditException ex)
+            {
+                WebOptionPane.showMessageDialog(sbWindow, ex.getLocalizedMessage(), "Ошибка сохранения документа", WebOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        
+        sbWindow.setVisible(false);
+        sblistWindow.refresh();
     }
 
 }
