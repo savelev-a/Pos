@@ -155,4 +155,14 @@ public class ChequeSetupTableModel extends DefaultTableModel
         refreshEntryList();
     }
 
+    public Product getProductAt(int selectedRow)
+    {
+        return lines.get(selectedRow).getProduct();
+    }
+
+    public Integer getQuantityAt(int selectedRow)
+    {
+        return lines.get(selectedRow).getQuantity();
+    }
+
 }

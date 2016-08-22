@@ -22,11 +22,13 @@ import com.alee.extended.image.WebImage;
 import com.alee.extended.layout.TableLayout;
 import com.alee.global.StyleConstants;
 import com.alee.laf.label.WebLabel;
+import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
 import javax.swing.table.TableColumnModel;
+import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
 
@@ -109,33 +111,34 @@ public class ChequeSetupPanel extends WebPanel
         
         tableModel.fireTableDataChanged();
     }
-    
-//    private void setupActionListeners()
-//    {
-//        table.addKeyListener(new KeyListener()
-//        {
-//
-//            @Override
-//            public void keyTyped(KeyEvent e){}
-//
-//            @Override
-//            public void keyPressed(KeyEvent e)
-//            {
-//                if(e.getKeyCode() == KeyEvent.VK_DELETE)
-//                {
-//                    tableModel.deleteRow(table.getSelectedRow());
-//                    tableModel.fireTableDataChanged();
-//                }
-//            }
-//
-//            @Override
-//            public void keyReleased(KeyEvent e){}
-//        });
-//    }
 
     public WebTable getTable()
     {
         return table;
+    }
+
+    public Product getSelectedProduct()
+    {
+        int row = table.getSelectedRow();
+        if(row == -1)
+        {
+            WebOptionPane.showMessageDialog(this, "Не выбрана строка!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+            return null;
+        }
+        
+        return tableModel.getProductAt(table.getSelectedRow());
+    }
+
+    public Integer getSelectedQuantity()
+    {
+        int row = table.getSelectedRow();
+        if(row == -1)
+        {
+            WebOptionPane.showMessageDialog(this, "Не выбрана строка!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+            return null;
+        }
+        
+        return tableModel.getQuantityAt(table.getSelectedRow());
     }
 
 }

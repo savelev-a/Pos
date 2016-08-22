@@ -20,6 +20,7 @@ package ru.codemine.pos.ui;
 
 import com.alee.extended.layout.TableLayout;
 import com.alee.extended.panel.GroupPanel;
+import com.alee.global.StyleConstants;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.combobox.WebComboBox;
 import com.alee.laf.label.WebLabel;
@@ -80,6 +81,10 @@ public class LoginScreen
         
         okButton     = new WebButton("Ок",     new ImageIcon("images/icons/default/16x16/button-ok.png"));
         cancelButton = new WebButton("Отмена", new ImageIcon("images/icons/default/16x16/button-cancel.png"));
+        okButton.setMargin(5);
+        cancelButton.setMargin(5);
+        okButton.setRound(StyleConstants.largeRound);
+        cancelButton.setRound(StyleConstants.largeRound);
         GroupPanel buttonsGroupPanel = new GroupPanel(10, okButton, cancelButton);
         
         frame.add(usernameLabel, "1, 1");

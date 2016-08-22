@@ -28,7 +28,7 @@ import ru.codemine.pos.ui.GenericPanelComponent;
 import ru.codemine.pos.ui.salespanel.listener.ChequeProcessButtonListener;
 import ru.codemine.pos.ui.salespanel.listener.CloseWorkdayButtonListener;
 import ru.codemine.pos.ui.salespanel.listener.OpenWorkdayButtonListener;
-import ru.codemine.pos.ui.salespanel.listener.QuantitySetupListener;
+import ru.codemine.pos.ui.salespanel.listener.ShowQuantitySetupWindowListener;
 import ru.codemine.pos.ui.salespanel.listener.XReportButtonListener;
 
 /**
@@ -41,7 +41,7 @@ public class ButtonsPanel extends WebPanel implements GenericPanelComponent
 {
     @Autowired private OpenWorkdayButtonListener openWorkdayButtonListener;
     @Autowired private CloseWorkdayButtonListener closeWorkdayButtonListener;
-    @Autowired private QuantitySetupListener quantitySetupListener;
+    @Autowired private ShowQuantitySetupWindowListener quantitySetupListener;
     @Autowired private ChequeProcessButtonListener chequeProcessButtonListener;
     @Autowired private XReportButtonListener xReportButtonListener;
     
@@ -70,6 +70,7 @@ public class ButtonsPanel extends WebPanel implements GenericPanelComponent
                 buttons[i][j] = new WebButton("button");
                 buttons[i][j].setMinimumHeight(50);
                 buttons[i][j].setMinimumWidth(150);
+                buttons[i][j].setRound(StyleConstants.largeRound);
                 add(buttons[i][j], "" + (i * 2) + ", " + (j * 2));
             }
         }

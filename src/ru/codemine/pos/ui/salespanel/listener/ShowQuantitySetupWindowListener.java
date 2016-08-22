@@ -31,7 +31,7 @@ import ru.codemine.pos.ui.salespanel.QuantitySetupWindow;
  */
 
 @Component
-public class QuantitySetupListener implements ActionListener
+public class ShowQuantitySetupWindowListener implements ActionListener
 {
     @Autowired private QuantitySetupWindow quantityWindow;
     @Autowired private MainWindow mainWindow;

@@ -155,4 +155,14 @@ public class StoreService
         return storeDAO.unproxyStocks(store);
     }
 
+    @Transactional
+    public Integer getAvaibleStocksOnRetail(Product product)
+    {
+        Store store = storeDAO.getByName("Розница");
+        if(store == null) return 0;
+        
+        Store st = storeDAO.unproxyStocks(store);
+        return st.getStocks().get(product);
+    }
+
 }
