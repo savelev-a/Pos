@@ -16,14 +16,14 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document.stores.listener;
+package ru.codemine.pos.ui.windows.products.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.entity.Store;
-import ru.codemine.pos.ui.windows.document.stores.StoreWindow;
+import ru.codemine.pos.entity.Product;
+import ru.codemine.pos.ui.windows.products.ProductWindow;
 
 /**
  *
@@ -31,14 +31,14 @@ import ru.codemine.pos.ui.windows.document.stores.StoreWindow;
  */
 
 @Component
-public class NewStore implements ActionListener
+public class NewProduct implements ActionListener 
 {
-    @Autowired private StoreWindow storeWindow;
-    
+    @Autowired private ProductWindow productWindow;
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        storeWindow.showWindow(new Store());
+        productWindow.showWindow(new Product());
     }
 
 }

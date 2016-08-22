@@ -29,6 +29,7 @@ import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyJoinColumn;
 import javax.persistence.Table;
+import org.joda.time.DateTime;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
 
@@ -57,12 +58,14 @@ public class StartBalance extends Document
     public StartBalance()
     {
         contents = new HashMap<>();
+        total = 0.0;
     }
     
     public StartBalance(Store store)
     {
         this.store = store;
         contents = new HashMap<>();
+        total = 0.0;
     }
     
     public Map<Product, Integer> getContents()

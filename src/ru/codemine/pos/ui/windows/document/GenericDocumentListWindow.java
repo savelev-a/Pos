@@ -42,7 +42,7 @@ import javax.swing.table.TableRowSorter;
  *
  * @author Alexander Savelev
  */
-public class GenericDocumentListWindow extends WebFrame
+public abstract class GenericDocumentListWindow extends WebFrame
 {
     protected WebMenuBar menuBar;
     protected WebToolBar toolBar;
@@ -209,4 +209,7 @@ public class GenericDocumentListWindow extends WebFrame
     {
         menuItemRefresh.doClick();
     }
+    
+    public abstract void showWindow();
+    public abstract void setupActionListeners();
 }

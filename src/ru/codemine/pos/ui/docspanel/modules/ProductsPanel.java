@@ -46,7 +46,8 @@ public class ProductsPanel extends WebPanel
         setLayout(layout);
         
         showCatalogButton = new WebButton("Справочник товаров");
-        
+        showCatalogButton.setMargin(5);
+        showCatalogButton.setRound(StyleConstants.largeRound);
 
         add(new WebLabel("-----Товары-----"), "1, 1, C, T");
         add(showCatalogButton, "1, 3");

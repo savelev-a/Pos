@@ -22,7 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.ui.windows.document.stores.StoresListWindow;
+import ru.codemine.pos.ui.windows.stores.StoresListWindow;
 
 /**
  *

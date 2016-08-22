@@ -50,23 +50,30 @@ public class Document implements Serializable
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
     @Column(name = "id", nullable = false)
-    private Long id;
+    protected Long id;
     
     @Column(name = "creationTime", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime creationTime;
+    protected DateTime creationTime;
     
     @Column(name = "docTime", nullable = false)
     @Type(type = "org.jadira.usertype.dateandtime.joda.PersistentDateTime")
-    private DateTime documentTime;
+    protected DateTime documentTime;
     
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_user", referencedColumnName = "id")
-    private User creator;
+    protected User creator;
     
     @Column(name = "processed", nullable = false)
-    private boolean processed;
+    protected boolean processed;
 
+    
+    public Document()
+    {
+        creationTime = DateTime.now();
+        documentTime = DateTime.now();
+        processed = false;
+    }
     public Long getId()
     {
         return id;

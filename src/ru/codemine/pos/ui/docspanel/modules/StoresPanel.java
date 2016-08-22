@@ -47,6 +47,10 @@ public class StoresPanel extends WebPanel
         
         showStoresBtn = new WebButton("Показать склады");
         showStartBalancesBtn = new WebButton("Начальные остатки складов");
+        showStoresBtn.setMargin(5);
+        showStartBalancesBtn.setMargin(5);
+        showStoresBtn.setRound(StyleConstants.largeRound);
+        showStartBalancesBtn.setRound(StyleConstants.largeRound);
         
         add(new WebLabel("-----Склады-----"), "1, 1, C, T");
         add(showStoresBtn, "1, 3");

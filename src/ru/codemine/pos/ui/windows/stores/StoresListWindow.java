@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document.stores;
+package ru.codemine.pos.ui.windows.stores;
 
 import com.alee.laf.table.WebTable;
 import java.awt.Point;
@@ -30,10 +30,10 @@ import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.tablemodel.StoresListTableModel;
 import ru.codemine.pos.ui.windows.document.GenericDocumentListWindow;
-import ru.codemine.pos.ui.windows.document.stores.listener.DeleteStore;
-import ru.codemine.pos.ui.windows.document.stores.listener.EditStore;
-import ru.codemine.pos.ui.windows.document.stores.listener.NewStore;
-import ru.codemine.pos.ui.windows.document.stores.listener.RefreshStoreList;
+import ru.codemine.pos.ui.windows.stores.listener.DeleteStore;
+import ru.codemine.pos.ui.windows.stores.listener.EditStore;
+import ru.codemine.pos.ui.windows.stores.listener.NewStore;
+import ru.codemine.pos.ui.windows.stores.listener.RefreshStoreList;
 
 /**
  *
@@ -62,6 +62,7 @@ public class StoresListWindow extends GenericDocumentListWindow
         toolButtonUnprocess.setEnabled(false);
     }
     
+    @Override
     public void showWindow()
     {
         List<Store> stores = storeService.getAll();
@@ -83,7 +84,8 @@ public class StoresListWindow extends GenericDocumentListWindow
         
     }
     
-    private void setupActionListeners()
+    @Override
+    public void setupActionListeners()
     {
         setNewActionListener(newStore);
         setEditActionListener(editStore);

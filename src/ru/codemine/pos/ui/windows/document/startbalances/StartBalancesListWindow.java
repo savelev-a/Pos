@@ -77,6 +77,7 @@ public class StartBalancesListWindow extends GenericDocumentListWindow
         toolBar.add(storeChooseBox);
     }
     
+    @Override
     public void showWindow()
     {
         List<Store> stores = storeService.getAll();
@@ -103,7 +104,8 @@ public class StartBalancesListWindow extends GenericDocumentListWindow
         setVisible(true);
     }
 
-    private void setupActionListeners()
+    @Override
+    public void setupActionListeners()
     {
         setNewActionListener(newSb);
         setEditActionListener(editSb);

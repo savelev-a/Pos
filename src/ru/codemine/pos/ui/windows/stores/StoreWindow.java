@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document.stores;
+package ru.codemine.pos.ui.windows.stores;
 
 import com.alee.extended.layout.TableLayout;
 import com.alee.extended.panel.WebButtonGroup;
@@ -29,9 +29,9 @@ import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.tablemodel.StoreStocksTableModel;
-import ru.codemine.pos.ui.windows.document.GenericDocumentWindow;
-import ru.codemine.pos.ui.windows.document.stores.listener.DontSaveStore;
-import ru.codemine.pos.ui.windows.document.stores.listener.SaveStore;
+import ru.codemine.pos.ui.windows.GenericEntityWindow;
+import ru.codemine.pos.ui.windows.stores.listener.DontSaveStore;
+import ru.codemine.pos.ui.windows.stores.listener.SaveStore;
 
 /**
  *
@@ -39,7 +39,7 @@ import ru.codemine.pos.ui.windows.document.stores.listener.SaveStore;
  */
 
 @Component
-public class StoreWindow extends GenericDocumentWindow 
+public class StoreWindow extends GenericEntityWindow<Store>
 {
     @Autowired private StoreService storeService;
     @Autowired private SaveStore saveStore;
@@ -82,6 +82,7 @@ public class StoreWindow extends GenericDocumentWindow
         
     }
     
+    @Override
     public void showWindow(Store store)
     {
         if(!actionListenersInit) setupActionListeners();
@@ -114,7 +115,8 @@ public class StoreWindow extends GenericDocumentWindow
         return store;
     }
     
-    private void setupActionListeners()
+    @Override
+    public void setupActionListeners()
     {
         saveButton.addActionListener(saveStore);
         cancelButton.addActionListener(dontSaveStore);

@@ -20,7 +20,10 @@ package ru.codemine.pos.ui.windows.document.startbalances.listener;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.entity.document.StartBalance;
+import ru.codemine.pos.ui.windows.document.startbalances.StartBalanceWindow;
 
 /**
  *
@@ -30,11 +33,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class NewSb implements ActionListener
 {
+    @Autowired StartBalanceWindow window;
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        
+        window.showWindow(new StartBalance());
     }
 
 }

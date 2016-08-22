@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document.products;
+package ru.codemine.pos.ui.windows.products;
 
 import com.alee.extended.layout.TableLayout;
 import com.alee.extended.panel.WebButtonGroup;
@@ -34,9 +34,9 @@ import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.tablemodel.ProductByStoresTableModel;
-import ru.codemine.pos.ui.windows.document.GenericDocumentWindow;
-import ru.codemine.pos.ui.windows.document.products.listener.DontSaveProduct;
-import ru.codemine.pos.ui.windows.document.products.listener.SaveProduct;
+import ru.codemine.pos.ui.windows.GenericEntityWindow;
+import ru.codemine.pos.ui.windows.products.listener.DontSaveProduct;
+import ru.codemine.pos.ui.windows.products.listener.SaveProduct;
 
 /**
  *
@@ -44,7 +44,7 @@ import ru.codemine.pos.ui.windows.document.products.listener.SaveProduct;
  */
 
 @Component
-public class ProductWindow extends GenericDocumentWindow
+public class ProductWindow extends GenericEntityWindow<Product>
 {
     @Autowired private StoreService storeService;
     
@@ -116,6 +116,7 @@ public class ProductWindow extends GenericDocumentWindow
         add(new WebButtonGroup(saveButton, cancelButton), "1, 13, 3, 13, C, T");
     }
     
+    @Override
     public void showWindow(Product product)
     {
         if(!actionListenersInit) setupActionListeners();
@@ -153,7 +154,8 @@ public class ProductWindow extends GenericDocumentWindow
         setVisible(true);
     }
     
-    private void setupActionListeners()
+    @Override
+    public void setupActionListeners()
     {
         saveButton.addActionListener(saveProduct);
         cancelButton.addActionListener(dontSaveProduct);

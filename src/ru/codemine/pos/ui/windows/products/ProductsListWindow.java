@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document.products;
+package ru.codemine.pos.ui.windows.products;
 
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
@@ -29,10 +29,10 @@ import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.service.ProductService;
 import ru.codemine.pos.tablemodel.ProductCatalogTableModel;
 import ru.codemine.pos.ui.windows.document.GenericDocumentListWindow;
-import ru.codemine.pos.ui.windows.document.products.listener.DeleteProduct;
-import ru.codemine.pos.ui.windows.document.products.listener.EditProduct;
-import ru.codemine.pos.ui.windows.document.products.listener.NewProduct;
-import ru.codemine.pos.ui.windows.document.products.listener.RefreshProductList;
+import ru.codemine.pos.ui.windows.products.listener.DeleteProduct;
+import ru.codemine.pos.ui.windows.products.listener.EditProduct;
+import ru.codemine.pos.ui.windows.products.listener.NewProduct;
+import ru.codemine.pos.ui.windows.products.listener.RefreshProductList;
 
 /**
  *
@@ -63,6 +63,7 @@ public class ProductsListWindow extends GenericDocumentListWindow
         toolButtonUnprocess.setEnabled(false);
     }
     
+    @Override
     public void showWindow()
     {
         List<Product> products = productService.getAll();
@@ -81,7 +82,8 @@ public class ProductsListWindow extends GenericDocumentListWindow
         setVisible(true);
     }
     
-    private void setupActionListeners()
+    @Override
+    public void setupActionListeners()
     {
         setNewActionListener(newProduct);
         setEditActionListener(editProduct);

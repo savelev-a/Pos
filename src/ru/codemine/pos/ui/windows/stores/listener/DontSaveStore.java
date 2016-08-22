@@ -16,24 +16,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui;
+package ru.codemine.pos.ui.windows.stores.listener;
+
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.codemine.pos.ui.windows.stores.StoreWindow;
 
 /**
  *
  * @author Alexander Savelev
  */
-public interface GenericWindow 
-{
 
-    /**
-     * Выполняется после конструктора.
-     * Настраивает окно и делает его видимым
-     */
-    public void showWindow();
+@Component
+public class DontSaveStore implements ActionListener
+{
+    @Autowired private StoreWindow storeWindow;
     
-    /**
-     * Выполняется после конструктора.
-     * Настраивает ActionListener'ы
-     */
-    public void setupActionListeners();
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        storeWindow.setVisible(false);
+    }
+
 }

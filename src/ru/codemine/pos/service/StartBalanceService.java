@@ -181,7 +181,7 @@ public class StartBalanceService
             }
             else
             {
-                throw new GeneralException("Ошибка склада: " + store.getName() 
+                throw new NegativeQuantityOnDeactivateException("Ошибка склада: " + store.getName() 
                         + ". В документе обнаружен артикул, отсутствующий на складе. Артикул: " 
                         + product.getArtikul());
             }

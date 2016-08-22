@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document.stores.listener;
+package ru.codemine.pos.ui.windows.stores.listener;
 
 import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
@@ -24,10 +24,8 @@ import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
-import ru.codemine.pos.exception.DuplicateStoreDataException;
 import ru.codemine.pos.service.StoreService;
-import ru.codemine.pos.ui.windows.document.stores.StoreWindow;
-import ru.codemine.pos.ui.windows.document.stores.StoresListWindow;
+import ru.codemine.pos.ui.windows.stores.StoresListWindow;
 
 /**
  *
@@ -35,44 +33,32 @@ import ru.codemine.pos.ui.windows.document.stores.StoresListWindow;
  */
 
 @Component
-public class SaveStore implements ActionListener
+public class DeleteStore implements ActionListener
 {
-    @Autowired private StoreWindow storeWindow;
-    @Autowired private StoresListWindow storesListWindow;
+    @Autowired private StoresListWindow window;
     @Autowired private StoreService storeService;
-    
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        Store store = storeWindow.getStore();
-        if(store.getId() == null)
+        Store store = window.getSelectedStore();
+        if(store != null)
         {
-            try
+            if(storeService.unproxyStocks(store).getStocks().isEmpty())
             {
-                storeService.create(store);
-            } 
-            catch (DuplicateStoreDataException ex)
+                storeService.delete(store);
+            }
+            else
             {
-                WebOptionPane.showMessageDialog(storeWindow, ex.getLocalizedMessage(), "Ошибка сохранения склада", WebOptionPane.ERROR_MESSAGE);
-                return;
+                WebOptionPane.showMessageDialog(window, "Невозможно удалить склад с товаром на остатках!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
             }
         }
         else
         {
-            try
-            {
-                storeService.update(store);
-            } 
-            catch (DuplicateStoreDataException ex)
-            {
-                WebOptionPane.showMessageDialog(storeWindow, ex.getLocalizedMessage(), "Ошибка сохранения склада", WebOptionPane.ERROR_MESSAGE);
-                return;
-            }
+            WebOptionPane.showMessageDialog(window, "Не выбран склад!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
         }
 
-        storeWindow.setVisible(false);
-        storesListWindow.refresh();
-        
+        window.refresh();
     }
 
 }

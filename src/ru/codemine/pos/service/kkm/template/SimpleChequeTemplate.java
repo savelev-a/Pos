@@ -18,6 +18,7 @@
 
 package ru.codemine.pos.service.kkm.template;
 
+import org.joda.time.DateTime;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.entity.document.ChequeLine;
 
@@ -42,35 +43,43 @@ public class SimpleChequeTemplate
                 + "     ООО 'Рога И Копыта'    \n"
                 + "ИНН 123456789 КПП 000000000 \n"
                 + "----------------------------\n"
+                + "                            \n"
+                + formTab(DateTime.now().toString("dd.MM.YY HH:mm"), "", 28)
+                + formTab("", cheque.getCreator().getPrintName(), 28)
+                + "                            \n"
                 + "                            \n";
+
         for(ChequeLine line : cheque.getContent())
         {
             String productName = line.getProduct().getName();
-            String spaces = "";
+
             String priceStr = line.getPrice() + " руб.";
             String quantityStr = "x" + line.getQuantity();
             
             if(productName.length() > 14) productName = productName.substring(0, 13);
-            int spaceNum = 29 - (productName.length() + quantityStr.length() + priceStr.length() + 2);
-            for(int i = 0; i < spaceNum; i++) spaces = spaces + " ";
             
-            itemStr = itemStr + productName + spaces + quantityStr + " " + priceStr + "\n";
+            itemStr = itemStr + formTab(productName, quantityStr + " " + priceStr, 28);
 
         }
         
-        String itogo = "ИТОГО:";
-        String spaces = "";
         String sumStr = cheque.getChequeTotal()+ " руб.";
-        int spaceNum = 28 - (itogo.length() + sumStr.length());
-        
-        for(int i = 0; i < spaceNum; i++) spaces = spaces + " ";
+
         String tail = "" 
                 + "                            \n"
-                + itogo + spaces + sumStr +   "\n"
+                + formTab("ИТОГО:", sumStr, 28)
                 + "----------------------------\n"
                 + "     Спасибо за покупку!    \n";
         
         return head + itemStr + tail;
         
+    }
+    
+    private String formTab(String left, String right, int width)
+    {
+        String spaces = "";
+        int spaceNum = width - left.length() - right.length();
+        for(int i = 0; i < spaceNum; i++) spaces = spaces + " ";
+        
+        return left + spaces + right + "\n";
     }
 }

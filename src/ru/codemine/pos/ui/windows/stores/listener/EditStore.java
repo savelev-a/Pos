@@ -16,17 +16,17 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document.products.listener;
+package ru.codemine.pos.ui.windows.stores.listener;
 
 import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.entity.Product;
-import ru.codemine.pos.service.ProductService;
-import ru.codemine.pos.ui.windows.document.products.ProductWindow;
-import ru.codemine.pos.ui.windows.document.products.ProductsListWindow;
+import ru.codemine.pos.entity.Store;
+import ru.codemine.pos.service.StoreService;
+import ru.codemine.pos.ui.windows.stores.StoreWindow;
+import ru.codemine.pos.ui.windows.stores.StoresListWindow;
 
 /**
  *
@@ -34,25 +34,26 @@ import ru.codemine.pos.ui.windows.document.products.ProductsListWindow;
  */
 
 @Component
-public class EditProduct implements ActionListener
+public class EditStore implements ActionListener
 {
-    @Autowired private ProductWindow productWindow;
-    @Autowired private ProductsListWindow productListWindow;
-    @Autowired private ProductService productService;
-    
+    @Autowired private StoreWindow storeWindow;
+    @Autowired private StoresListWindow storesListWindow;
+    @Autowired private StoreService storeService;
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        Product product = productListWindow.getSelectedProduct();
+        Store store = storesListWindow.getSelectedStore();
         
-        if(product != null)
+        if(store != null)
         {
-            productWindow.showWindow(product);
+            storeWindow.showWindow(storeService.unproxyStocks(store));
         }
         else
         {
-            WebOptionPane.showMessageDialog(productListWindow, "Не выбран товар!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+            WebOptionPane.showMessageDialog(storesListWindow, "Не выбран склад!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
         }
+        
     }
 
 }

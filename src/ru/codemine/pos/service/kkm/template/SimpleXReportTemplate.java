@@ -50,7 +50,7 @@ public class SimpleXReportTemplate
                 + " Отчет суточный без гашения \n"
                 + "                            \n";
         
-        String timeUser = formTab(DateTime.now().toString("dd.MM.YY HH:mm"), currentWorkday.getOpenUser().getUsername(), 28);
+        String timeUser = formTab(DateTime.now().toString("dd.MM.YY HH:mm"), currentWorkday.getOpenUser().getPrintName(), 28);
         String cheqNum = formTab("Продаж", String.valueOf(cheques.size()), 28);
         String cashbNum = formTab("Возвратов", "0", 28);
         

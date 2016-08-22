@@ -46,7 +46,8 @@ public class ChequesPanel extends WebPanel
         setLayout(layout);
         
         showOpenWdChequesBtn = new WebButton("Показать Чеки открытой смены");
-        
+        showOpenWdChequesBtn.setMargin(5);
+        showOpenWdChequesBtn.setRound(StyleConstants.largeRound);
 
         add(new WebLabel("-----Чеки-----"), "1, 1, C, T");
         add(showOpenWdChequesBtn, "1, 3");

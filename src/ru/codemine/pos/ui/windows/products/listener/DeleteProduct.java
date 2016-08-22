@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document.products.listener;
+package ru.codemine.pos.ui.windows.products.listener;
 
 import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
@@ -26,7 +26,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.service.ProductService;
-import ru.codemine.pos.ui.windows.document.products.ProductsListWindow;
+import ru.codemine.pos.ui.windows.products.ProductsListWindow;
 
 /**
  *
