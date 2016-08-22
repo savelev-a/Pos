@@ -41,7 +41,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "stores")
-public class Store implements Serializable
+public class Store extends GenericEntity
 {
     @Id
     @GeneratedValue(generator = "increment")
@@ -127,6 +127,12 @@ public class Store implements Serializable
     public String toString()
     {
         return "Store{" + "id=" + id + ", name=" + name + '}';
+    }
+
+    @Override
+    public EntityType getEntityType()
+    {
+        return EntityType.STORE;
     }
     
     

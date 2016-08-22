@@ -34,7 +34,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "products")
-public class Product implements Serializable
+public class Product extends GenericEntity
 {
     @Id
     @GeneratedValue(generator = "increment")
@@ -143,6 +143,12 @@ public class Product implements Serializable
     public String toString()
     {
         return "Product{" + "id=" + id + ", artikul=" + artikul + ", name=" + name + ", barcode=" + barcode + ", price=" + price + '}';
+    }
+
+    @Override
+    public EntityType getEntityType()
+    {
+        return EntityType.PRODUCT;
     }
     
     

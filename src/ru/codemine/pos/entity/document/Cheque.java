@@ -198,4 +198,10 @@ public class Cheque extends Document
         }
     }
 
+    @Override
+    public EntityType getEntityType()
+    {
+        return EntityType.CHEQUE;
+    }
+
 }

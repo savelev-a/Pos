@@ -116,6 +116,12 @@ public class StartBalance extends Document
     {
         return "StartBalance{" + "contents=" + contents + ", store=" + store + ", total=" + total + '}';
     }
+
+    @Override
+    public EntityType getEntityType()
+    {
+        return EntityType.STARTBALANCE;
+    }
     
     
     

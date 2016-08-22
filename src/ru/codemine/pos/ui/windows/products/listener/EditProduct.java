@@ -24,7 +24,6 @@ import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Product;
-import ru.codemine.pos.service.ProductService;
 import ru.codemine.pos.ui.windows.products.ProductWindow;
 import ru.codemine.pos.ui.windows.products.ProductsListWindow;
 

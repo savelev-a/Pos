@@ -39,7 +39,7 @@ import org.joda.time.DateTime;
 
 @Entity
 @Table(name = "workdays")
-public class Workday implements Serializable
+public class Workday extends GenericEntity
 {
     @Id
     @GeneratedValue(generator = "increment")
@@ -154,6 +154,12 @@ public class Workday implements Serializable
     public String toString()
     {
         return "Workday{" + "id=" + id + ", openTime=" + openTime + ", closeTime=" + closeTime + ", open=" + open + '}';
+    }
+
+    @Override
+    public EntityType getEntityType()
+    {
+        return EntityType.WORKDAY;
     }
     
     

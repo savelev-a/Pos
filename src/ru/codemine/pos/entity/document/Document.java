@@ -33,6 +33,7 @@ import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.Type;
 import org.joda.time.DateTime;
+import ru.codemine.pos.entity.GenericEntity;
 import ru.codemine.pos.entity.User;
 
 
@@ -44,7 +45,7 @@ import ru.codemine.pos.entity.User;
 @Entity
 @Table(name = "documents")
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Document implements Serializable
+public abstract class Document extends GenericEntity
 {
     @Id
     @GeneratedValue(generator = "increment")

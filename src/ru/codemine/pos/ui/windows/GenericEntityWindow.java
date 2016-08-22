@@ -23,14 +23,14 @@ import com.alee.global.StyleConstants;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.rootpane.WebFrame;
 import javax.swing.ImageIcon;
-import ru.codemine.pos.entity.document.Document;
+import ru.codemine.pos.entity.GenericEntity;
 
 /**
  *
  * @author Alexander Savelev
- * @param <T>
+ * @param <T> класс сущности
  */
-public abstract class GenericEntityWindow<T extends Object> extends WebFrame
+public abstract class GenericEntityWindow<T extends GenericEntity> extends WebFrame
 {
     
     protected boolean actionListenersInit;

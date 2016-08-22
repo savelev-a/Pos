@@ -34,7 +34,7 @@ import org.hibernate.annotations.GenericGenerator;
 
 @Entity
 @Table(name = "users")
-public class User implements Serializable 
+public class User extends GenericEntity
 {
     @Id
     @GeneratedValue(generator = "increment")
@@ -146,6 +146,12 @@ public class User implements Serializable
     public String toString()
     {
         return "User{" + "id=" + id + ", username=" + username + ", password=" + password + ", active=" + active + ", printName=" + printName + '}';
+    }
+
+    @Override
+    public EntityType getEntityType()
+    {
+        return EntityType.USER;
     }
     
     
