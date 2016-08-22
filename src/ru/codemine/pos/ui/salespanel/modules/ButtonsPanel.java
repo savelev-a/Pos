@@ -22,6 +22,7 @@ import com.alee.extended.layout.TableLayout;
 import com.alee.global.StyleConstants;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.panel.WebPanel;
+import javax.swing.ImageIcon;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.ui.GenericPanelComponent;
@@ -76,10 +77,19 @@ public class ButtonsPanel extends WebPanel implements GenericPanelComponent
         }
         
         buttons[0][0].setText("Открыть смену (F2)");
-        buttons[0][1].setText("Закрыть смену (Z-отчет) (F3)");
+        buttons[0][0].setIcon(new ImageIcon("images/icons/default/32x32/open-workday.png"));
+        
+        buttons[0][1].setText("Закрыть смену (F3)");
+        buttons[0][1].setIcon(new ImageIcon("images/icons/default/32x32/close-workday.png"));
+        
         buttons[1][0].setText("Количество (F4)");
+        buttons[1][0].setIcon(new ImageIcon("images/icons/default/32x32/set-quantity.png"));
+        
         buttons[1][1].setText("Отчет без гашения");
+        buttons[1][1].setIcon(new ImageIcon("images/icons/default/32x32/x-report.png"));
+        
         buttons[2][0].setText("Пробить чек (F5)");
+        buttons[2][0].setIcon(new ImageIcon("images/icons/default/32x32/cheque-process.png"));
         
         
     }
