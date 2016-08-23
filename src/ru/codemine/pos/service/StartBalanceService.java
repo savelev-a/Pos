@@ -18,6 +18,13 @@
 
 package ru.codemine.pos.service;
 
+import java.io.BufferedReader;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.LineNumberReader;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import org.joda.time.DateTime;
@@ -25,6 +32,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.codemine.pos.application.Application;
+import ru.codemine.pos.dao.ProductDAO;
 import ru.codemine.pos.dao.StoreDAO;
 import ru.codemine.pos.dao.document.StartBalanceDAO;
 import ru.codemine.pos.entity.Product;
@@ -52,8 +60,11 @@ public class StartBalanceService
     private StoreDAO storeDAO;
     
     @Autowired
-    private Application application;
+    private ProductDAO productDAO;
     
+    @Autowired
+    private Application application;
+      
     @Transactional
     public void create(StartBalance sb) throws GeneralException
     {
@@ -204,9 +215,86 @@ public class StartBalanceService
         return sbDAO.unproxyContents(sb);
     }
 
-    public StartBalance loadFromCsv(StartBalance sb, String filename)
+    @Transactional
+    public StartBalance loadFromCsv(StartBalance sb, String filename) throws IOException
     {
-        System.out.println(filename);
+        sb.setContents(new HashMap<Product, Integer>());
+        sb.setTotal(0.0);
+        
+        InputStream is = new FileInputStream(filename);
+        InputStreamReader isr = new InputStreamReader(is);
+        BufferedReader br = new BufferedReader(isr);
+        String line;
+        String errors = "";
+        int lineNumber = 0;
+
+        
+        while((line = br.readLine()) != null)
+        {
+            lineNumber++;
+            
+            String[] lineParts = line.split(";");
+            if(lineParts.length != 5)
+            {
+                errors = errors + "Ошибка обработки строки " + String.valueOf(lineNumber) + ": неверная длина \n";
+                continue;
+            }
+            
+            String artikulStr = lineParts[0];
+            String barcodeStr = lineParts[1];
+            String nameStr = lineParts[2];
+            String priceStr = lineParts[3];
+            String quantStr = lineParts[4];
+            
+            double priceDouble;
+            int quantInt;
+            
+            try
+            {
+                priceDouble = Double.parseDouble(priceStr);
+            } 
+            catch (Exception e)
+            {
+                errors = errors + "Ошибка обработки строки " + String.valueOf(lineNumber) + ": неверная цена \n";
+                continue;
+            }
+            
+            try
+            {
+                quantInt = Integer.parseInt(quantStr);
+            } 
+            catch (Exception e)
+            {
+                errors = errors + "Ошибка обработки строки " + String.valueOf(lineNumber) + ": неверное количество \n";
+                continue;
+            }
+
+            Product product = new Product(artikulStr, nameStr, barcodeStr, priceDouble);
+            Product testArtikul = productDAO.getByArtikul(artikulStr);
+            Product testBarcode = productDAO.getByBarcode(barcodeStr);
+            if(testArtikul == null && testBarcode == null)
+            {
+                // Товара нет в базе
+                productDAO.evict(testArtikul);
+                productDAO.evict(testBarcode);
+                
+                productDAO.create(product);
+            }
+            else
+            {
+                // Товар в базе уже есть
+                product = testArtikul;
+                productDAO.evict(testBarcode);
+            }
+            
+            sb.getContents().put(product, quantInt);
+            sb.setTotal(sb.getTotal() + priceDouble * quantInt);
+            
+
+        }
+
+        System.out.println(errors);
+        
         return sb;
     }
 

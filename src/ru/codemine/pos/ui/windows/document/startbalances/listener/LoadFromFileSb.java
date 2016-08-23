@@ -19,8 +19,12 @@
 package ru.codemine.pos.ui.windows.document.startbalances.listener;
 
 import com.alee.laf.filechooser.WebFileChooser;
+import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.document.StartBalance;
@@ -50,7 +54,15 @@ public class LoadFromFileSb implements ActionListener
         {
             String filename = fileChooser.getSelectedFile().getAbsolutePath();
             
-            window.getTableModel().setStartBalance(sbService.loadFromCsv(sb, filename));
+            try
+            {
+                window.getTableModel().setStartBalance(sbService.loadFromCsv(sb, filename));
+            } 
+            catch (IOException ex)
+            {
+                WebOptionPane.showMessageDialog(window, ex.getLocalizedMessage(), "Ошибка чтения файла", WebOptionPane.ERROR_MESSAGE);
+            }
+            
             window.getTableModel().fireTableDataChanged();
         }
         
