@@ -199,7 +199,7 @@ public abstract class GenericDocumentListWindow extends WebFrame
         return statusLabel;
     }
     
-    public void setupSorter()
+    protected void setupSorter()
     {
         TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(sorter);

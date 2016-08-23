@@ -23,6 +23,7 @@ import com.alee.laf.button.WebButton;
 import com.alee.laf.combobox.WebComboBox;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.scroll.WebScrollPane;
+import com.alee.laf.table.WebTable;
 import java.util.List;
 import javax.swing.ImageIcon;
 import javax.swing.table.TableColumnModel;
@@ -30,6 +31,8 @@ import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.application.Application;
+import ru.codemine.pos.entity.GenericEntity;
+import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.entity.document.StartBalance;
 import ru.codemine.pos.service.StartBalanceService;
@@ -37,8 +40,12 @@ import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.service.UserService;
 import ru.codemine.pos.tablemodel.StartBalanceContentTableModel;
 import ru.codemine.pos.ui.windows.document.GenericDocumentWindow;
+import ru.codemine.pos.ui.windows.document.startbalances.listener.AddProductToSb;
 import ru.codemine.pos.ui.windows.document.startbalances.listener.DontSaveSb;
+import ru.codemine.pos.ui.windows.document.startbalances.listener.LoadFromFileSb;
+import ru.codemine.pos.ui.windows.document.startbalances.listener.RemoveProductFromSb;
 import ru.codemine.pos.ui.windows.document.startbalances.listener.SaveSb;
+import ru.codemine.pos.ui.windows.document.startbalances.listener.SetQuantityInSb;
 
 /**
  *
@@ -50,15 +57,20 @@ public class StartBalanceWindow extends GenericDocumentWindow<StartBalance>
 {
     @Autowired private Application application;
     @Autowired private StoreService storeService;
-    @Autowired private StartBalanceService sbservice;
     @Autowired private UserService userService;
     
     @Autowired private SaveSb saveSb;
     @Autowired private DontSaveSb dontSaveSb;
+    @Autowired private AddProductToSb addProductToSb;
+    @Autowired private RemoveProductFromSb removeProductFromSb;
+    @Autowired private SetQuantityInSb setQuantityInSb;
+    @Autowired private LoadFromFileSb loadFromFileSb;
     
     private final WebLabel storeLabel;
     private final WebComboBox storeFieldComboBox;
     private final WebButton loadFromFileToolButton;
+    
+    private StartBalanceContentTableModel tableModel;
     
     private StartBalance startBalance;
     
@@ -98,7 +110,7 @@ public class StartBalanceWindow extends GenericDocumentWindow<StartBalance>
         add(creatorField,       "3, 5");
         //add(contentLabel,       "1, 7, L, T");
         add(tableToolBar,        "1, 7, 7, 7, F, F");
-        add(new WebScrollPane(documentContent), "1, 8, 7, 8, F, F");
+        add(new WebScrollPane(contentTable), "1, 8, 7, 8, F, F");
         add(buttonsGroupPanel, "1, 10, 7, 10, C, T");
         
         creationTimeField.setEnabled(false);
@@ -128,10 +140,11 @@ public class StartBalanceWindow extends GenericDocumentWindow<StartBalance>
             storeFieldComboBox.addItem(s.getName());
         }
         
-        
-        documentContent.setModel(new StartBalanceContentTableModel(startBalance));
-        TableColumnModel columnModel = documentContent.getColumnModel();
+        tableModel = new StartBalanceContentTableModel(startBalance);
+        contentTable.setModel(tableModel);
+        TableColumnModel columnModel = contentTable.getColumnModel();
         columnModel.getColumn(0).setMaxWidth(10);
+        contentTable.setEditable(true);
         
         setVisible(true);
     }
@@ -141,6 +154,11 @@ public class StartBalanceWindow extends GenericDocumentWindow<StartBalance>
     {
         saveButton.addActionListener(saveSb);
         cancelButton.addActionListener(dontSaveSb);
+        
+        addItemToolButton.addActionListener(addProductToSb);
+        removeItemToolButton.addActionListener(removeProductFromSb);
+        setQuantityToolButton.addActionListener(setQuantityInSb);
+        loadFromFileToolButton.addActionListener(loadFromFileSb);
         
         actionListenersInit = true;
     }
@@ -152,10 +170,41 @@ public class StartBalanceWindow extends GenericDocumentWindow<StartBalance>
         startBalance.setCreationTime(new DateTime(creationTimeField.getDate()));
         startBalance.setDocumentTime(new DateTime(documentTimeField.getDate()));
         startBalance.setCreator(userService.getByUsername(creatorField.getText()));
-        startBalance.setContents(((StartBalanceContentTableModel)documentContent.getModel()).getContentMap());
+        startBalance.setContents(((StartBalanceContentTableModel)contentTable.getModel()).getContentMap());
         startBalance.calculateTotals();
         
         return startBalance;
+    }
+    
+    @Override
+    public void addItem(GenericEntity item)
+    {
+        if(item != null && item.getEntityType() == GenericEntity.EntityType.PRODUCT)
+        {
+            Product product = (Product)item;
+            if(startBalance.getContents().containsKey(product))
+            {
+                contentTable.setSelectedRow(tableModel.getProductIndex(product));
+            }
+            else
+            {
+                startBalance.getContents().put(product, 1);
+                startBalance.calculateTotals();
+                tableModel.setStartBalance(startBalance);
+                tableModel.fireTableDataChanged();
+            }
+            
+        }
+    }
+    
+    public StartBalanceContentTableModel getTableModel()
+    {
+        return tableModel;
+    }
+    
+    public WebTable getTable()
+    {
+        return contentTable;
     }
 
 }

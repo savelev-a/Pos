@@ -204,4 +204,10 @@ public class StartBalanceService
         return sbDAO.unproxyContents(sb);
     }
 
+    public StartBalance loadFromCsv(StartBalance sb, String filename)
+    {
+        System.out.println(filename);
+        return sb;
+    }
+
 }

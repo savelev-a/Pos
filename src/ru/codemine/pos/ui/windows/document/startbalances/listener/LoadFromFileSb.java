@@ -18,15 +18,14 @@
 
 package ru.codemine.pos.ui.windows.document.startbalances.listener;
 
-import com.alee.laf.optionpane.WebOptionPane;
+import com.alee.laf.filechooser.WebFileChooser;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.document.StartBalance;
 import ru.codemine.pos.service.StartBalanceService;
-import ru.codemine.pos.ui.windows.document.startbalances.StartBalancesListWindow;
+import ru.codemine.pos.ui.windows.document.startbalances.StartBalanceWindow;
 
 /**
  *
@@ -34,39 +33,28 @@ import ru.codemine.pos.ui.windows.document.startbalances.StartBalancesListWindow
  */
 
 @Component
-public class DeleteSb implements ActionListener
+public class LoadFromFileSb implements ActionListener
 {
-    @Autowired private StartBalancesListWindow window;
+    @Autowired private StartBalanceWindow window;
     @Autowired private StartBalanceService sbService;
     
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        StartBalance sb = window.getSelectedDocument();
+        StartBalance sb = window.getDocument();
         
-        if(sb != null)
+        WebFileChooser fileChooser = new WebFileChooser();
+        fileChooser.setMultiSelectionEnabled(false);
+        fileChooser.setGenerateThumbnails(false);
+        if(fileChooser.showOpenDialog(window) == WebFileChooser.APPROVE_OPTION)
         {
-            if(sb.isProcessed())
-            {
-                WebOptionPane.showMessageDialog(window, "Невозможно удалить проведённый документ!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
-                return;
-            }
+            String filename = fileChooser.getSelectedFile().getAbsolutePath();
             
-            try
-            {
-                sbService.delete(sb);
-            } 
-            catch (DataIntegrityViolationException ex)
-            {
-                WebOptionPane.showMessageDialog(window, "Невозможно удалить данный документ!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
-            }
-        }
-        else
-        {
-            WebOptionPane.showMessageDialog(window, "Не выбран документ!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+            window.getTableModel().setStartBalance(sbService.loadFromCsv(sb, filename));
+            window.getTableModel().fireTableDataChanged();
         }
         
-        window.refresh();
+        
     }
 
 }

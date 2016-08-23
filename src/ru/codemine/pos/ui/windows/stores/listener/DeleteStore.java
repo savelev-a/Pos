@@ -22,6 +22,7 @@ import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.service.StoreService;
@@ -46,7 +47,16 @@ public class DeleteStore implements ActionListener
         {
             if(storeService.unproxyStocks(store).getStocks().isEmpty())
             {
-                storeService.delete(store);
+                try
+                {
+                    storeService.delete(store);
+                } 
+                catch (DataIntegrityViolationException ex)
+                {
+                    WebOptionPane.showMessageDialog(window, "Невозможно удалить склад по которому было движения товара, \n"
+                            + "либо имеются неудаленные документы!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+                }
+                
             }
             else
             {

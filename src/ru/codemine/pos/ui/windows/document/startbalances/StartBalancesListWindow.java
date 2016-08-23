@@ -33,6 +33,7 @@ import ru.codemine.pos.service.StartBalanceService;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.tablemodel.StartBalancesListTableModel;
 import ru.codemine.pos.ui.windows.document.GenericDocumentListWindow;
+import ru.codemine.pos.ui.windows.document.startbalances.listener.ChangeStoreSb;
 import ru.codemine.pos.ui.windows.document.startbalances.listener.DeleteSb;
 import ru.codemine.pos.ui.windows.document.startbalances.listener.EditSb;
 import ru.codemine.pos.ui.windows.document.startbalances.listener.NewSb;
@@ -57,6 +58,7 @@ public class StartBalancesListWindow extends GenericDocumentListWindow
     @Autowired private ProcessSb processSb;
     @Autowired private UnprocessSb unprocessSb;
     @Autowired private RefreshSbList refreshSbList;
+    @Autowired private ChangeStoreSb changeStoreSb;
     
     private final WebLabel storeChooseLabel;
     private final WebComboBox storeChooseBox;
@@ -114,6 +116,8 @@ public class StartBalancesListWindow extends GenericDocumentListWindow
         setUnprocessActionListener(unprocessSb);
         setRefreshActionListener(refreshSbList);
         
+        storeChooseBox.addActionListener(changeStoreSb);
+        
         table.addMouseListener(new MouseAdapter()
         {
             @Override
@@ -147,4 +151,10 @@ public class StartBalancesListWindow extends GenericDocumentListWindow
     {
         return tableModel;
     }
+
+    public String getSelectedStoreName()
+    {
+        return (String)storeChooseBox.getSelectedItem();
+    }
+
 }

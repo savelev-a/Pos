@@ -29,6 +29,7 @@ import com.alee.laf.text.WebTextField;
 import com.alee.laf.toolbar.ToolbarStyle;
 import com.alee.laf.toolbar.WebToolBar;
 import javax.swing.ImageIcon;
+import ru.codemine.pos.entity.GenericEntity;
 import ru.codemine.pos.entity.document.Document;
 
 /**
@@ -48,7 +49,7 @@ public abstract class GenericDocumentWindow<T extends Document> extends WebFrame
     protected WebDateField creationTimeField;
     protected WebDateField documentTimeField;
     protected WebTextField creatorField;
-    protected WebTable documentContent;
+    protected WebTable contentTable;
     
     protected WebToolBar tableToolBar;
     protected WebButton addItemToolButton;
@@ -78,7 +79,7 @@ public abstract class GenericDocumentWindow<T extends Document> extends WebFrame
         documentTimeField = new WebDateField();
         creatorField = new WebTextField();
     
-        documentContent = new WebTable();
+        contentTable = new WebTable();
         
         tableToolBar          = new WebToolBar();
         tableToolBar.setToolbarStyle(ToolbarStyle.attached);
@@ -113,4 +114,5 @@ public abstract class GenericDocumentWindow<T extends Document> extends WebFrame
     public abstract void showWindow(T t);
     public abstract void setupActionListeners();
     public abstract T getDocument();
+    public abstract void addItem(GenericEntity item);
 }

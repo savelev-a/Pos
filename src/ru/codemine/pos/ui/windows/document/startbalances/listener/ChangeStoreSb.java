@@ -18,14 +18,13 @@
 
 package ru.codemine.pos.ui.windows.document.startbalances.listener;
 
-import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.entity.document.StartBalance;
+import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.service.StartBalanceService;
+import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.ui.windows.document.startbalances.StartBalancesListWindow;
 
 /**
@@ -34,39 +33,19 @@ import ru.codemine.pos.ui.windows.document.startbalances.StartBalancesListWindow
  */
 
 @Component
-public class DeleteSb implements ActionListener
+public class ChangeStoreSb implements ActionListener
 {
     @Autowired private StartBalancesListWindow window;
+    @Autowired private StoreService storeService;
     @Autowired private StartBalanceService sbService;
     
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        StartBalance sb = window.getSelectedDocument();
+        Store store = storeService.getByName(window.getSelectedStoreName());
         
-        if(sb != null)
-        {
-            if(sb.isProcessed())
-            {
-                WebOptionPane.showMessageDialog(window, "Невозможно удалить проведённый документ!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            
-            try
-            {
-                sbService.delete(sb);
-            } 
-            catch (DataIntegrityViolationException ex)
-            {
-                WebOptionPane.showMessageDialog(window, "Невозможно удалить данный документ!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
-            }
-        }
-        else
-        {
-            WebOptionPane.showMessageDialog(window, "Не выбран документ!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
-        }
-        
-        window.refresh();
+        window.getTableModel().setStartBalancesList(sbService.getAllByStore(store));
+        window.getTableModel().fireTableDataChanged();
     }
 
 }

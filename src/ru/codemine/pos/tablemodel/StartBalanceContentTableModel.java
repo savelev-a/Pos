@@ -86,7 +86,7 @@ public class StartBalanceContentTableModel extends DefaultTableModel
             case 1 : return String.class;
             case 2 : return String.class;
             case 3 : return String.class;
-            case 4 : return Double.class;
+            case 4 : return Integer.class;
         }
         
         return String.class;
@@ -95,7 +95,7 @@ public class StartBalanceContentTableModel extends DefaultTableModel
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex)
     {
-        return false;
+        return columnIndex == 4;
     }
 
     @Override
@@ -111,6 +111,18 @@ public class StartBalanceContentTableModel extends DefaultTableModel
         }
         
         return "";
+    }
+    
+    @Override
+    public void setValueAt(Object aValue, int row, int column)
+    {
+        Integer value = (Integer)aValue;
+        if(value == null) return;
+        
+        Product product = stocks.get(row).getKey();
+        startBalance.getContents().put(product, value);
+        stocks = new ArrayList<>(startBalance.getContents().entrySet());
+        
     }
     
     public void setStartBalance(StartBalance sb)
@@ -129,8 +141,27 @@ public class StartBalanceContentTableModel extends DefaultTableModel
         
         return result;
     }
+
+    public int getProductIndex(Product product)
+    {
+        for(int i = 0; i <= stocks.size(); i++)
+        {
+            Product p = stocks.get(i).getKey();
+            if(p.equals(product))
+                return i;
+        }
+        
+        return -1;
+    }
     
-    
+    public void deleteRow(int row)
+    {
+        Product p = stocks.get(row).getKey();
+        
+        startBalance.getContents().remove(p);
+        startBalance.calculateTotals();
+        stocks = new ArrayList<>(startBalance.getContents().entrySet());
+    }
     
     
 
