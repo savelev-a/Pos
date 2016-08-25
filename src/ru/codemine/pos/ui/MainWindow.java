@@ -39,6 +39,7 @@ import ru.codemine.pos.service.WorkdayService;
 import ru.codemine.pos.ui.docspanel.DocumentsPanel;
 import ru.codemine.pos.ui.keydispatcher.MainKeyDispatcher;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
+import ru.codemine.pos.ui.settingspanel.SettingsPanel;
 
 /**
  *
@@ -53,6 +54,8 @@ public class MainWindow extends WebFrame
 
     @Autowired private SalesPanel salesPanel;
     @Autowired private DocumentsPanel documentsPanel;
+    @Autowired private SettingsPanel settingsPanel;
+    
     @Autowired private MainKeyDispatcher keyDispatcher;
     
     private final WebTabbedPane tabs;
@@ -97,7 +100,10 @@ public class MainWindow extends WebFrame
         documentsPanel.init();
         
         tabs.addTab("Отчеты",    new ImageIcon("images/icons/default/32x32/tab-reports.png"), new WebPanel());
-        tabs.addTab("Настройки", new ImageIcon("images/icons/default/32x32/tab-settings.png"), new WebPanel());
+        //init
+        
+        tabs.addTab("Настройки", new ImageIcon("images/icons/default/32x32/tab-settings.png"), settingsPanel);
+        settingsPanel.init();
         
         setupActionListeners();
         setupKeyboard();
@@ -107,7 +113,10 @@ public class MainWindow extends WebFrame
     {
         salesPanel.getUpperStatusPanel().setCurrentUserStatus(application.getActiveUser().getUsername());
         salesPanel.getUpperStatusPanel().setRightTopStatus(workdayService.isWorkdayOpened() ? "Смена открыта" : "Смена закрыта");
-        salesPanel.getUpperStatusPanel().setLeftBottomStatus("Статус чека итд.");
+        salesPanel.getUpperStatusPanel().setLeftBottomStatus("Выручка текущей смены: " 
+                + (workdayService.isWorkdayOpened() 
+                        ? workdayService.getOpenWorkday().getTotal() + " руб."
+                        : "смена закрыта"));
 
     }
     

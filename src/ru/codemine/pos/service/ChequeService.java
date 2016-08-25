@@ -101,6 +101,8 @@ public class ChequeService
         cheque.setProcessed(true); 
         cheque.recalculateCheque();
         
+        currentWorkday.setTotal(currentWorkday.getTotal() + cheque.getChequeTotal());
+        
         // Сохранение чека
         if(checkoutNewCheque) 
             chequeDAO.create(cheque);
@@ -148,6 +150,8 @@ public class ChequeService
         cheque.setProcessed(true); 
         cheque.recalculateCheque();
         
+        currentWorkday.setTotal(currentWorkday.getTotal() + cheque.getChequeTotal());
+        
         //Пробитие чека по ККМ
         try
         {
@@ -155,6 +159,7 @@ public class ChequeService
         } 
         catch (KkmException e)
         {
+            //evict here
             throw new ChequeProcessByKkmException(e.getLocalizedMessage());
         }
         

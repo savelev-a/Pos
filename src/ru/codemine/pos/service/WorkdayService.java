@@ -18,6 +18,7 @@
 
 package ru.codemine.pos.service;
 
+import java.util.List;
 import org.apache.log4j.Logger;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,8 +26,10 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.codemine.pos.application.Application;
 import ru.codemine.pos.dao.WorkdayDAO;
+import ru.codemine.pos.dao.document.ChequeDAO;
 import ru.codemine.pos.entity.User;
 import ru.codemine.pos.entity.Workday;
+import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.exception.GeneralException;
 import ru.codemine.pos.exception.WorkdayAlreadyOpenedException;
 
@@ -42,6 +45,8 @@ public class WorkdayService
     
     @Autowired
     private WorkdayDAO workdayDAO;
+    
+    @Autowired private ChequeDAO chequeDAO;
     
     @Autowired
     private Application application;
@@ -87,6 +92,16 @@ public class WorkdayService
             workday.setOpen(false);
             workday.setCloseTime(DateTime.now());
             workday.setCloseUser(currentUser);
+            
+            List<Cheque> cheques = chequeDAO.getByWorkday(workday);
+            Double total = 0.0;
+            for(Cheque cheque : cheques)
+            {
+                if(cheque.isProcessed()) total += cheque.getChequeTotal();
+            }
+            workday.setTotal(total);
+            
+            workdayDAO.update(workday);
         }
     }
 }

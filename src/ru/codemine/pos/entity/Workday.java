@@ -18,7 +18,6 @@
 
 package ru.codemine.pos.entity;
 
-import java.io.Serializable;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -65,6 +64,15 @@ public class Workday extends GenericEntity
     
     @Column(name = "isOpen", nullable = false)
     private boolean open;
+    
+    @Column(name = "total", nullable = false)
+    private Double total;
+    
+    public Workday()
+    {
+        this.open = false;
+        this.total = 0.0;
+    }
     
     public Long getId()
     {
@@ -124,6 +132,16 @@ public class Workday extends GenericEntity
     public void setOpen(boolean open)
     {
         this.open = open;
+    }
+
+    public Double getTotal()
+    {
+        return total;
+    }
+
+    public void setTotal(Double total)
+    {
+        this.total = total;
     }
 
     @Override

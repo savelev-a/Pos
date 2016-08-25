@@ -29,6 +29,7 @@ import ru.codemine.pos.exception.NotEnoughGoodsException;
 import ru.codemine.pos.exception.WorkdayNotOpenedException;
 import ru.codemine.pos.service.ChequeService;
 import ru.codemine.pos.service.kkm.ChequePrinter;
+import ru.codemine.pos.ui.MainWindow;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
 
@@ -41,6 +42,7 @@ import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
 public class ChequeProcessButtonListener implements ActionListener
 {
     @Autowired private ChequeService chequeService;
+    @Autowired private MainWindow mainWindow;
     @Autowired private SalesPanel salesPanel;
     @Autowired private ButtonsPanel buttonsPanel;
 
@@ -69,6 +71,7 @@ public class ChequeProcessButtonListener implements ActionListener
         {
             buttonsPanel.getChequeProcessButton().setEnabled(true);
             salesPanel.requestFocus();
+            mainWindow.refreshStatus();
         }
     }
 

@@ -44,6 +44,8 @@ public class ChangeStoreSb implements ActionListener
     {
         Store store = storeService.getByName(window.getSelectedStoreName());
         
+        if(store == null) return;;
+        
         window.getTableModel().setStartBalancesList(sbService.getAllByStore(store));
         window.getTableModel().fireTableDataChanged();
     }
