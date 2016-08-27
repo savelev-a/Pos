@@ -30,6 +30,8 @@ import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.entity.User;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.service.UserService;
+import ru.codemine.pos.service.kkm.Kkm;
+import ru.codemine.pos.service.kkm.SyslogChequePrinter;
 import ru.codemine.pos.ui.LoadingScreen;
 import ru.codemine.pos.ui.LoginScreen;
 import ru.codemine.pos.ui.MainWindow;
@@ -78,6 +80,15 @@ public class Application
     public void setActiveUser(User user)
     {
         this.activeUser = user;
+    }
+    
+    /**
+     * Возвращает теущую настроеную ККМ
+     * @return
+     */
+    public Kkm getCurrentKkm()
+    {
+        return new SyslogChequePrinter();
     }
     
     

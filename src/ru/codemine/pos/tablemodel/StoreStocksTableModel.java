@@ -21,6 +21,7 @@ package ru.codemine.pos.tablemodel;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.Store;
@@ -31,6 +32,8 @@ import ru.codemine.pos.entity.Store;
  */
 public class StoreStocksTableModel extends DefaultTableModel
 {
+    private static final ImageIcon ICON_IMAGE = new ImageIcon("images/icons/default/16x16/product.png");
+    
     private Store store;
     private List<Map.Entry<Product, Integer>> stocks;
     
@@ -55,7 +58,7 @@ public class StoreStocksTableModel extends DefaultTableModel
     @Override
     public int getColumnCount()
     {
-        return 4; // Артикул, наименование, кол-во, цена
+        return 5; // icon, артикул, наименование, кол-во, цена
     }
     
     @Override
@@ -63,10 +66,11 @@ public class StoreStocksTableModel extends DefaultTableModel
     {
         switch(columnIndex)
         {
-            case 0 : return "Артикул";
-            case 1 : return "Наименование";
-            case 2 : return "Количество";
-            case 3 : return "Цена";
+            case 0 : return "";
+            case 1 : return "Артикул";
+            case 2 : return "Наименование";
+            case 3 : return "Количество";
+            case 4 : return "Цена";
         }
         
         return "";
@@ -77,10 +81,11 @@ public class StoreStocksTableModel extends DefaultTableModel
     {
         switch(columnIndex)
         {
-            case 0 : return String.class;
+            case 0 : return ImageIcon.class;
             case 1 : return String.class;
-            case 2 : return Integer.class;
-            case 3 : return Double.class;
+            case 2 : return String.class;
+            case 3 : return Integer.class;
+            case 4 : return Double.class;
         }
         
         return String.class;
@@ -97,10 +102,11 @@ public class StoreStocksTableModel extends DefaultTableModel
     {
         switch(columnIndex)
         {
-            case 0 : return stocks.get(rowIndex).getKey().getArtikul();
-            case 1 : return stocks.get(rowIndex).getKey().getName();
-            case 2 : return stocks.get(rowIndex).getValue();
-            case 3 : return stocks.get(rowIndex).getKey().getPrice();
+            case 0 : return ICON_IMAGE;
+            case 1 : return stocks.get(rowIndex).getKey().getArtikul();
+            case 2 : return stocks.get(rowIndex).getKey().getName();
+            case 3 : return stocks.get(rowIndex).getValue();
+            case 4 : return stocks.get(rowIndex).getKey().getPrice();
         }
         
         return "";

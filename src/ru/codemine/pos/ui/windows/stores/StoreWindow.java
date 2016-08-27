@@ -24,6 +24,7 @@ import com.alee.laf.label.WebLabel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
+import javax.swing.table.TableColumnModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
@@ -41,7 +42,6 @@ import ru.codemine.pos.ui.windows.stores.listener.SaveStore;
 @Component
 public class StoreWindow extends GenericEntityWindow<Store>
 {
-    @Autowired private StoreService storeService;
     @Autowired private SaveStore saveStore;
     @Autowired private DontSaveStore dontSaveStore;
     
@@ -78,7 +78,7 @@ public class StoreWindow extends GenericEntityWindow<Store>
         add(nameLabel, "1, 3");
         add(storeNameField, "3, 3");
         add(new WebScrollPane(table), "3, 5");
-        add(new WebButtonGroup(saveButton, cancelButton), "1, 7, 3, 7, C, T");
+        add(buttonsGroupPanel, "1, 7, 3, 7, C, T");
         
     }
     
@@ -95,6 +95,9 @@ public class StoreWindow extends GenericEntityWindow<Store>
         storeNameField.setText(store.getName());
         
         table.setModel(new StoreStocksTableModel(store));
+        
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(0).setMaxWidth(10);
         
         if("Розница".equals(store.getName())) 
         {

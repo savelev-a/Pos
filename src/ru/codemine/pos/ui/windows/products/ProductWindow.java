@@ -19,7 +19,6 @@
 package ru.codemine.pos.ui.windows.products;
 
 import com.alee.extended.layout.TableLayout;
-import com.alee.extended.panel.WebButtonGroup;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.scroll.WebScrollPane;
@@ -113,7 +112,7 @@ public class ProductWindow extends GenericEntityWindow<Product>
         add(priceField,   "3, 9");
         add(stocksLabel, "1, 11, L, T");
         add(new WebScrollPane(stocksTable), "3, 11");
-        add(new WebButtonGroup(saveButton, cancelButton), "1, 13, 3, 13, C, T");
+        add(buttonsGroupPanel, "1, 13, 3, 13, C, T");
     }
     
     @Override

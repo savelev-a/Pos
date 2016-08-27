@@ -47,4 +47,6 @@ public interface StoreDAO extends GenericDAO<Store, Integer>
      * @return склад с депроксированными остатками
      */
     public Store unproxyStocks(Store store);
+
+    public void evict(Store store);
 }

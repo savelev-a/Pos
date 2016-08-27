@@ -23,6 +23,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.application.Application;
 import ru.codemine.pos.exception.KkmException;
 import ru.codemine.pos.service.kkm.ChequePrinter;
 import ru.codemine.pos.service.kkm.KkmService;
@@ -39,6 +40,7 @@ import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
 public class XReportButtonListener implements ActionListener
 {
     @Autowired private KkmService kkmService;
+    @Autowired private Application application;
     @Autowired private MainWindow mainWindow;
     @Autowired private SalesPanel salesPanel;
     @Autowired private ButtonsPanel buttonsPanel;
@@ -49,7 +51,7 @@ public class XReportButtonListener implements ActionListener
         try
         {
             buttonsPanel.getChequeProcessButton().setEnabled(false);
-            kkmService.printXReport(new ChequePrinter());
+            kkmService.printXReport(application.getCurrentKkm());
         } 
         catch (KkmException ex)
         {

@@ -22,6 +22,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.application.Application;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.exception.ChequeProcessByKkmException;
 import ru.codemine.pos.exception.DocumentAlreadyActiveException;
@@ -29,6 +30,7 @@ import ru.codemine.pos.exception.NotEnoughGoodsException;
 import ru.codemine.pos.exception.WorkdayNotOpenedException;
 import ru.codemine.pos.service.ChequeService;
 import ru.codemine.pos.service.kkm.ChequePrinter;
+import ru.codemine.pos.service.kkm.SyslogChequePrinter;
 import ru.codemine.pos.ui.MainWindow;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
@@ -42,6 +44,7 @@ import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
 public class ChequeProcessButtonListener implements ActionListener
 {
     @Autowired private ChequeService chequeService;
+    @Autowired private Application application;
     @Autowired private MainWindow mainWindow;
     @Autowired private SalesPanel salesPanel;
     @Autowired private ButtonsPanel buttonsPanel;
@@ -55,7 +58,7 @@ public class ChequeProcessButtonListener implements ActionListener
             Cheque cheque = salesPanel.getChequeSetupPanel().getCheque();
             if (!cheque.getContent().isEmpty())
             {
-                chequeService.checkoutWithKKM(cheque, new ChequePrinter());
+                chequeService.checkoutWithKKM(cheque, application.getCurrentKkm());
                 salesPanel.getChequeSetupPanel().newCheque();
                 salesPanel.getCalcsPanel().showByCheque(salesPanel.getChequeSetupPanel().getCheque());
                 salesPanel.requestFocus();

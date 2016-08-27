@@ -159,7 +159,7 @@ public class ChequeService
         } 
         catch (KkmException e)
         {
-            //evict here
+            storeDAO.evict(retailStore);
             throw new ChequeProcessByKkmException(e.getLocalizedMessage());
         }
         
