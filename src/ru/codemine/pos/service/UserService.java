@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.codemine.pos.dao.UserDAO;
 import ru.codemine.pos.entity.User;
+import ru.codemine.pos.exception.DuplicateUserDataException;
 
 /**
  *
@@ -44,12 +45,18 @@ public class UserService
     /**
      * Создает нового пользователя и записывает его в БД
      * @param user
+     * @throws ru.codemine.pos.exception.DuplicateUserDataException
      */
     @Transactional
-    public void create(User user)
+    public void create(User user) throws DuplicateUserDataException
     {
+        if(user == null) return;
+        
         byte[] hash = DigestUtils.md5(user.getPassword());
         user.setPassword(Base64.encodeBase64String(hash));
+        
+        if(userDAO.getByUsername(user.getUsername()) != null) throw new DuplicateUserDataException();
+        
         userDAO.create(user);
     }
     
@@ -66,10 +73,18 @@ public class UserService
     /**
      * Обновляет пользователя в БД
      * @param user
+     * @throws ru.codemine.pos.exception.DuplicateUserDataException
      */
     @Transactional
-    public void update(User user)
+    public void update(User user) throws DuplicateUserDataException
     {
+        if(user == null) return;
+        
+        User testName = userDAO.getByUsername(user.getUsername());
+        if(testName != null && !testName.getId().equals(user.getId())) throw new DuplicateUserDataException();
+        
+        userDAO.evict(testName);
+        
         userDAO.update(user);
     }
     

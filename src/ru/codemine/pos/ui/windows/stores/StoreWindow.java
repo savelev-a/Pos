@@ -19,7 +19,6 @@
 package ru.codemine.pos.ui.windows.stores;
 
 import com.alee.extended.layout.TableLayout;
-import com.alee.extended.panel.WebButtonGroup;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
@@ -28,7 +27,6 @@ import javax.swing.table.TableColumnModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
-import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.tablemodel.StoreStocksTableModel;
 import ru.codemine.pos.ui.windows.GenericEntityWindow;
 import ru.codemine.pos.ui.windows.stores.listener.DontSaveStore;

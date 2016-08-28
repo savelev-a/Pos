@@ -16,26 +16,28 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.entity;
+package ru.codemine.pos.ui.settingspanel.listener;
 
-import java.io.Serializable;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.codemine.pos.ui.windows.users.UsersListWindow;
 
 /**
  *
  * @author Alexander Savelev
  */
-public abstract class GenericEntity implements Serializable
+
+@Component
+public class ShowUsersButtonListener implements ActionListener
 {
-    public enum EntityType
+    @Autowired private UsersListWindow window;
+
+    @Override
+    public void actionPerformed(ActionEvent e)
     {
-        USER,
-        WORKDAY,
-        STORE,
-        PRODUCT,
-        CHEQUE,
-        STARTBALANCE,
-        DEVICE
+        window.showWindow();
     }
-    
-    public abstract EntityType getEntityType();
+
 }

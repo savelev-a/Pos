@@ -22,6 +22,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Set;
 import javax.persistence.CascadeType;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.JoinColumn;
@@ -40,11 +41,6 @@ import ru.codemine.pos.entity.Workday;
 @Table(name = "cheques")
 public class Cheque extends Document
 {
-//    @ElementCollection(fetch = FetchType.LAZY)
-//    @CollectionTable(name = "cdocCheque", joinColumns = @JoinColumn(name = "id_cheque"))
-//    @Column(name = "quantity", nullable = false)
-//    @MapKeyJoinColumn(name = "id_product", referencedColumnName = "id")
-//    private Map<Product, Integer> contents;
     
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "cheque", cascade = CascadeType.ALL)
     private Set<ChequeLine> content;
@@ -53,6 +49,7 @@ public class Cheque extends Document
     @JoinColumn(name = "id_workday", nullable = false)
     private Workday workday;
     
+    @Column(name = "chequeTotal", nullable = false)
     private Double chequeTotal;
     
     public Cheque()

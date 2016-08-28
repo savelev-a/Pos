@@ -16,51 +16,39 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.dao;
+package ru.codemine.pos.ui.windows.users.listener;
 
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.List;
-import org.hibernate.Query;
-import org.springframework.stereotype.Repository;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.User;
+import ru.codemine.pos.service.UserService;
+import ru.codemine.pos.tablemodel.UsersListTableModel;
+import ru.codemine.pos.ui.windows.users.UsersListWindow;
 
 /**
  *
  * @author Alexander Savelev
  */
 
-@Repository
-public class UserDAOImpl extends GenericDAOImpl<User, Integer> implements UserDAO
+@Component
+public class RefreshUsersList implements ActionListener
 {
+    @Autowired private UsersListWindow window;
+    @Autowired private UsersListTableModel tableModel;
+    @Autowired private UserService userService;
 
     @Override
-    public User getByUsername(String username)
+    public void actionPerformed(ActionEvent e)
     {
-        Query query = getSession().createQuery("FROM User u WHERE u.username = :username");
-        query.setString("username", username);
+        List<User> users = userService.getAllUsers();
         
-        return (User)query.uniqueResult();
-    }
-    
-    @Override
-    public List<User> getActive()
-    {
-        Query query = getSession().createQuery("FROM User u WHERE u.active = true");
+        tableModel.setUsersList(users);
+        tableModel.fireTableDataChanged();
         
-        return query.list();
-    }
-
-    @Override
-    public List<User> getAll()
-    {
-        Query query = getSession().createQuery("FROM User");
-        
-        return query.list();
-    }
-
-    @Override
-    public void evict(User user)
-    {
-        if(user != null) getSession().evict(user);
+        window.getStatusLabel().setText("Загружено " + users.size() + " строк");
     }
 
 }

@@ -20,8 +20,10 @@ package ru.codemine.pos.ui.settingspanel;
 
 import com.alee.extended.layout.TableLayout;
 import com.alee.laf.panel.WebPanel;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.ui.GenericPanelComponent;
+import ru.codemine.pos.ui.settingspanel.listener.ShowUsersButtonListener;
 import ru.codemine.pos.ui.settingspanel.modules.CommonSettingsPanel;
 
 /**
@@ -32,6 +34,7 @@ import ru.codemine.pos.ui.settingspanel.modules.CommonSettingsPanel;
 @Component
 public class SettingsPanel extends WebPanel implements GenericPanelComponent
 {
+    @Autowired private ShowUsersButtonListener showUsersButtonListener;
     
     private CommonSettingsPanel commonSettingsPanel;
     
@@ -65,7 +68,7 @@ public class SettingsPanel extends WebPanel implements GenericPanelComponent
     @Override
     public void setupActionListeners()
     {
-        
+        commonSettingsPanel.getShowUsersButton().addActionListener(showUsersButtonListener);
     }
 
 }

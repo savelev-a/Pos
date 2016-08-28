@@ -16,36 +16,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.dao;
+package ru.codemine.pos.ui.windows.users.listener;
 
-import java.util.List;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.User;
+import ru.codemine.pos.ui.windows.users.UserWindow;
 
 /**
  *
  * @author Alexander Savelev
  */
-public interface UserDAO extends GenericDAO<User, Integer>
+
+@Component
+public class NewUser implements ActionListener
 {
-
-    /**
-     * Делает выборку из БД пользователя по его имени
-     * @param username имя пользователя
-     * @return
-     */
-    public User getByUsername(String username);
-
-    /**
-     * Делает выборку из БД списка незаблокированных пользователей
-     * @return список пользователей
-     */
-    public List<User> getActive();
-    /**
-     * Делает выборку из БД списка всех пользователей
-     * @return список пользователей
-     */
-    public List<User> getAll();
-
-    public void evict(User user);
+    @Autowired private UserWindow userWindow;
+    
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        userWindow.showWindow(new User());
+    }
 
 }

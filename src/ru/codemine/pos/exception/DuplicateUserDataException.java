@@ -16,26 +16,25 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.entity;
-
-import java.io.Serializable;
+package ru.codemine.pos.exception;
 
 /**
  *
  * @author Alexander Savelev
  */
-public abstract class GenericEntity implements Serializable
+public class DuplicateUserDataException extends Exception
 {
-    public enum EntityType
+
+    public DuplicateUserDataException()
     {
-        USER,
-        WORKDAY,
-        STORE,
-        PRODUCT,
-        CHEQUE,
-        STARTBALANCE,
-        DEVICE
+        super("Пользователь с таким именем уже существует!");
+    }
+
+    public DuplicateUserDataException(String fieldName, String fieldData)
+    {
+        super("Пользователь с такими данными уже существует. \n"
+                + "Совпадение по: " + fieldName + ", значение: " + fieldData);
     }
     
-    public abstract EntityType getEntityType();
+
 }

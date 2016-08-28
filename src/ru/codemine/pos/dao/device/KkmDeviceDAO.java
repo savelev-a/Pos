@@ -16,36 +16,23 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.dao;
+package ru.codemine.pos.dao.device;
 
 import java.util.List;
-import ru.codemine.pos.entity.User;
+import ru.codemine.pos.dao.GenericDAO;
+import ru.codemine.pos.entity.device.KkmDevice;
 
 /**
  *
  * @author Alexander Savelev
  */
-public interface UserDAO extends GenericDAO<User, Integer>
+public interface KkmDeviceDAO extends GenericDAO<KkmDevice, Long>
 {
-
-    /**
-     * Делает выборку из БД пользователя по его имени
-     * @param username имя пользователя
-     * @return
-     */
-    public User getByUsername(String username);
-
-    /**
-     * Делает выборку из БД списка незаблокированных пользователей
-     * @return список пользователей
-     */
-    public List<User> getActive();
-    /**
-     * Делает выборку из БД списка всех пользователей
-     * @return список пользователей
-     */
-    public List<User> getAll();
-
-    public void evict(User user);
-
+    public KkmDevice getBySerialNumber(String serial);
+    public KkmDevice getActive();
+    
+    public void setActive(KkmDevice kkmDevice);
+    
+    public List<KkmDevice> getByType(KkmDevice.KkmType type);
+    public List<KkmDevice> getAll();
 }
