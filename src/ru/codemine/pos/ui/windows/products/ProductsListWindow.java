@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.service.ProductService;
 import ru.codemine.pos.tablemodel.ProductCatalogTableModel;
-import ru.codemine.pos.ui.windows.document.GenericDocumentListWindow;
+import ru.codemine.pos.ui.windows.GenericEntityListWindow;
 import ru.codemine.pos.ui.windows.products.listener.DeleteProduct;
 import ru.codemine.pos.ui.windows.products.listener.EditProduct;
 import ru.codemine.pos.ui.windows.products.listener.NewProduct;
@@ -40,7 +40,7 @@ import ru.codemine.pos.ui.windows.products.listener.RefreshProductList;
  */
 
 @Component
-public class ProductsListWindow extends GenericDocumentListWindow
+public class ProductsListWindow extends GenericEntityListWindow
 {
     @Autowired private ProductService productService;
     

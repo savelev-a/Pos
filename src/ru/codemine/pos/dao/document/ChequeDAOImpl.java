@@ -20,6 +20,9 @@ package ru.codemine.pos.dao.document;
 
 import java.util.List;
 import org.hibernate.Query;
+import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
+import org.joda.time.LocalTime;
 import org.springframework.stereotype.Repository;
 import ru.codemine.pos.dao.GenericDAOImpl;
 import ru.codemine.pos.entity.Workday;
@@ -46,11 +49,21 @@ public class ChequeDAOImpl extends GenericDAOImpl<Cheque, Long> implements Chequ
     @Override
     public List<Cheque> getByOpenWorkday()
     {
-        Query wdQuery = getSession().createQuery("FROM Workday w WHERE w.open = true");
-        List<Workday> list = wdQuery.list();
-        Workday wd = list.get(0);
+        Query query = getSession().createQuery("FROM Cheque c WHERE c.workday.open = true");
         
-        return getByWorkday(wd);
+        return query.list();
+    }
+
+    @Override
+    public List<Cheque> getByPeriod(LocalDate startDate, LocalDate endDate)
+    {
+        endDate = endDate.plusDays(1); // по конечную дату включительно
+        
+        Query query = getSession().createQuery("FROM Cheque c WHERE c.creationTime BETWEEN :start AND :end");
+        query.setDate("start", startDate.toDate());
+        query.setDate("end", endDate.toDate());
+        
+        return query.list();
     }
 
 }

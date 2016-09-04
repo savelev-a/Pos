@@ -23,6 +23,8 @@ import com.alee.laf.panel.WebPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.ui.GenericPanelComponent;
+import ru.codemine.pos.ui.docspanel.listener.ShowChequesByPeriodButtonListener;
+import ru.codemine.pos.ui.docspanel.listener.ShowOpenWdChequesButtonListener;
 import ru.codemine.pos.ui.docspanel.listener.ShowProductsButtonListener;
 import ru.codemine.pos.ui.docspanel.listener.ShowStartBalancesButtonListener;
 import ru.codemine.pos.ui.docspanel.listener.ShowStoresButtonListener;
@@ -41,6 +43,8 @@ public class DocumentsPanel extends WebPanel implements GenericPanelComponent
     @Autowired private ShowStoresButtonListener showStoresButtonListener;
     @Autowired private ShowStartBalancesButtonListener showBalancesButtonListener;
     @Autowired private ShowProductsButtonListener showProductsButtonListener;
+    @Autowired private ShowOpenWdChequesButtonListener showOpenWdChequesButtonListener;
+    @Autowired private ShowChequesByPeriodButtonListener showChequesByPeriodButtonListener;
     
     private final StoresPanel storesPanel;
     private final ChequesPanel chequesPanel;
@@ -92,6 +96,8 @@ public class DocumentsPanel extends WebPanel implements GenericPanelComponent
     {
         storesPanel.getShowStoresBtn().addActionListener(showStoresButtonListener);
         storesPanel.getShowStartBalancesBtn().addActionListener(showBalancesButtonListener);
+        chequesPanel.getOpenWdChequesButton().addActionListener(showOpenWdChequesButtonListener);
+        chequesPanel.getChequesByPeriodButton().addActionListener(showChequesByPeriodButtonListener);
         productsPanel.getShowCatalogBtn().addActionListener(showProductsButtonListener);
         
     }

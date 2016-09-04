@@ -19,6 +19,7 @@
 package ru.codemine.pos.dao.document;
 
 import java.util.List;
+import org.joda.time.LocalDate;
 import ru.codemine.pos.dao.GenericDAO;
 import ru.codemine.pos.entity.Workday;
 import ru.codemine.pos.entity.document.Cheque;
@@ -43,6 +44,8 @@ public interface ChequeDAO extends GenericDAO<Cheque, Long>
      * @return чписок чеков
      */
     public List<Cheque> getByOpenWorkday();
+
+    public List<Cheque> getByPeriod(LocalDate startDate, LocalDate endDate);
 
     
 }

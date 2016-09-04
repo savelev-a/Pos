@@ -31,6 +31,7 @@ import com.alee.laf.panel.WebPanel;
 public class ChequesPanel extends WebPanel
 {
     private final WebButton showOpenWdChequesBtn;
+    private final WebButton showChequesByPeriodBtn;
     
     public ChequesPanel()
     {
@@ -41,15 +42,31 @@ public class ChequesPanel extends WebPanel
         
         TableLayout layout = new TableLayout(new double[][]{
             {10, TableLayout.FILL, 10},
-            {5, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, 10}
+            {5, TableLayout.PREFERRED,          // Заголовок
+            10, TableLayout.PREFERRED,          // Чеки открытой смены
+            10, TableLayout.PREFERRED, 10}      // Чеки за период
         });
         setLayout(layout);
         
-        showOpenWdChequesBtn = new WebButton("Показать Чеки открытой смены");
+        showOpenWdChequesBtn   = new WebButton("Чеки открытой смены");
+        showChequesByPeriodBtn = new WebButton("Чеки за период");
         showOpenWdChequesBtn.setMargin(5);
+        showChequesByPeriodBtn.setMargin(5);
         showOpenWdChequesBtn.setRound(StyleConstants.largeRound);
+        showChequesByPeriodBtn.setRound(StyleConstants.largeRound);
 
         add(new WebLabel("-----Чеки-----"), "1, 1, C, T");
-        add(showOpenWdChequesBtn, "1, 3");
+        add(showOpenWdChequesBtn,           "1, 3");
+        add(showChequesByPeriodBtn,         "1, 5");
+    }
+    
+    public WebButton getOpenWdChequesButton()
+    {
+        return showOpenWdChequesBtn;
+    }
+    
+    public WebButton getChequesByPeriodButton()
+    {
+        return showChequesByPeriodBtn;
     }
 }

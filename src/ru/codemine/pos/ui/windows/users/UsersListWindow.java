@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.User;
 import ru.codemine.pos.service.UserService;
 import ru.codemine.pos.tablemodel.UsersListTableModel;
-import ru.codemine.pos.ui.windows.document.GenericDocumentListWindow;
+import ru.codemine.pos.ui.windows.GenericEntityListWindow;
 import ru.codemine.pos.ui.windows.users.listener.DeleteUser;
 import ru.codemine.pos.ui.windows.users.listener.EditUser;
 import ru.codemine.pos.ui.windows.users.listener.NewUser;
@@ -40,7 +40,7 @@ import ru.codemine.pos.ui.windows.users.listener.RefreshUsersList;
  */
 
 @Component
-public class UsersListWindow extends GenericDocumentListWindow
+public class UsersListWindow extends GenericEntityListWindow
 {
     
     @Autowired private UserService userService;

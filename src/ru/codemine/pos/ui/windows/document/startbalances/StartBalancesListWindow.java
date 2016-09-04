@@ -25,6 +25,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.table.TableColumnModel;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
@@ -91,6 +92,11 @@ public class StartBalancesListWindow extends GenericDocumentListWindow
         
         List<StartBalance> startBalances = startBalanceService.getAllByStore(stores.get(0));
         
+        showWindow(startBalances);
+    }
+    
+    public void showWindow(List<StartBalance> startBalances)
+    {
         tableModel = new StartBalancesListTableModel(startBalances);
         table.setModel(tableModel);
         
@@ -155,6 +161,17 @@ public class StartBalancesListWindow extends GenericDocumentListWindow
     public String getSelectedStoreName()
     {
         return (String)storeChooseBox.getSelectedItem();
+    }
+
+    @Override
+    public void setPeriod(LocalDate startDate, LocalDate endDate)
+    {
+//        List<StartBalance> startBalances = startBalanceService.getByPeriod(
+//                startDate, 
+//                endDate, 
+//                storeService.getByName((String)storeChooseBox.getSelectedItem()));
+//        
+//        showWindow(startBalances);
     }
 
 }

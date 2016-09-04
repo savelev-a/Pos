@@ -16,16 +16,30 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.document;
+package ru.codemine.pos.ui.docspanel.listener;
 
-import org.joda.time.LocalDate;
-import ru.codemine.pos.ui.windows.GenericEntityListWindow;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.codemine.pos.service.ChequeService;
+import ru.codemine.pos.ui.windows.document.cheque.ChequeListWindow;
 
 /**
  *
  * @author Alexander Savelev
  */
-public abstract class GenericDocumentListWindow extends GenericEntityListWindow
+
+@Component
+public class ShowOpenWdChequesButtonListener implements ActionListener
 {
-    public abstract void setPeriod(LocalDate startDate, LocalDate endDate);
+    @Autowired private ChequeListWindow chequeListWindow;
+    @Autowired private ChequeService chequeService;
+    
+    @Override
+    public void actionPerformed(ActionEvent e)
+    {
+        chequeListWindow.showWindow(chequeService.getByOpenWorkday());
+    }
+
 }

@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.tablemodel.StoresListTableModel;
-import ru.codemine.pos.ui.windows.document.GenericDocumentListWindow;
+import ru.codemine.pos.ui.windows.GenericEntityListWindow;
 import ru.codemine.pos.ui.windows.stores.listener.DeleteStore;
 import ru.codemine.pos.ui.windows.stores.listener.EditStore;
 import ru.codemine.pos.ui.windows.stores.listener.NewStore;
@@ -41,7 +41,7 @@ import ru.codemine.pos.ui.windows.stores.listener.RefreshStoreList;
  */
 
 @Component
-public class StoresListWindow extends GenericDocumentListWindow
+public class StoresListWindow extends GenericEntityListWindow
 {
     @Autowired private StoreService storeService;
     

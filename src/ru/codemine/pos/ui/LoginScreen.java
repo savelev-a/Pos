@@ -134,7 +134,7 @@ public class LoginScreen
     
     public void show()
     {
-        for(User user : userService.getAllUsers())
+        for(User user : userService.getActive())
         {
             usernameComboBox.addItem(user.getUsername());
         }

@@ -20,6 +20,7 @@ package ru.codemine.pos.service;
 
 import java.util.List;
 import org.joda.time.DateTime;
+import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -190,6 +191,12 @@ public class ChequeService
     public List<Cheque> getByOpenWorkday()
     {
         return chequeDAO.getByOpenWorkday();
+    }
+
+    @Transactional
+    public List<Cheque> getByPeriod(LocalDate startDate, LocalDate endDate)
+    {
+        return chequeDAO.getByPeriod(startDate, endDate);
     }
     
 }
