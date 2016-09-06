@@ -55,7 +55,6 @@ public class ProductsListWindow extends GenericEntityListWindow
     {
         super();
         setTitle("Справочник товаров");
-        setSize(800, 400);
         
         menuItemProcess.setEnabled(false);
         menuItemUnprocess.setEnabled(false);

@@ -42,7 +42,7 @@ public abstract class GenericEntityWindow<T extends GenericEntity> extends WebFr
     public GenericEntityWindow()
     {
         setTitle("");
-        setSize(640, 400);
+        setSize(800, 400);
         setLocationRelativeTo(null);
         
         actionListenersInit = false;

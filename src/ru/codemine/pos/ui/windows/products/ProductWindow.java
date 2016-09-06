@@ -18,14 +18,27 @@
 
 package ru.codemine.pos.ui.windows.products;
 
+import com.alee.extended.image.WebDecoratedImage;
+import com.alee.extended.image.WebImage;
 import com.alee.extended.layout.TableLayout;
+import com.alee.global.StyleConstants;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.optionpane.WebOptionPane;
+import com.alee.laf.panel.WebPanel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.Image;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.nio.file.Files;
+import java.nio.file.LinkOption;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.table.TableColumnModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,6 +78,8 @@ public class ProductWindow extends GenericEntityWindow<Product>
     private final WebLabel stocksLabel;
     private final WebTable stocksTable;
     
+    private WebDecoratedImage imagePanel;
+    
     private Product product;
     
     public ProductWindow()
@@ -87,8 +102,10 @@ public class ProductWindow extends GenericEntityWindow<Product>
         stocksLabel = new WebLabel("Остатки по складам");
         stocksTable = new WebTable();
         
+        imagePanel = new WebDecoratedImage();
+        
         TableLayout layout = new TableLayout(new double[][]{
-            {10, TableLayout.PREFERRED, 10, TableLayout.FILL, 10},
+            {10, TableLayout.PREFERRED, 10, TableLayout.FILL, 10, TableLayout.PREFERRED, 10},
             {10, TableLayout.PREFERRED,                 // 1  - Id
              10, TableLayout.PREFERRED,                 // 3  - Артикул
              10, TableLayout.PREFERRED,                 // 5  - Наименование
@@ -111,8 +128,9 @@ public class ProductWindow extends GenericEntityWindow<Product>
         add(priceLabel,   "1, 9");
         add(priceField,   "3, 9");
         add(stocksLabel, "1, 11, L, T");
-        add(new WebScrollPane(stocksTable), "3, 11");
-        add(buttonsGroupPanel, "1, 13, 3, 13, C, T");
+        add(new WebScrollPane(stocksTable), "3, 11, 5, 11, F, F");
+        add(imagePanel, "5, 1, 5, 9, F, F");
+        add(buttonsGroupPanel, "1, 13, 5, 13, C, T");
     }
     
     @Override
@@ -149,6 +167,22 @@ public class ProductWindow extends GenericEntityWindow<Product>
         
         TableColumnModel columnModel = stocksTable.getColumnModel();
         columnModel.getColumn(0).setMaxWidth(10);
+        
+        File imgFile = new File("images/products/" + product.getArtikul() + ".jpg");
+        String imgPath = "images/products/default.jpg";
+        
+        if(imgFile.exists() && !imgFile.isDirectory())
+        {
+            imgPath = imgFile.getAbsolutePath();
+        }
+        
+        ImageIcon ico = new ImageIcon(imgPath);
+        if(ico.getIconHeight() > 0)
+        {
+            Image img = ico.getImage().getScaledInstance(200, 200, Image.SCALE_SMOOTH);
+            imagePanel.setImage(img, true);
+        }
+        
         
         setVisible(true);
     }

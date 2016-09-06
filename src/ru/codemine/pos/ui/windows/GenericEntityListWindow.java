@@ -74,7 +74,7 @@ public abstract class GenericEntityListWindow extends WebFrame
     public GenericEntityListWindow()
     {
         setTitle("");
-        setSize(640, 400);
+        setSize(800, 400);
         setLocationRelativeTo(null);
         
         TableLayout layout = new TableLayout(new double[][]{

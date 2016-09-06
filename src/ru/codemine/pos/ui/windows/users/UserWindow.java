@@ -62,7 +62,6 @@ public class UserWindow extends GenericEntityWindow<User>
     {
         super();
         setTitle("Пользователь");
-        setSize(640, 250);
         
         idLabel = new WebLabel("ID");
         usernameLabel = new WebLabel("Имя пользователя");

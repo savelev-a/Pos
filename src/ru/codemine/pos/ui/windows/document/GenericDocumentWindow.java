@@ -65,7 +65,7 @@ public abstract class GenericDocumentWindow<T extends Document> extends WebFrame
     public GenericDocumentWindow()
     {
         setTitle("");
-        setSize(800, 600);
+        setSize(800, 400);
         setLocationRelativeTo(null);
         
         idLabel = new WebLabel("№ документа");
