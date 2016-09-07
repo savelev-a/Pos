@@ -23,6 +23,7 @@ import com.alee.laf.panel.WebPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.ui.GenericPanelComponent;
+import ru.codemine.pos.ui.settingspanel.listener.ShowKkmsButtonListener;
 import ru.codemine.pos.ui.settingspanel.listener.ShowUsersButtonListener;
 import ru.codemine.pos.ui.settingspanel.modules.CommonSettingsPanel;
 
@@ -35,8 +36,9 @@ import ru.codemine.pos.ui.settingspanel.modules.CommonSettingsPanel;
 public class SettingsPanel extends WebPanel implements GenericPanelComponent
 {
     @Autowired private ShowUsersButtonListener showUsersButtonListener;
+    @Autowired private ShowKkmsButtonListener showKkmsButtonListener;
     
-    private CommonSettingsPanel commonSettingsPanel;
+    private final CommonSettingsPanel commonSettingsPanel;
     
     public SettingsPanel()
     {
@@ -69,6 +71,7 @@ public class SettingsPanel extends WebPanel implements GenericPanelComponent
     public void setupActionListeners()
     {
         commonSettingsPanel.getShowUsersButton().addActionListener(showUsersButtonListener);
+        commonSettingsPanel.getShowKkmsButton().addActionListener(showKkmsButtonListener);
     }
 
 }

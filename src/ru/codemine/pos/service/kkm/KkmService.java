@@ -21,8 +21,13 @@ package ru.codemine.pos.service.kkm;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import ru.codemine.pos.dao.device.KkmDeviceDAO;
 import ru.codemine.pos.entity.Workday;
+import ru.codemine.pos.entity.device.GenericDevice;
+import ru.codemine.pos.entity.device.KkmDevice;
 import ru.codemine.pos.entity.document.Cheque;
+import ru.codemine.pos.exception.DuplicateDeviceDataException;
 import ru.codemine.pos.exception.KkmException;
 import ru.codemine.pos.service.ChequeService;
 import ru.codemine.pos.service.WorkdayService;
@@ -37,12 +42,71 @@ public class KkmService
 {
     @Autowired private WorkdayService workdayService;
     @Autowired private ChequeService chequeService;
+    @Autowired private KkmDeviceDAO kkmDeviceDAO;
+    
+    @Transactional
+    public Kkm getCurrentKkm()
+    {
+        Kkm kkm;
+        KkmDevice kkmDevice = kkmDeviceDAO.getActive();
+        if(kkmDevice == null) return null;
+        
+        switch(kkmDevice.getType())
+        {
+            case SYSLOG_PRINTER : 
+                kkm = new SyslogChequePrinter();
+                break;
+            case CHEQUE_PRINTER : 
+                kkm = new ChequePrinter();
+                break;
+            default :
+                kkm = new SyslogChequePrinter();
+        }
+        
+        kkm.setDevice(kkmDevice);
+        
+        return kkm;
+    }
+    
+    public void printXReport() throws KkmException 
+    {
+        printXReport(getCurrentKkm());
+    }
     
     public void printXReport(Kkm kkm) throws KkmException
     {
+        if(kkm == null) return;
+        
         Workday currentWorkday = workdayService.getOpenWorkday();
         List<Cheque> cheques = chequeService.getByOpenWorkday();
         
         kkm.printXReport(currentWorkday, cheques);
+    }
+
+    @Transactional
+    public List<KkmDevice> getAllKkmDevices()
+    {
+        return kkmDeviceDAO.getAll();
+    }
+
+    @Transactional
+    public void createDevice(KkmDevice device) throws DuplicateDeviceDataException
+    {
+        if(device == null) return;
+        
+        if(kkmDeviceDAO.getBySerialNumber(device.getSerialNumber()) != null) 
+            throw new DuplicateDeviceDataException(GenericDevice.DeviceType.DEVICE_KKM, 
+                    "Серийный номер",
+                    device.getSerialNumber());
+        
+        kkmDeviceDAO.create(device);
+    }
+
+    @Transactional
+    public void updateDevice(KkmDevice device)
+    {
+        if(device == null) return;
+        
+        //todo it
     }
 }

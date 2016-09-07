@@ -16,32 +16,29 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.service.kkm;
+package ru.codemine.pos.ui.windows.devices.kkm.listener;
 
-import java.util.List;
-import ru.codemine.pos.entity.Workday;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.device.KkmDevice;
-import ru.codemine.pos.entity.document.Cheque;
-import ru.codemine.pos.exception.KkmException;
+import ru.codemine.pos.ui.windows.devices.kkm.KkmWindow;
 
 /**
  *
  * @author Alexander Savelev
  */
-public abstract class Kkm 
+
+@Component
+public class NewKkmDevice implements ActionListener
 {
-    private KkmDevice device;
+    @Autowired private KkmWindow window;
     
-    public abstract void printCheque(Cheque cheque) throws KkmException;
-    public abstract void printXReport(Workday currentWorkday, List<Cheque> cheques) throws KkmException;
-    
-    public KkmDevice getDevice()
+    @Override
+    public void actionPerformed(ActionEvent e)
     {
-        return device;
+        window.showWindow(new KkmDevice());
     }
-    
-    public void setDevice(KkmDevice device)
-    {
-        this.device = device;
-    }
+
 }

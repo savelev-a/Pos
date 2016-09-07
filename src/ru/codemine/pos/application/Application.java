@@ -28,9 +28,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.entity.User;
+import ru.codemine.pos.entity.device.KkmDevice;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.service.UserService;
 import ru.codemine.pos.service.kkm.Kkm;
+import ru.codemine.pos.service.kkm.KkmService;
 import ru.codemine.pos.service.kkm.SyslogChequePrinter;
 import ru.codemine.pos.ui.LoadingScreen;
 import ru.codemine.pos.ui.LoginScreen;
@@ -48,12 +50,14 @@ public class Application
     
     @Autowired private UserService userService;
     @Autowired private StoreService storeService;
+    @Autowired private KkmService kkmService;
     
     @Autowired private LoginScreen loginScreen;
     @Autowired private MainWindow mainWindow;
     
     private ApplicationContext appContext;
     private User activeUser;
+    private Kkm activeKkm;
     
     /**
      * Возвращает контекст приложения
@@ -88,7 +92,7 @@ public class Application
      */
     public Kkm getCurrentKkm()
     {
-        return new SyslogChequePrinter();
+        return activeKkm;
     }
     
     
@@ -134,6 +138,10 @@ public class Application
         //Инициализация складов
         loadingScreen.setLoadingStatus("Загрузка складов", 80);
         app.initStores();
+        
+        //Инициализация ККМ
+        loadingScreen.setLoadingStatus("Загрузка касс", 90);
+        app.initKkm();
         
         //Окончание загрузки
         loadingScreen.setLoadingStatus("Загрузка завершена", 100);
@@ -212,6 +220,21 @@ public class Application
             System.exit(1);
         }
         
+    }
+
+    private void initKkm()
+    {
+        activeKkm = kkmService.getCurrentKkm();
+        if(activeKkm == null)
+        {
+            WebOptionPane.showMessageDialog(null,  
+                        "После загрузки перейдите в Настройки -> Кассовые аппараты\n"
+                       + "и настройте подключенный кассовый аппарат.", 
+                        "Не найдено настроенных кассовых аппаратов", WebOptionPane.INFORMATION_MESSAGE);
+            
+            activeKkm = new SyslogChequePrinter();
+            activeKkm.setDevice(new KkmDevice());
+        }
     }
     
 }

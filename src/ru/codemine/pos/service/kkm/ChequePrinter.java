@@ -34,16 +34,11 @@ import ru.codemine.pos.service.printer.PrinterService;
  */
 
 
-public class ChequePrinter implements Kkm
+public class ChequePrinter extends Kkm
 {
-    private final PrinterService printerService;
     
     private static final Logger log = Logger.getLogger("ChequePrinterModule");
-    
-    public ChequePrinter()
-    {
-        printerService = new PrinterService();
-    }
+
 
     @Override
     public void printCheque(Cheque cheque) throws KkmException
@@ -52,7 +47,7 @@ public class ChequePrinter implements Kkm
 
         try
         {
-            printerService.printPlainText(template.toString(), "Star-TSP100");
+            PrinterService.printPlainText(template.toString(), "Star-TSP100");
         } 
         catch (PrintException ex)
         {
@@ -71,7 +66,7 @@ public class ChequePrinter implements Kkm
         
         try
         {
-            printerService.printPlainText(template.toString(), "Star-TSP100");
+            PrinterService.printPlainText(template.toString(), "Star-TSP100");
         } 
         catch (PrintException ex)
         {

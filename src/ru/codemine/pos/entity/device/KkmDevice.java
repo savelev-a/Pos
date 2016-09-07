@@ -18,6 +18,8 @@
 
 package ru.codemine.pos.entity.device;
 
+import java.util.LinkedHashMap;
+import java.util.Map;
 import java.util.Objects;
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -56,9 +58,20 @@ public class KkmDevice extends GenericDevice
     @Column(name = "speed", nullable = true)
     private Integer speed;
     
-    @Column(name = "sysname", nullable = true)
-    private String sysname;
+    @Column(name = "sysprinter", nullable = true)
+    private String sysprinter;
+    
+    @Column(name = "description", nullable = false, columnDefinition="TEXT")
+    private String description;
 
+    public KkmDevice()
+    {
+        this.enabled = false;
+        this.type = KkmType.SYSLOG_PRINTER;
+        this.name = "Печать в syslog (только для отладки)";
+        this.speed = 0;
+    }
+    
     public String getSerialNumber()
     {
         return serialNumber;
@@ -97,6 +110,7 @@ public class KkmDevice extends GenericDevice
     public void setType(KkmType type)
     {
         this.type = type;
+        this.name = getAvaibleTypes().get(type);
     }
 
     public String getPort()
@@ -119,15 +133,26 @@ public class KkmDevice extends GenericDevice
         this.speed = speed;
     }
 
-    public String getSysname()
+    public String getSysprinter()
     {
-        return sysname;
+        return sysprinter;
     }
 
-    public void setSysname(String sysname)
+    public void setSysprinter(String sysprinter)
     {
-        this.sysname = sysname;
+        this.sysprinter = sysprinter;
     }
+
+    public String getDescription()
+    {
+        return description;
+    }
+
+    public void setDescription(String description)
+    {
+        this.description = description;
+    }
+    
 
     @Override
     public int hashCode()
@@ -171,13 +196,22 @@ public class KkmDevice extends GenericDevice
                 + ", type=" + type 
                 + ", port=" + port 
                 + ", speed=" + speed 
-                + ", sysname=" + sysname + '}';
+                + ", sysname=" + sysprinter + '}';
     }
 
     @Override
     public DeviceType getDeviceType()
     {
         return DeviceType.DEVICE_KKM;
+    }
+    
+    public static Map<KkmType, String> getAvaibleTypes()
+    {
+        Map<KkmType, String> result = new LinkedHashMap<>();
+        result.put(KkmType.SYSLOG_PRINTER ,"Печать в syslog (только для отладки)");
+        result.put(KkmType.CHEQUE_PRINTER ,"Чековый принтер");
+        
+        return result;
     }
 
 }

@@ -20,6 +20,7 @@ package ru.codemine.pos.dao.device;
 
 import java.util.List;
 import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
 import ru.codemine.pos.dao.GenericDAOImpl;
 import ru.codemine.pos.entity.device.KkmDevice;
 
@@ -27,6 +28,8 @@ import ru.codemine.pos.entity.device.KkmDevice;
  *
  * @author Alexander Savelev
  */
+
+@Repository
 public class KkmDeviceDAOImpl extends GenericDAOImpl<KkmDevice, Long> implements KkmDeviceDAO
 {
 
@@ -42,7 +45,7 @@ public class KkmDeviceDAOImpl extends GenericDAOImpl<KkmDevice, Long> implements
     @Override
     public KkmDevice getActive()
     {
-        Query query = getSession().createQuery("FROM KkmDevice d WHERE d.active = true");
+        Query query = getSession().createQuery("FROM KkmDevice d WHERE d.enabled = true");
         
         return (KkmDevice)query.uniqueResult();
     }

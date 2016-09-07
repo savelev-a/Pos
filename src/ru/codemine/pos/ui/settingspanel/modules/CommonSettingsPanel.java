@@ -31,6 +31,7 @@ import com.alee.laf.panel.WebPanel;
 public class CommonSettingsPanel extends WebPanel
 {
     private final WebButton showUsersBtn;
+    private final WebButton showKkmsButton;
     
     public CommonSettingsPanel()
     {
@@ -41,16 +42,22 @@ public class CommonSettingsPanel extends WebPanel
         
         TableLayout layout = new TableLayout(new double[][]{
             {10, TableLayout.FILL, 10},
-            {5, TableLayout.PREFERRED, 10, TableLayout.PREFERRED, 10}
+            {5, TableLayout.PREFERRED, 
+            10, TableLayout.PREFERRED,          //users
+            10, TableLayout.PREFERRED, 10}      //kkms
         });
         setLayout(layout);
         
         showUsersBtn = new WebButton("Настройки пользователей");
+        showKkmsButton = new WebButton("Кассовые аппараты");
         showUsersBtn.setMargin(5);
+        showKkmsButton.setMargin(5);
         showUsersBtn.setRound(StyleConstants.largeRound);
+        showKkmsButton.setRound(StyleConstants.largeRound);
 
         add(new WebLabel("-----Общие настройки-----"), "1, 1, C, T");
         add(showUsersBtn, "1, 3");
+        add(showKkmsButton, "1, 5");
     }
     
     public WebButton getShowUsersButton()
@@ -58,4 +65,8 @@ public class CommonSettingsPanel extends WebPanel
         return showUsersBtn;
     }
     
+    public WebButton getShowKkmsButton()
+    {
+        return showKkmsButton;
+    }
 }

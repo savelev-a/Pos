@@ -38,28 +38,24 @@ public class PrinterJobWatcher
             @Override
             public void printJobCanceled(PrintJobEvent ev)
             {
-                System.out.println("Print canceled!");
                 printFinished = true;
             }
             
             @Override
             public void printJobCompleted(PrintJobEvent ev)
             {
-                System.out.println("Print completed!");
                 printFinished = true;
             }
             
             @Override
             public void printJobFailed(PrintJobEvent ev)
             {
-                System.out.println("Print failed!");
                 printFinished = true;
             }
             
             @Override
             public void printJobNoMoreEvents(PrintJobEvent ev)
             {
-                System.out.println("No more events");
                 printFinished = true;
             }
         });

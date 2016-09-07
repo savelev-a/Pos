@@ -16,32 +16,26 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.service.kkm;
+package ru.codemine.pos.exception;
 
-import java.util.List;
-import ru.codemine.pos.entity.Workday;
-import ru.codemine.pos.entity.device.KkmDevice;
-import ru.codemine.pos.entity.document.Cheque;
-import ru.codemine.pos.exception.KkmException;
+import ru.codemine.pos.entity.device.GenericDevice;
 
 /**
  *
  * @author Alexander Savelev
  */
-public abstract class Kkm 
+public class DuplicateDeviceDataException extends Exception
 {
-    private KkmDevice device;
-    
-    public abstract void printCheque(Cheque cheque) throws KkmException;
-    public abstract void printXReport(Workday currentWorkday, List<Cheque> cheques) throws KkmException;
-    
-    public KkmDevice getDevice()
+    public DuplicateDeviceDataException()
     {
-        return device;
+        super("Такое устройство уже существует!");
     }
     
-    public void setDevice(KkmDevice device)
+    public DuplicateDeviceDataException(GenericDevice.DeviceType type, String fieldName, String fieldData)
     {
-        this.device = device;
+        super("Такое устройство уже существует.\n"
+                + "Тип устройства: " + type + "\n"
+                + "Совпадение по: " + fieldName + ", значение: " + fieldData);
     }
+
 }

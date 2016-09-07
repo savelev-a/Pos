@@ -28,6 +28,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import ru.codemine.pos.entity.User;
+import ru.codemine.pos.exception.DuplicateUserDataException;
 
 /**
  *
@@ -55,19 +56,37 @@ public class UserServiceTest
     @Test
     public void testLogin()
     {
-        userService.create(user);
+        try
+        {
+            userService.create(user);
+        } 
+        catch (DuplicateUserDataException ex)
+        {
+        }
         
         Assert.assertTrue(userService.performLogin("testuser", "123qweAS"));
         Assert.assertFalse(userService.performLogin("testuser", "wrongpass"));
         Assert.assertFalse(userService.performLogin("wronguser", "123qweAS"));
         
         user.setActive(false);
-        userService.update(user);
+        try
+        {
+            userService.update(user);
+        } 
+        catch (DuplicateUserDataException ex)
+        {
+        }
         
         Assert.assertFalse(userService.performLogin("testuser", "123qweAS"));
         
         user.setActive(true);
-        userService.update(user);
+        try
+        {
+            userService.update(user);
+        } 
+        catch (DuplicateUserDataException ex)
+        {
+        }
         
         Assert.assertTrue(userService.performLogin("testuser", "123qweAS"));
     }

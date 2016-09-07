@@ -41,7 +41,7 @@ public class PrinterService
      * Возвращает список имен всех принтеров
      * @return
      */
-    public List<String> getAvaiblePrinterNames()
+    public static List<String> getAvaiblePrinterNames()
     {
         List<String> result = new ArrayList<>();
         
@@ -59,7 +59,7 @@ public class PrinterService
      * @param name имя принтера
      * @return
      */
-    public PrintService getPrinterByName(String name)
+    public static PrintService getPrinterByName(String name)
     {
         PrintService[] services = PrintServiceLookup.lookupPrintServices(DocFlavor.INPUT_STREAM.AUTOSENSE, null);
         for(PrintService service : services)
@@ -71,7 +71,7 @@ public class PrinterService
         return null;
     }
     
-    public void printPlainText(String data, String printerName) throws PrintException
+    public static void printPlainText(String data, String printerName) throws PrintException
     {
         PrintService service = getPrinterByName(printerName);
         Doc doc = new SimpleDoc(data, DocFlavor.STRING.TEXT_PLAIN, null);

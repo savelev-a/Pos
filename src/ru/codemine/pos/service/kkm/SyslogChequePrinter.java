@@ -30,7 +30,7 @@ import ru.codemine.pos.service.kkm.template.SimpleXReportTemplate;
  *
  * @author Alexander Savelev
  */
-public class SyslogChequePrinter implements Kkm
+public class SyslogChequePrinter extends Kkm
 {
     private static final Logger log = Logger.getLogger("CP");
 

@@ -25,7 +25,7 @@ import javax.swing.table.DefaultTableModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.application.Application;
-import ru.codemine.pos.entity.User;
+import ru.codemine.pos.entity.device.KkmDevice;
 
 /**
  *
@@ -33,33 +33,33 @@ import ru.codemine.pos.entity.User;
  */
 
 @Component
-public class UsersListTableModel extends DefaultTableModel
+public class KkmListTableModel extends DefaultTableModel
 {
-    @Autowired private Application application;
+    @Autowired Application application;
     
-    private List<User> users;
-    private static final ImageIcon ICON_IMAGE = new ImageIcon("images/icons/default/16x16/user.png");
+    private List<KkmDevice> kkmDevices;
+    private static final ImageIcon KKM_ICON = new ImageIcon("images/icons/default/16x16/kkm.png");
 
-    public UsersListTableModel()
+    public KkmListTableModel()
     {
-        this.users = new ArrayList<>();
+        this.kkmDevices = new ArrayList<>();
     }
 
-    public UsersListTableModel(List<User> users)
+    public KkmListTableModel(List<KkmDevice> kkmDevices)
     {
-        this.users = users;
+        this.kkmDevices = kkmDevices;
     }
 
     @Override
     public int getRowCount()
     {
-        return users == null ? 0 : users.size();
+        return kkmDevices == null ? 0 : kkmDevices.size();
     }
 
     @Override
     public int getColumnCount()
     {
-        return 6; //icon, current, id, username, active, printname
+        return 7; //ico, active, id, type, s/n, k/n, description
     }
 
     @Override
@@ -69,10 +69,11 @@ public class UsersListTableModel extends DefaultTableModel
         {
             case 0 : return "";
             case 1 : return "";
-            case 2 : return "ID";
-            case 3 : return "Имя пользователя";
-            case 4 : return "Вход разрешен";
-            case 5 : return "Имя в чеке";
+            case 2 : return "№";
+            case 3 : return "Тип кассы";
+            case 4 : return "Серийный номер";
+            case 5 : return "Номер ККМ";
+            case 6 : return "Описание";
         }
         
         return "";
@@ -89,11 +90,12 @@ public class UsersListTableModel extends DefaultTableModel
             case 3 : return String.class;
             case 4 : return String.class;
             case 5 : return String.class;
+            case 6 : return String.class;
         }
         
         return String.class;
     }
-
+    
     @Override
     public boolean isCellEditable(int row, int column)
     {
@@ -105,24 +107,29 @@ public class UsersListTableModel extends DefaultTableModel
     {
         switch(column)
         {
-            case 0 : return ICON_IMAGE;
-            case 1 : return application.getActiveUser().equals(users.get(row)) ? "A" : " ";
-            case 2 : return users.get(row).getId();
-            case 3 : return users.get(row).getUsername();
-            case 4 : return users.get(row).isActive() ? "Да" : "Нет";
-            case 5 : return users.get(row).getPrintName();
+            case 0 : return KKM_ICON;
+            case 1 : return application.getCurrentKkm().getDevice().equals(kkmDevices.get(row)) ? "A" : " ";
+            case 2 : return kkmDevices.get(row).getId();
+            case 3 : return kkmDevices.get(row).getName();
+            case 4 : return kkmDevices.get(row).getSerialNumber();
+            case 5 : return kkmDevices.get(row).getKkmNumber();
+            case 6 : return kkmDevices.get(row).getDescription();
         }
         
         return "";
     }
-    
-    public void setUsersList(List<User> users)
+
+    public void setKkmDevices(List<KkmDevice> kkmDevices)
     {
-        this.users = users;
+        this.kkmDevices = kkmDevices;
     }
     
-    public User getUserAt(int selectedRow)
+    public KkmDevice getDeviceAt(int selectedRow)
     {
-        return users.get(selectedRow);
+        return kkmDevices.get(selectedRow);
     }
+    
+    
+    
+    
 }
