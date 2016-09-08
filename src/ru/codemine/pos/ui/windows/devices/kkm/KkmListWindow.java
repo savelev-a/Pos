@@ -18,7 +18,13 @@
 
 package ru.codemine.pos.ui.windows.devices.kkm;
 
+import com.alee.laf.button.WebButton;
+import com.alee.laf.menu.WebMenuItem;
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.table.TableColumnModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -26,7 +32,12 @@ import ru.codemine.pos.entity.device.KkmDevice;
 import ru.codemine.pos.service.kkm.KkmService;
 import ru.codemine.pos.tablemodel.KkmListTableModel;
 import ru.codemine.pos.ui.windows.devices.GenericDeviceListWindow;
+import ru.codemine.pos.ui.windows.devices.kkm.listener.DeleteKkm;
+import ru.codemine.pos.ui.windows.devices.kkm.listener.EditKkmDevice;
 import ru.codemine.pos.ui.windows.devices.kkm.listener.NewKkmDevice;
+import ru.codemine.pos.ui.windows.devices.kkm.listener.RefreshKkmDeviceList;
+import ru.codemine.pos.ui.windows.devices.kkm.listener.SetActiveKkm;
+import ru.codemine.pos.ui.windows.devices.kkm.listener.TestKkmDevice;
 
 /**
  *
@@ -40,15 +51,38 @@ public class KkmListWindow extends GenericDeviceListWindow
     @Autowired private KkmListTableModel tableModel;
     
     @Autowired private NewKkmDevice newKkmDevice;
+    @Autowired private EditKkmDevice editKkmDevice;
+    @Autowired private DeleteKkm deleteKkm;
+    @Autowired private SetActiveKkm setActiveKkm;
+    @Autowired private RefreshKkmDeviceList refreshKkmDeviceList;
+    @Autowired private TestKkmDevice testKkmDevice;
+    
+    private final WebButton toolButtonTestCheque;
     
     public KkmListWindow()
     {
         super();
         setTitle("Доступные кассовые аппараты");
-        //menuItemProcess.setEnabled(false); change icons & description, move to upper class
-        //menuItemUnprocess.setEnabled(false);
-        //toolButtonProcess.setEnabled(false);
-        //toolButtonUnprocess.setEnabled(false);
+        
+        toolButtonTestCheque = new WebButton();
+        toolButtonTestCheque.setRolloverDecoratedOnly(true);
+        toolButtonTestCheque.setToolTip("Проверить работу ККМ");
+        toolButtonTestCheque.setIcon(new ImageIcon("images/icons/default/16x16/test-kkm.png"));
+        toolBar.addSeparator();
+        toolBar.add(toolButtonTestCheque);
+        
+        toolBar.removeAll();
+        toolBar.add(toolButtonNew);
+        toolBar.add(toolButtonDelete);
+        toolBar.addSeparator();
+        toolBar.add(toolButtonEdit);
+        toolBar.add(toolButtonProcess);
+        toolBar.add(toolButtonTestCheque);
+        toolBar.addSeparator();
+        toolBar.add(toolButtonRefresh);
+        
+        operationsMenu.remove(menuItemUnprocess);
+        
     }
 
     @Override
@@ -77,6 +111,27 @@ public class KkmListWindow extends GenericDeviceListWindow
     public void setupActionListeners()
     {
         setNewActionListener(newKkmDevice);
+        setEditActionListener(editKkmDevice);
+        setDeleteActionListener(deleteKkm);
+        setProcessActionListener(setActiveKkm);
+        setRefreshActionListener(refreshKkmDeviceList);
+        toolButtonTestCheque.addActionListener(testKkmDevice);
+        
+        
+        table.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                Point p = e.getPoint();
+                int row = table.rowAtPoint(p);
+                if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
+                {
+                    menuItemEdit.doClick();
+                }
+            }
+        });
+        
         actionListenersInit = true;
     }
     

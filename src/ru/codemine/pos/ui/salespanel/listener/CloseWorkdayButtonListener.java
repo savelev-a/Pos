@@ -23,7 +23,9 @@ import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.exception.GeneralException;
+import ru.codemine.pos.exception.KkmException;
 import ru.codemine.pos.service.WorkdayService;
+import ru.codemine.pos.service.kkm.KkmService;
 import ru.codemine.pos.ui.MainWindow;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
@@ -37,6 +39,7 @@ public class CloseWorkdayButtonListener implements ActionListener
 {
 
     @Autowired private WorkdayService workdayService;
+    @Autowired private KkmService kkmService;
     @Autowired private MainWindow mainWindow;
     @Autowired private SalesPanel salesPanel;
     @Autowired private ButtonsPanel buttonsPanel;
@@ -51,11 +54,11 @@ public class CloseWorkdayButtonListener implements ActionListener
                     "Напечатать Z-отчет?", "Подтвердите действие",
                     WebOptionPane.YES_NO_OPTION, WebOptionPane.QUESTION_MESSAGE) == 0)
             {
-                workdayService.closeWorkday();
+                kkmService.printZReport();
             }
             mainWindow.refreshStatus();
         } 
-        catch (GeneralException ex)
+        catch (GeneralException | KkmException ex)
         {
             WebOptionPane.showMessageDialog(mainWindow.getRootPane(), ex.getLocalizedMessage(), "Ошибка", WebOptionPane.WARNING_MESSAGE);
         } 

@@ -167,6 +167,8 @@ public class KkmWindow extends GenericEntityWindow<KkmDevice>
         sysprinterBox.setSelectedItem(device.getSysprinter());
         descriptionArea.setText(device.getDescription());
         
+        snField.setEditable(device.getId() == null);
+        
         
         setVisible(true);
     }

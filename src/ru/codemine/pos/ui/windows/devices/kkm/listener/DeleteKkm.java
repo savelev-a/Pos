@@ -21,15 +21,12 @@ package ru.codemine.pos.ui.windows.devices.kkm.listener;
 import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.device.KkmDevice;
-import ru.codemine.pos.exception.DuplicateDeviceDataException;
 import ru.codemine.pos.service.kkm.KkmService;
 import ru.codemine.pos.ui.windows.devices.kkm.KkmListWindow;
-import ru.codemine.pos.ui.windows.devices.kkm.KkmWindow;
 
 /**
  *
@@ -37,52 +34,39 @@ import ru.codemine.pos.ui.windows.devices.kkm.KkmWindow;
  */
 
 @Component
-public class SaveKkmDevice implements ActionListener
+public class DeleteKkm implements ActionListener
 {
-    @Autowired private KkmListWindow kkmListWindow;
-    @Autowired private KkmWindow kkmWindow;
+    @Autowired private KkmListWindow window;
     @Autowired private KkmService kkmService;
-    
+
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        KkmDevice device = kkmWindow.getKkmDevice();
+        KkmDevice device = window.getSelectedDevice();
         
-        if(device == null) return;
-        
-        if(device.getId() == null)
-        {
-            try
-            {
-                kkmService.createDevice(device);
-            } 
-            catch (DuplicateDeviceDataException ex)
-            {
-                WebOptionPane.showMessageDialog(kkmWindow, ex.getLocalizedMessage(), "Ошибка сохранения устройства", WebOptionPane.ERROR_MESSAGE);
-                return;  
-            }
-        }
-        else
+        if(device != null)
         {
             if(device.isEnabled())
             {
-                WebOptionPane.showMessageDialog(kkmWindow, "Нельзя изменять активную ККМ", "Ошибка сохранения устройства", WebOptionPane.ERROR_MESSAGE);
-                return; 
+                WebOptionPane.showMessageDialog(window, "Невозможно удалить активную ККМ!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+                return;
             }
             
             try
             {
-                kkmService.updateDevice(device);
+                kkmService.deleteDevice(device);
             } 
-            catch (DuplicateDeviceDataException ex)
+            catch (DataIntegrityViolationException ex)
             {
-                WebOptionPane.showMessageDialog(kkmWindow, ex.getLocalizedMessage(), "Ошибка сохранения устройства", WebOptionPane.ERROR_MESSAGE);
-                return;  
+                WebOptionPane.showMessageDialog(window, "Невозможно удалить данную ККМ!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
             }
         }
+        else
+        {
+            WebOptionPane.showMessageDialog(window, "Не выбрана ККМ!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+        }
         
-        kkmWindow.setVisible(false);
-        kkmListWindow.refresh();
+        window.refresh();
     }
 
 }

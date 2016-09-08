@@ -32,6 +32,7 @@ import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
 import com.alee.laf.toolbar.ToolbarStyle;
 import com.alee.laf.toolbar.WebToolBar;
+import java.awt.Dimension;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
@@ -74,7 +75,7 @@ public abstract class GenericEntityListWindow extends WebFrame
     public GenericEntityListWindow()
     {
         setTitle("");
-        setSize(800, 400);
+        setMinimumSize(new Dimension(800, 400));
         setLocationRelativeTo(null);
         
         TableLayout layout = new TableLayout(new double[][]{

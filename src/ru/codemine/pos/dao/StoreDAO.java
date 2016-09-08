@@ -48,5 +48,4 @@ public interface StoreDAO extends GenericDAO<Store, Integer>
      */
     public Store unproxyStocks(Store store);
 
-    public void evict(Store store);
 }

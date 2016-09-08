@@ -46,6 +46,4 @@ public interface UserDAO extends GenericDAO<User, Integer>
      */
     public List<User> getAll();
 
-    public void evict(User user);
-
 }

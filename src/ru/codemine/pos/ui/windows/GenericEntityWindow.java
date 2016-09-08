@@ -22,6 +22,7 @@ import com.alee.extended.panel.GroupPanel;
 import com.alee.global.StyleConstants;
 import com.alee.laf.button.WebButton;
 import com.alee.laf.rootpane.WebFrame;
+import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import ru.codemine.pos.entity.GenericEntity;
 
@@ -42,7 +43,7 @@ public abstract class GenericEntityWindow<T extends GenericEntity> extends WebFr
     public GenericEntityWindow()
     {
         setTitle("");
-        setSize(800, 400);
+        setMinimumSize(new Dimension(800, 400));
         setLocationRelativeTo(null);
         
         actionListenersInit = false;

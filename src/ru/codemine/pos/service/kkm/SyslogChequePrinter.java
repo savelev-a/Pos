@@ -25,6 +25,7 @@ import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.exception.KkmException;
 import ru.codemine.pos.service.kkm.template.SimpleChequeTemplate;
 import ru.codemine.pos.service.kkm.template.SimpleXReportTemplate;
+import ru.codemine.pos.service.kkm.template.SimpleZReportTemplate;
 
 /**
  *
@@ -45,6 +46,13 @@ public class SyslogChequePrinter extends Kkm
     public void printXReport(Workday currentWorkday, List<Cheque> cheques) throws KkmException
     {
         SimpleXReportTemplate template = new SimpleXReportTemplate(currentWorkday, cheques);
+        log.info("\n" + template.toString());
+    }
+    
+    @Override
+    public void printZReport(Workday currentWorkday, List<Cheque> cheques) throws KkmException
+    {
+        SimpleZReportTemplate template = new SimpleZReportTemplate(currentWorkday, cheques);
         log.info("\n" + template.toString());
     }
 

@@ -57,42 +57,31 @@ public class Application
     
     private ApplicationContext appContext;
     private User activeUser;
-    private Kkm activeKkm;
+    private Kkm currentKkm;
     
-    /**
-     * Возвращает контекст приложения
-     * @return контекст приложения
-     */
     public ApplicationContext getAppContext()
     {
         return appContext;
     }
     
-    /**
-     * Возвращает текущего пользователя
-     * @return текуший пользователь
-     */
     public User getActiveUser()
     {
         return activeUser;
     }
     
-    /**
-     * Делает заданного пользователя текущим
-     * @param user
-     */
     public void setActiveUser(User user)
     {
         this.activeUser = user;
     }
-    
-    /**
-     * Возвращает теущую настроеную ККМ
-     * @return
-     */
+
     public Kkm getCurrentKkm()
     {
-        return activeKkm;
+        return currentKkm;
+    }
+    
+    public void setCurrentKkm(Kkm kkm)
+    {
+        this.currentKkm = kkm;
     }
     
     
@@ -128,22 +117,17 @@ public class Application
         }
         Application app = appContext.getBean(Application.class);
         
-        //Загрузка настроек
         loadingScreen.setLoadingStatus("Загрузка настроек", 50);
-        
-        //Инициализация пользователей
+
         loadingScreen.setLoadingStatus("Загрузка пользователей", 70);
         app.initUsers();
-        
-        //Инициализация складов
+
         loadingScreen.setLoadingStatus("Загрузка складов", 80);
         app.initStores();
-        
-        //Инициализация ККМ
+
         loadingScreen.setLoadingStatus("Загрузка касс", 90);
         app.initKkm();
-        
-        //Окончание загрузки
+
         loadingScreen.setLoadingStatus("Загрузка завершена", 100);
 
         loadingScreen.close();
@@ -224,17 +208,17 @@ public class Application
 
     private void initKkm()
     {
-        activeKkm = kkmService.getCurrentKkm();
-        if(activeKkm == null)
+        currentKkm = kkmService.getCurrentKkm();
+        if(currentKkm == null)
         {
             WebOptionPane.showMessageDialog(null,  
                         "После загрузки перейдите в Настройки -> Кассовые аппараты\n"
                        + "и настройте подключенный кассовый аппарат.", 
                         "Не найдено настроенных кассовых аппаратов", WebOptionPane.INFORMATION_MESSAGE);
             
-            activeKkm = new SyslogChequePrinter();
-            activeKkm.setDevice(new KkmDevice());
+            currentKkm = new SyslogChequePrinter();
+            currentKkm.setDevice(new KkmDevice());
         }
     }
-    
+
 }

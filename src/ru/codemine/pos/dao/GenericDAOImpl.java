@@ -82,5 +82,11 @@ public class GenericDAOImpl<T, PK extends Serializable> implements GenericDAO<T,
     {
         return (T)getSession().get(entityClass, id);
     }
+    
+    @Override
+    public void evict(T t)
+    {
+        if(t != null) getSession().evict(t);
+    }
 
 }

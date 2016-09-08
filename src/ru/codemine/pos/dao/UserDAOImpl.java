@@ -57,10 +57,5 @@ public class UserDAOImpl extends GenericDAOImpl<User, Integer> implements UserDA
         return query.list();
     }
 
-    @Override
-    public void evict(User user)
-    {
-        if(user != null) getSession().evict(user);
-    }
 
 }

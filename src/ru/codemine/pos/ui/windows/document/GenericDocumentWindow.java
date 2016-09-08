@@ -28,6 +28,7 @@ import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
 import com.alee.laf.toolbar.ToolbarStyle;
 import com.alee.laf.toolbar.WebToolBar;
+import java.awt.Dimension;
 import javax.swing.ImageIcon;
 import ru.codemine.pos.entity.GenericEntity;
 import ru.codemine.pos.entity.document.Document;
@@ -65,7 +66,7 @@ public abstract class GenericDocumentWindow<T extends Document> extends WebFrame
     public GenericDocumentWindow()
     {
         setTitle("");
-        setSize(800, 400);
+        setMinimumSize(new Dimension(800, 400));
         setLocationRelativeTo(null);
         
         idLabel = new WebLabel("№ документа");

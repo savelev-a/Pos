@@ -19,6 +19,7 @@
 package ru.codemine.pos.service.kkm;
 
 import java.util.List;
+import java.util.logging.Level;
 import javax.print.PrintException;
 import org.apache.log4j.Logger;
 import ru.codemine.pos.entity.Workday;
@@ -26,6 +27,7 @@ import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.exception.KkmException;
 import ru.codemine.pos.service.kkm.template.SimpleChequeTemplate;
 import ru.codemine.pos.service.kkm.template.SimpleXReportTemplate;
+import ru.codemine.pos.service.kkm.template.SimpleZReportTemplate;
 import ru.codemine.pos.service.printer.PrinterService;
 
 /**
@@ -47,7 +49,7 @@ public class ChequePrinter extends Kkm
 
         try
         {
-            PrinterService.printPlainText(template.toString(), "Star-TSP100");
+            PrinterService.printPlainText(template.toString(), getDevice().getSysprinter());
         } 
         catch (PrintException ex)
         {
@@ -66,7 +68,22 @@ public class ChequePrinter extends Kkm
         
         try
         {
-            PrinterService.printPlainText(template.toString(), "Star-TSP100");
+            PrinterService.printPlainText(template.toString(), getDevice().getSysprinter());
+        } 
+        catch (PrintException ex)
+        {
+            throw new KkmException(ex.getLocalizedMessage());
+        }
+    }
+
+    @Override
+    public void printZReport(Workday currentWorkday, List<Cheque> cheques) throws KkmException
+    {
+        SimpleZReportTemplate template = new SimpleZReportTemplate(currentWorkday, cheques);
+        
+        try
+        {
+            PrinterService.printPlainText(template.toString(), getDevice().getSysprinter());
         } 
         catch (PrintException ex)
         {

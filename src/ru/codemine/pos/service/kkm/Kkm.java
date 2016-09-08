@@ -34,6 +34,7 @@ public abstract class Kkm
     
     public abstract void printCheque(Cheque cheque) throws KkmException;
     public abstract void printXReport(Workday currentWorkday, List<Cheque> cheques) throws KkmException;
+    public abstract void printZReport(Workday currentWorkday, List<Cheque> cheques) throws KkmException;
     
     public KkmDevice getDevice()
     {

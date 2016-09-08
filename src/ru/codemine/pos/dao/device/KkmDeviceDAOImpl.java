@@ -56,9 +56,9 @@ public class KkmDeviceDAOImpl extends GenericDAOImpl<KkmDevice, Long> implements
         if(kkmDevice == null || kkmDevice.getSerialNumber() == null) return;
         
         kkmDevice.setEnabled(true);
-        Query querySetFalse = getSession().createQuery("UPDATE KkmDevice SET KKMDEVICE.enabled = FALSE");
+        Query querySetFalse = getSession().createQuery("UPDATE KkmDevice SET enabled = FALSE");
         
-        Query querySetTrue = getSession().createQuery("UPDATE KkmDevice SET KKMDEVICE.enabled = TRUE WHERE KKMDEVICE.serialNumber = :serial");
+        Query querySetTrue = getSession().createQuery("UPDATE KkmDevice SET enabled = TRUE WHERE serialNumber = :serial");
         querySetTrue.setString("serial", kkmDevice.getSerialNumber());
         
         querySetFalse.executeUpdate();

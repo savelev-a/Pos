@@ -28,6 +28,7 @@ import ru.codemine.pos.entity.device.GenericDevice;
 import ru.codemine.pos.entity.device.KkmDevice;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.exception.DuplicateDeviceDataException;
+import ru.codemine.pos.exception.GeneralException;
 import ru.codemine.pos.exception.KkmException;
 import ru.codemine.pos.service.ChequeService;
 import ru.codemine.pos.service.WorkdayService;
@@ -47,11 +48,17 @@ public class KkmService
     @Transactional
     public Kkm getCurrentKkm()
     {
-        Kkm kkm;
         KkmDevice kkmDevice = kkmDeviceDAO.getActive();
-        if(kkmDevice == null) return null;
         
-        switch(kkmDevice.getType())
+        return createKkm(kkmDevice);
+    }
+    
+    public Kkm createKkm(KkmDevice device)
+    {
+        Kkm kkm;
+        if(device == null) return null;
+        
+        switch(device.getType())
         {
             case SYSLOG_PRINTER : 
                 kkm = new SyslogChequePrinter();
@@ -63,7 +70,7 @@ public class KkmService
                 kkm = new SyslogChequePrinter();
         }
         
-        kkm.setDevice(kkmDevice);
+        kkm.setDevice(device);
         
         return kkm;
     }
@@ -82,6 +89,22 @@ public class KkmService
         
         kkm.printXReport(currentWorkday, cheques);
     }
+    
+    @Transactional
+    public void printZReport() throws KkmException, GeneralException
+    {
+        Kkm kkm = getCurrentKkm();
+        Workday currentWorkday = workdayService.getOpenWorkday();
+        List<Cheque> cheques = chequeService.getByOpenWorkday();
+        
+        if(kkm == null || currentWorkday == null) return;
+        
+        kkm.printZReport(currentWorkday, cheques);
+        
+        workdayService.closeWorkday();
+        
+    }
+    
 
     @Transactional
     public List<KkmDevice> getAllKkmDevices()
@@ -103,10 +126,31 @@ public class KkmService
     }
 
     @Transactional
-    public void updateDevice(KkmDevice device)
+    public void updateDevice(KkmDevice device) throws DuplicateDeviceDataException
     {
         if(device == null) return;
         
-        //todo it
+        KkmDevice testSerialNumber = kkmDeviceDAO.getBySerialNumber(device.getSerialNumber());
+        
+        if(testSerialNumber != null && !testSerialNumber.getId().equals(device.getId())) 
+            throw new DuplicateDeviceDataException(GenericDevice.DeviceType.DEVICE_KKM, 
+                                                   "Серийный номер", 
+                                                   device.getSerialNumber());
+        
+        kkmDeviceDAO.evict(testSerialNumber);
+        kkmDeviceDAO.update(device);
+        
+    }
+
+    @Transactional
+    public void deleteDevice(KkmDevice device)
+    {
+        kkmDeviceDAO.delete(device);
+    }
+
+    @Transactional
+    public void setActiveKkm(KkmDevice device)
+    {
+        kkmDeviceDAO.setActive(device);
     }
 }

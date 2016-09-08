@@ -59,10 +59,5 @@ public class StoreDAOImpl extends GenericDAOImpl<Store, Integer> implements Stor
         return s;
     }
 
-    @Override
-    public void evict(Store store)
-    {
-        if(store != null) getSession().evict(store);
-    }
 
 }

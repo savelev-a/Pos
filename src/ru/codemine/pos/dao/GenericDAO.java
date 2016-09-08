@@ -36,4 +36,6 @@ public interface GenericDAO<T, PK extends Serializable>
     public void update(T t);
     
     public T getById(PK id);
+    
+    public void evict(T t);
 }

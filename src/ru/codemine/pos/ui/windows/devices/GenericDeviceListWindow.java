@@ -43,5 +43,9 @@ public abstract class GenericDeviceListWindow extends GenericEntityListWindow
         toolButtonNew.setIcon(new ImageIcon("images/icons/default/16x16/device-add.png"));
         toolButtonDelete.setIcon(new ImageIcon("images/icons/default/16x16/device-remove.png"));
         toolButtonEdit.setIcon(new ImageIcon("images/icons/default/16x16/device-config.png"));
+        toolButtonProcess.setIcon(new ImageIcon("images/icons/default/16x16/device-setactive.png"));
+        
+        toolButtonProcess.setToolTip("Включить");
+        toolButtonUnprocess.setToolTip("Отключить");
     }
 }
