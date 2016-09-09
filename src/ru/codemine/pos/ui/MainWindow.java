@@ -24,7 +24,6 @@ import com.alee.extended.statusbar.WebMemoryBar;
 import com.alee.extended.statusbar.WebStatusBar;
 import com.alee.extended.statusbar.WebStatusLabel;
 import com.alee.laf.optionpane.WebOptionPane;
-import com.alee.laf.panel.WebPanel;
 import com.alee.laf.rootpane.WebFrame;
 import com.alee.laf.tabbedpane.WebTabbedPane;
 import java.awt.KeyboardFocusManager;
@@ -38,6 +37,7 @@ import ru.codemine.pos.application.Application;
 import ru.codemine.pos.service.WorkdayService;
 import ru.codemine.pos.ui.docspanel.DocumentsPanel;
 import ru.codemine.pos.ui.keydispatcher.MainKeyDispatcher;
+import ru.codemine.pos.ui.repotrspanel.ReportsPanel;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.settingspanel.SettingsPanel;
 
@@ -54,6 +54,7 @@ public class MainWindow extends WebFrame
 
     @Autowired private SalesPanel salesPanel;
     @Autowired private DocumentsPanel documentsPanel;
+    @Autowired private ReportsPanel reportsPanel;
     @Autowired private SettingsPanel settingsPanel;
     
     @Autowired private MainKeyDispatcher keyDispatcher;
@@ -99,8 +100,8 @@ public class MainWindow extends WebFrame
         tabs.addTab("Документы", new ImageIcon("images/icons/default/32x32/tab-docs.png"), documentsPanel);
         documentsPanel.init();
         
-        tabs.addTab("Отчеты",    new ImageIcon("images/icons/default/32x32/tab-reports.png"), new WebPanel());
-        //init
+        tabs.addTab("Отчеты",    new ImageIcon("images/icons/default/32x32/tab-reports.png"), reportsPanel);
+        reportsPanel.init();
         
         tabs.addTab("Настройки", new ImageIcon("images/icons/default/32x32/tab-settings.png"), settingsPanel);
         settingsPanel.init();

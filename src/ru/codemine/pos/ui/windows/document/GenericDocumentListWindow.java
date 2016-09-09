@@ -18,14 +18,14 @@
 
 package ru.codemine.pos.ui.windows.document;
 
-import org.joda.time.LocalDate;
 import ru.codemine.pos.ui.windows.GenericEntityListWindow;
+import ru.codemine.pos.ui.windows.PeriodSelectable;
 
 /**
  *
  * @author Alexander Savelev
  */
-public abstract class GenericDocumentListWindow extends GenericEntityListWindow
+public abstract class GenericDocumentListWindow extends GenericEntityListWindow implements PeriodSelectable
 {
-    public abstract void setPeriod(LocalDate startDate, LocalDate endDate);
+    
 }

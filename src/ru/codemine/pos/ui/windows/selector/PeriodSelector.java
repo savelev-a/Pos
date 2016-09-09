@@ -30,7 +30,7 @@ import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
 import org.joda.time.LocalDate;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.ui.windows.document.GenericDocumentListWindow;
+import ru.codemine.pos.ui.windows.PeriodSelectable;
 
 /**
  *
@@ -51,7 +51,7 @@ public class PeriodSelector extends WebFrame
     
     protected boolean actionListenersInit;
     
-    protected GenericDocumentListWindow clientWindow;
+    protected PeriodSelectable clientWindow;
     
     public PeriodSelector()
     {
@@ -84,9 +84,11 @@ public class PeriodSelector extends WebFrame
         add(dateEndLabel, "1, 3");
         add(dateEndField, "3, 3");
         add(buttonsGroupPanel, "1, 7, 3, 7, C, T");
+        
+        clientWindow = null;
     }
     
-    public void selectFor(GenericDocumentListWindow window)
+    public void selectFor(PeriodSelectable window)
     {
         this.clientWindow = window;
         if(!actionListenersInit) setupActionListeners();
@@ -116,5 +118,7 @@ public class PeriodSelector extends WebFrame
                 setVisible(false);
             }
         });
+        
+        actionListenersInit = true;
     }
 }
