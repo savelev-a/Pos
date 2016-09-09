@@ -29,7 +29,15 @@ import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
 import com.alee.laf.toolbar.WebToolBar;
+import com.alee.utils.swing.DocumentChangeListener;
+import java.awt.Point;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import javax.swing.ImageIcon;
+import javax.swing.RowFilter;
+import javax.swing.event.DocumentEvent;
 import javax.swing.table.TableModel;
 import javax.swing.table.TableRowSorter;
 import ru.codemine.pos.ui.windows.document.GenericDocumentWindow;
@@ -99,6 +107,53 @@ public abstract class GenericSelector extends WebFrame
     {
         sorter = new TableRowSorter<>(table.getModel());
         table.setRowSorter(sorter);
+    }
+    
+    protected  void finishSetupActionListeners()
+    {
+        cancelButton.addActionListener(new ActionListener()
+        {
+
+            @Override
+            public void actionPerformed(ActionEvent e)
+            {
+                setVisible(false);
+            }
+        });
+        
+        searchField.getDocument().addDocumentListener(new DocumentChangeListener()
+        {
+
+            @Override
+            public void documentChanged(DocumentEvent de)
+            {
+                String text = searchField.getText();
+                if(text.length() == 0)
+                {
+                    sorter.setRowFilter(null);
+                }
+                else
+                {
+                    sorter.setRowFilter(RowFilter.regexFilter(text));
+                }
+            }
+        });
+        
+        table.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                Point p = e.getPoint();
+                int row = table.rowAtPoint(p);
+                if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
+                {
+                    selectButton.doClick();
+                }
+            }
+        });
+        
+        actionListenersInit = true;
     }
     
     public abstract void selectFor(GenericDocumentWindow window);

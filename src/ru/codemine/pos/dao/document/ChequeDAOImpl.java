@@ -65,5 +65,18 @@ public class ChequeDAOImpl extends GenericDAOImpl<Cheque, Long> implements Chequ
         
         return query.list();
     }
+    
+    @Override
+    public List<Cheque> getByPeriod(LocalDate startDate, LocalDate endDate, Cheque.PaymentType type)
+    {
+        endDate = endDate.plusDays(1);
+        
+        Query query = getSession().createQuery("FROM Cheque c WHERE c.paymentType = :type AND c.creationTime BETWEEN :start AND :end");
+        query.setDate("start", startDate.toDate());
+        query.setDate("end", endDate.toDate());
+        query.setInteger("type", type.ordinal());
+        
+        return query.list();
+    }
 
 }

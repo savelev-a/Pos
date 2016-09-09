@@ -103,10 +103,10 @@ public class MainKeyDispatcher implements KeyEventDispatcher
             {
                 switch(e.getKeyCode())
                 {
-                    case KeyEvent.VK_F2 : buttonsPanel.getOpenWorkdayButton().doClick();
-                        break;
-                    case KeyEvent.VK_F3 : buttonsPanel.getCloseWorkdayButton().doClick();
-                        break;
+                    //case KeyEvent.VK_F2 : buttonsPanel.getOpenWorkdayButton().doClick();
+                    //    break;
+                    //case KeyEvent.VK_F3 : buttonsPanel.getCloseWorkdayButton().doClick();
+                    //    break;
                     case KeyEvent.VK_F4 : buttonsPanel.getQuantitySetupButton().doClick();
                         break;
                     case KeyEvent.VK_F5 : buttonsPanel.getChequeProcessButton().doClick();

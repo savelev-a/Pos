@@ -53,7 +53,7 @@ public class ChequeListTableModel extends DefaultTableModel
     @Override
     public int getColumnCount()
     {
-        return 7; //icon, id, type, time, creator, workday, total
+        return 8; //icon, id, type, time, creator, workday, ptype, total
     }
 
     @Override
@@ -67,7 +67,8 @@ public class ChequeListTableModel extends DefaultTableModel
             case 3 : return "Время";
             case 4 : return "Продавец";
             case 5 : return "№ смены";
-            case 6 : return "Сумма";
+            case 6 : return "Тип оплаты";
+            case 7 : return "Сумма";
         }
         
         return "";
@@ -84,7 +85,8 @@ public class ChequeListTableModel extends DefaultTableModel
             case 3 : return String.class;
             case 4 : return String.class;
             case 5 : return String.class;
-            case 6 : return Double.class;
+            case 6 : return String.class;
+            case 7 : return Double.class;
         }
         
         return String.class;
@@ -107,7 +109,8 @@ public class ChequeListTableModel extends DefaultTableModel
             case 3 : return chequeList.get(row).getCreationTime().toString("dd.MM.YY HH:mm");
             case 4 : return chequeList.get(row).getCreator().getPrintName();
             case 5 : return chequeList.get(row).getWorkday().getId().toString();
-            case 6 : return chequeList.get(row).getChequeTotal();
+            case 6 : return chequeList.get(row).getPaymentTypeString();
+            case 7 : return chequeList.get(row).getChequeTotal();
         }
         
         return "";

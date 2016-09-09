@@ -199,4 +199,10 @@ public class ChequeService
         return chequeDAO.getByPeriod(startDate, endDate);
     }
     
+    @Transactional
+    public List<Cheque> getByPeriod(LocalDate startDate, LocalDate endDate, Cheque.PaymentType type)
+    {
+        return chequeDAO.getByPeriod(startDate, endDate, type);
+    }
+    
 }

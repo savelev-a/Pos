@@ -46,6 +46,8 @@ public interface ChequeDAO extends GenericDAO<Cheque, Long>
     public List<Cheque> getByOpenWorkday();
 
     public List<Cheque> getByPeriod(LocalDate startDate, LocalDate endDate);
+    public List<Cheque> getByPeriod(LocalDate startDate, LocalDate endDate, Cheque.PaymentType type);
+    
 
     
 }

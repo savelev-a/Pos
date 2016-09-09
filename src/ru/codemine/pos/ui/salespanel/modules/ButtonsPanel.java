@@ -29,6 +29,7 @@ import ru.codemine.pos.ui.GenericPanelComponent;
 import ru.codemine.pos.ui.salespanel.listener.ChequeProcessButtonListener;
 import ru.codemine.pos.ui.salespanel.listener.CloseWorkdayButtonListener;
 import ru.codemine.pos.ui.salespanel.listener.OpenWorkdayButtonListener;
+import ru.codemine.pos.ui.salespanel.listener.PaymentTypeButtonListener;
 import ru.codemine.pos.ui.salespanel.listener.ShowQuantitySetupWindowListener;
 import ru.codemine.pos.ui.salespanel.listener.XReportButtonListener;
 
@@ -45,6 +46,7 @@ public class ButtonsPanel extends WebPanel implements GenericPanelComponent
     @Autowired private ShowQuantitySetupWindowListener quantitySetupListener;
     @Autowired private ChequeProcessButtonListener chequeProcessButtonListener;
     @Autowired private XReportButtonListener xReportButtonListener;
+    @Autowired private PaymentTypeButtonListener paymentTypeButtonListener;
     
     private final WebButton[][] buttons;
     public ButtonsPanel()
@@ -76,10 +78,10 @@ public class ButtonsPanel extends WebPanel implements GenericPanelComponent
             }
         }
         
-        buttons[0][0].setText("Открыть смену (F2)");
+        buttons[0][0].setText("Открыть смену");
         buttons[0][0].setIcon(new ImageIcon("images/icons/default/32x32/open-workday.png"));
         
-        buttons[0][1].setText("Закрыть смену (F3)");
+        buttons[0][1].setText("Закрыть смену");
         buttons[0][1].setIcon(new ImageIcon("images/icons/default/32x32/close-workday.png"));
         
         buttons[1][0].setText("Количество (F4)");
@@ -91,6 +93,8 @@ public class ButtonsPanel extends WebPanel implements GenericPanelComponent
         buttons[2][0].setText("Пробить чек (F5)");
         buttons[2][0].setIcon(new ImageIcon("images/icons/default/32x32/cheque-process.png"));
         
+        buttons[2][1].setText("Выбрать тип оплаты (F3)");
+        buttons[2][1].setIcon(new ImageIcon("images/icons/default/32x32/payment-type.png"));
         
     }
     
@@ -102,6 +106,7 @@ public class ButtonsPanel extends WebPanel implements GenericPanelComponent
         getQuantitySetupButton().addActionListener(quantitySetupListener);
         getChequeProcessButton().addActionListener(chequeProcessButtonListener);
         getXReportButton().addActionListener(xReportButtonListener);
+        getPaymentChooseButton().addActionListener(paymentTypeButtonListener);
     }
     
     public WebButton[][] getButtons()
@@ -132,6 +137,11 @@ public class ButtonsPanel extends WebPanel implements GenericPanelComponent
     public WebButton getChequeProcessButton()
     {
         return buttons[2][0];
+    }
+    
+    public WebButton getPaymentChooseButton()
+    {
+        return buttons[2][1];
     }
 
     @Override

@@ -32,6 +32,7 @@ public class CalcsPanel extends WebPanel
 {
     private final WebLabel[][] labels;
     private final WebLabel bottomLabel;
+    
     public CalcsPanel()
     {
         setMargin(10);
@@ -69,35 +70,18 @@ public class CalcsPanel extends WebPanel
         showByCheque(new Cheque());
     }
     
-    public void showChequeSum(Double value)
+    public final void showByCheque(Cheque cheque)
     {
-        labels[0][0].setText("Сумма:");
-        labels[1][0].setText("<html><b>" + value + " руб.</b></html>");
-    }
-    
-    public void showNds(Double value)
-    {
+        
+        labels[0][0].setText(cheque.getPaymentTypeString() + ":");
+        labels[1][0].setText("<html><b>" + cheque.getChequeTotal() + " руб.</b></html>");
+        
         labels[0][1].setText("НДС:");
-        labels[1][1].setText("<html><b>" + value + " руб.</b></html>");
-    }
-    
-    public void showDiscounts(Double value)
-    {
+        labels[1][1].setText("<html><b>" + cheque.getChequeTotal() * 0.18 + " руб.</b></html>");
+        
         labels[0][2].setText("Скидки:");
-        labels[1][2].setText("<html><b>" + value + " руб.</b></html>");
-    }
-    
-    public void showTotals(Double value)
-    {
-        bottomLabel.setText("Итого: " + value + " руб.");
-    }
-    
-    public void showByCheque(Cheque cheque)
-    {
-        Double sum = cheque.getChequeTotal();
-        showChequeSum(sum);
-        showNds(sum * 0.18);
-        showDiscounts(0.0);
-        showTotals(sum);
+        labels[1][2].setText("<html><b>" + 0.0 + " руб.</b></html>");
+
+        bottomLabel.setText("Итого: " + cheque.getChequeTotal() + " руб.");;
     }
 }

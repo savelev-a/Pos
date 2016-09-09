@@ -19,7 +19,9 @@
 package ru.codemine.pos.entity.document;
 
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 import javax.persistence.CascadeType;
 import javax.persistence.Column;
@@ -41,6 +43,11 @@ import ru.codemine.pos.entity.Workday;
 @Table(name = "cheques")
 public class Cheque extends Document
 {
+    public enum PaymentType
+    {
+        CASH,
+        CASHLESS
+    }
     
     @OneToMany(fetch = FetchType.EAGER, mappedBy = "cheque", cascade = CascadeType.ALL)
     private Set<ChequeLine> content;
@@ -49,18 +56,23 @@ public class Cheque extends Document
     @JoinColumn(name = "id_workday", nullable = false)
     private Workday workday;
     
+    @Column(name = "ptype", nullable = false)
+    private PaymentType paymentType;
+    
     @Column(name = "chequeTotal", nullable = false)
     private Double chequeTotal;
     
     public Cheque()
     {
         this.content = new LinkedHashSet<>();
+        this.paymentType = PaymentType.CASH;
         this.chequeTotal = 0.0;
     }
     
     public Cheque(Workday wd)
     {
         this.content = new LinkedHashSet<>();
+        this.paymentType = PaymentType.CASH;
         this.chequeTotal = 0.0;
         this.workday = wd;
     }
@@ -86,10 +98,19 @@ public class Cheque extends Document
     {
         this.workday = workday;
     }
+    
+    public PaymentType getPaymentType()
+    {
+        return paymentType;
+    }
+    
+    public void setPaymentType(PaymentType type)
+    {
+        this.paymentType = type;
+    }
 
     public Double getChequeTotal()
     {
-        recalculateCheque();
         return chequeTotal;
     }
 
@@ -121,19 +142,6 @@ public class Cheque extends Document
         return quantity;
     }
     
-//    public Double getPriceOf(Product product)
-//    {
-//        Double price = 0.0;
-//        for(ChequeLine line : content)
-//        {
-//            if(line.getProduct() == product)
-//            {
-//                price = line.getPrice();
-//            }
-//        }
-//        
-//        return price;
-//    }
     
     public boolean hasProduct(Product product)
     {
@@ -193,6 +201,21 @@ public class Cheque extends Document
                 chequeTotal += line.getLineTotal();
             }
         }
+    }
+    
+    public String getPaymentTypeString()
+    {
+        return getAvaiblePaymentTypes().get(paymentType);
+    }
+    
+    public static Map<PaymentType, String> getAvaiblePaymentTypes()
+    {
+        Map<PaymentType, String> result = new LinkedHashMap<>();
+        
+        result.put(PaymentType.CASH, "Наличными");
+        result.put(PaymentType.CASHLESS, "Безналично");
+        
+        return result;
     }
 
     @Override

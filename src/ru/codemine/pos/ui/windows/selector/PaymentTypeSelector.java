@@ -25,29 +25,31 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 import javax.swing.RowFilter;
 import javax.swing.event.DocumentEvent;
 import javax.swing.table.TableColumnModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.entity.Product;
-import ru.codemine.pos.service.ProductService;
-import ru.codemine.pos.tablemodel.ProductCatalogTableModel;
+import ru.codemine.pos.entity.document.Cheque;
+import ru.codemine.pos.tablemodel.PaymentTypesListTableModel;
+import ru.codemine.pos.ui.MainWindow;
+import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.windows.document.GenericDocumentWindow;
 
 /**
  *
  * @author Alexander Savelev
  */
+
 @Component
-public class ProductSelector extends GenericSelector
+public class PaymentTypeSelector extends GenericSelector
 {
-    @Autowired ProductService productService;
+    @Autowired private MainWindow mainWindow;
+    @Autowired private SalesPanel salesPanel;
     
-    ProductCatalogTableModel tableModel;
-    
-    public ProductSelector()
+    PaymentTypesListTableModel tableModel;
+
+    public PaymentTypeSelector()
     {
         super();
         actionListenersInit = false;
@@ -56,21 +58,28 @@ public class ProductSelector extends GenericSelector
     @Override
     public void selectFor(GenericDocumentWindow window)
     {
-        this.clientWindow = window;
+        throw new UnsupportedOperationException("Not supported yet."); 
+    }
+    
+    public void selectForMainWindow()
+    {
         if(!actionListenersInit) setupActionListeners();
+        mainWindow.blockBarcodeInput();
         
-        List<Product> products = productService.getAll();
-        tableModel = new ProductCatalogTableModel(products);
+        tableModel = new PaymentTypesListTableModel();
         table.setModel(tableModel);
         
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(0).setMaxWidth(10);
+        columnModel.getColumn(1).setMaxWidth(50);
         
-        setTitle("Выберите товар для добавления");
-        statusLabel.setText("Загружено " + products.size() + " строк");
+        setTitle("Выберите тип оплаты");
+        statusLabel.setText("Загружено " + tableModel.getRowCount() + " строк");
+        
         
         setupSorter();
         setVisible(true);
+        table.setSelectedRow(0);
     }
 
     @Override
@@ -87,12 +96,16 @@ public class ProductSelector extends GenericSelector
                 int row = table.getSelectedRow();
                 if(row == -1)
                 {
-                    WebOptionPane.showMessageDialog(rootPane, "Выберите товар для добавления", "Не выбран товар", WebOptionPane.WARNING_MESSAGE);
+                    WebOptionPane.showMessageDialog(rootPane, "Выберите тип оплаты", "Не выбран тип оплаты", WebOptionPane.WARNING_MESSAGE);
                     return;
                 }
                 
-                Product product = tableModel.getProductAt(table.getSelectedRow());
-                clientWindow.addItem(product);
+                Cheque.PaymentType type = tableModel.getPtypeAt(table.getSelectedRow());
+                Cheque mainCheque = salesPanel.getChequeSetupPanel().getCheque();
+                mainCheque.setPaymentType(type);
+                salesPanel.getCalcsPanel().showByCheque(mainCheque);
+                
+                mainWindow.unblockBarcodeInput();
                 setVisible(false);
             }
         });
