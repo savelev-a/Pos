@@ -20,6 +20,7 @@ package ru.codemine.pos.reports;
 
 import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.rootpane.WebFrame;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,12 +30,14 @@ import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
+import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.swing.JRViewer;
 import org.joda.time.LocalDate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.document.Cheque;
+import ru.codemine.pos.reports.reportmodel.SalesByPtypeReportRecord;
 import ru.codemine.pos.service.ChequeService;
 import ru.codemine.pos.ui.windows.PeriodSelectable;
 
@@ -51,33 +54,24 @@ public class SalesByPtypeReport implements PeriodSelectable
     @Override
     public void setPeriod(LocalDate startDate, LocalDate endDate)
     {
-        List<Cheque> chequesCash = chequeService.getByPeriod(startDate, endDate, Cheque.PaymentType.CASH);
-        List<Cheque> chequesCashless = chequeService.getByPeriod(startDate, endDate, Cheque.PaymentType.CASHLESS);
-        
-        Integer cqCountCash = chequesCash.size();
-        Integer cqCountCashless = chequesCashless.size();
-        Double salesCash = 0.0;
-        Double salesCashless = 0.0;
-        
-        for(Cheque c : chequesCash) salesCash += c.getChequeTotal();
-        for(Cheque c : chequesCashless) salesCashless += c.getChequeTotal();
+        List<SalesByPtypeReportRecord> records = new ArrayList<>();
+        for(Map.Entry<Cheque.PaymentType, String> paymentEntry : Cheque.getAvaiblePaymentTypes().entrySet())
+        {
+            List<Cheque> chequesByPtype = chequeService.getByPeriod(startDate, endDate, paymentEntry.getKey());
+            Double sales = 0.0;
+            for(Cheque c : chequesByPtype) sales += c.getChequeTotal();
+            records.add(new SalesByPtypeReportRecord(paymentEntry.getValue(), chequesByPtype.size(), sales));
+        }
         
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("startDate", startDate.toString("dd.MM.YY"));
         parameters.put("endDate", endDate.toString("dd.MM.YY"));
-        parameters.put("cqCountCash", cqCountCash);
-        parameters.put("cqCountCashless", cqCountCashless);
-        parameters.put("salesCash", salesCash);
-        parameters.put("salesCashless", salesCashless);
         
-        System.out.println(parameters);
-
-        JasperReport report;
-        JasperPrint jasperPrint;
         try
         {
-            report = (JasperReport)JRLoader.loadObjectFromFile("reports/SalesByPtypeReport.jasper");
-            jasperPrint = JasperFillManager.fillReport(report, parameters);
+            JasperReport report = (JasperReport)JRLoader.loadObjectFromFile("reports/SalesByPtypeReport.jasper");
+            JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(records);
+            JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataSource);
             WebFrame reportFrame = new WebFrame("Отчет о выручке по типу оплат");
             reportFrame.getContentPane().add(new JRViewer(jasperPrint));
             reportFrame.pack();
