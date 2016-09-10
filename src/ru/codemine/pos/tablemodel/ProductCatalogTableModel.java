@@ -19,7 +19,9 @@
 package ru.codemine.pos.tablemodel;
 
 import java.util.ArrayList;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
 import ru.codemine.pos.entity.Product;
@@ -31,17 +33,20 @@ import ru.codemine.pos.entity.Product;
 public class ProductCatalogTableModel extends DefaultTableModel
 {
     private List<Product> products;
+    private Set<Integer> selectedIndexes;
     
     private static final ImageIcon ICON_IMAGE = new ImageIcon("images/icons/default/16x16/product.png");
 
     public ProductCatalogTableModel()
     {
         this.products = new ArrayList<>();
+        this.selectedIndexes = new LinkedHashSet<>();
     }
 
     public ProductCatalogTableModel(List<Product> products)
     {
         this.products = products;
+        this.selectedIndexes = new LinkedHashSet<>();
     }
 
     @Override
@@ -53,7 +58,7 @@ public class ProductCatalogTableModel extends DefaultTableModel
     @Override
     public int getColumnCount()
     {
-        return 5; // icon, artikul, name, barcode, price
+        return 6; // icon, checkbox ,artikul, name, barcode, price
     }
 
     @Override
@@ -62,10 +67,11 @@ public class ProductCatalogTableModel extends DefaultTableModel
         switch(column)
         {
             case 0 : return "";
-            case 1 : return "Артикул";
-            case 2 : return "Наименование";
-            case 3 : return "Штрихкод";
-            case 4 : return "Цена";
+            case 1 : return "";
+            case 2 : return "Артикул";
+            case 3 : return "Наименование";
+            case 4 : return "Штрихкод";
+            case 5 : return "Цена";
         }
         
         return "";
@@ -77,10 +83,11 @@ public class ProductCatalogTableModel extends DefaultTableModel
         switch(column)
         {
             case 0 : return ImageIcon.class;
-            case 1 : return String.class;
+            case 1 : return Boolean.class;
             case 2 : return String.class;
             case 3 : return String.class;
-            case 4 : return Double.class;
+            case 4 : return String.class;
+            case 5 : return Double.class;
         }
         
         return String.class;
@@ -89,7 +96,7 @@ public class ProductCatalogTableModel extends DefaultTableModel
     @Override
     public boolean isCellEditable(int row, int column)
     {
-        return false;
+        return column == 1;
     }
     
     @Override
@@ -98,15 +105,29 @@ public class ProductCatalogTableModel extends DefaultTableModel
         switch(column)
         {
             case 0 : return ICON_IMAGE;
-            case 1 : return products.get(row).getArtikul();
-            case 2 : return products.get(row).getName();
-            case 3 : return products.get(row).getBarcode();
-            case 4 : return products.get(row).getPrice();
+            case 1 : return selectedIndexes.contains(row);
+            case 2 : return products.get(row).getArtikul();
+            case 3 : return products.get(row).getName();
+            case 4 : return products.get(row).getBarcode();
+            case 5 : return products.get(row).getPrice();
         }
         
         return "";
     }
 
+    @Override
+    public void setValueAt(Object aValue, int row, int column)
+    {
+        if(column != 1) return;
+        
+        Boolean val = (Boolean)aValue;
+        
+        if(val)
+            selectedIndexes.add(row);
+        else
+            selectedIndexes.remove(row);
+    }
+    
     public List<Product> getProducts()
     {
         return products;
@@ -120,6 +141,18 @@ public class ProductCatalogTableModel extends DefaultTableModel
     public Product getProductAt(int index)
     {
         return products.get(index);
+    }
+    
+    public List<Product> getSelectedProducts()
+    {
+        List<Product> result = new ArrayList<>();
+        
+        for(Integer index : selectedIndexes)
+        {
+            result.add(products.get(index));
+        }
+        
+        return result;
     }
     
     

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="StickerReport" pageWidth="302" pageHeight="226" orientation="Landscape" columnWidth="282" leftMargin="10" rightMargin="10" topMargin="10" bottomMargin="10" uuid="400ac56e-8292-4548-b1e6-b0c7a47ec52d">
+	<property name="ireport.zoom" value="1.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="defStyle" vAlign="Middle" fontName="Arial" fontSize="10"/>
+	<parameter name="datetime" class="java.lang.String"/>
+	<queryString>
+		<![CDATA[]]>
+	</queryString>
+	<field name="productName" class="java.lang.String"/>
+	<field name="artikul" class="java.lang.String"/>
+	<field name="priceRub" class="java.lang.String"/>
+	<field name="barcode" class="java.lang.String"/>
+	<field name="priceKop" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<detail>
+		<band height="206" splitType="Stretch">
+			<textField>
+				<reportElement style="defStyle" x="0" y="0" width="282" height="20" uuid="8e5c0173-406c-41f7-9481-d17ddc6a8689"/>
+				<textElement>
+					<font size="12"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{productName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="defStyle" x="0" y="20" width="282" height="20" uuid="635d5631-e32e-4ac3-bea2-c408bd262ed7"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{artikul}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="40" width="232" height="80" uuid="60ff7662-8994-42d2-b72f-8153fbb9a728"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Arial" size="54" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{priceRub}]]></textFieldExpression>
+			</textField>
+			<componentElement>
+				<reportElement x="4" y="138" width="178" height="52" uuid="862713aa-295e-47f5-b121-cfcf8b8415a0"/>
+				<jr:Code128 xmlns:jr="http://jasperreports.sourceforge.net/jasperreports/components" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports/components http://jasperreports.sourceforge.net/xsd/components.xsd" moduleWidth="2.0" textPosition="none">
+					<jr:codeExpression><![CDATA[$F{barcode}]]></jr:codeExpression>
+				</jr:Code128>
+			</componentElement>
+			<textField>
+				<reportElement style="defStyle" x="232" y="40" width="50" height="80" uuid="4373c5be-ac00-4889-b5ee-2b0cd00a323d"/>
+				<textElement textAlignment="Left" verticalAlignment="Bottom">
+					<font size="28" isBold="true" isItalic="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$F{priceKop}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="182" y="190" width="100" height="16" uuid="a4a49a70-c2ff-435a-8366-dfb18ccc2ede"/>
+				<textElement textAlignment="Right" verticalAlignment="Bottom">
+					<font fontName="Arial"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{datetime}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+</jasperReport>

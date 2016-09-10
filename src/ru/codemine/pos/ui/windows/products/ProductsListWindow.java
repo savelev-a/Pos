@@ -18,10 +18,14 @@
 
 package ru.codemine.pos.ui.windows.products;
 
+import com.alee.laf.button.WebButton;
+import com.alee.laf.menu.WebMenu;
+import com.alee.laf.menu.WebMenuItem;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
+import javax.swing.ImageIcon;
 import javax.swing.table.TableColumnModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -32,6 +36,7 @@ import ru.codemine.pos.ui.windows.GenericEntityListWindow;
 import ru.codemine.pos.ui.windows.products.listener.DeleteProduct;
 import ru.codemine.pos.ui.windows.products.listener.EditProduct;
 import ru.codemine.pos.ui.windows.products.listener.NewProduct;
+import ru.codemine.pos.ui.windows.products.listener.PrintProductStickers;
 import ru.codemine.pos.ui.windows.products.listener.RefreshProductList;
 
 /**
@@ -48,6 +53,10 @@ public class ProductsListWindow extends GenericEntityListWindow
     @Autowired EditProduct editProduct;
     @Autowired DeleteProduct deleteProduct;
     @Autowired RefreshProductList refreshProductList;
+    @Autowired PrintProductStickers printProductStickers;
+    
+    private final WebButton toolButtonPrintStickers;
+    private final WebMenuItem menuItemPrintStickers;
     
     ProductCatalogTableModel tableModel;
     
@@ -55,6 +64,17 @@ public class ProductsListWindow extends GenericEntityListWindow
     {
         super();
         setTitle("Справочник товаров");
+        
+        toolButtonPrintStickers = new WebButton(new ImageIcon("images/icons/default/16x16/print-stickers.png"));
+        toolButtonPrintStickers.setRolloverDecoratedOnly(true);
+        toolButtonPrintStickers.setToolTip("Печать этикеток");
+        
+        menuItemPrintStickers = new WebMenuItem("Печать этикеток", new ImageIcon("images/icons/default/16x16/print-stickers.png"));
+        
+        operationsMenu.add(menuItemPrintStickers, 4);
+        
+        toolBar.addSeparator();
+        toolBar.add(toolButtonPrintStickers);
         
         menuItemProcess.setEnabled(false);
         menuItemUnprocess.setEnabled(false);
@@ -72,6 +92,7 @@ public class ProductsListWindow extends GenericEntityListWindow
         
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(0).setMaxWidth(10);
+        columnModel.getColumn(1).setMaxWidth(10);
         
         if(!actionListenersInit) setupActionListeners();
         
@@ -88,6 +109,9 @@ public class ProductsListWindow extends GenericEntityListWindow
         setEditActionListener(editProduct);
         setDeleteActionListener(deleteProduct);
         setRefreshActionListener(refreshProductList);
+        
+        toolButtonPrintStickers.addActionListener(printProductStickers);
+        menuItemPrintStickers.addActionListener(printProductStickers);
         
         table.addMouseListener(new MouseAdapter()
         {
@@ -117,6 +141,11 @@ public class ProductsListWindow extends GenericEntityListWindow
     public ProductCatalogTableModel getTableModel()
     {
         return tableModel;
+    }
+
+    public List<Product> getSelectedProducts()
+    {
+        return tableModel.getSelectedProducts();
     }
     
 }

@@ -139,20 +139,6 @@ public abstract class GenericSelector extends WebFrame
             }
         });
         
-        table.addMouseListener(new MouseAdapter()
-        {
-            @Override
-            public void mousePressed(MouseEvent e)
-            {
-                Point p = e.getPoint();
-                int row = table.rowAtPoint(p);
-                if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
-                {
-                    selectButton.doClick();
-                }
-            }
-        });
-        
         actionListenersInit = true;
     }
     

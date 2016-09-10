@@ -29,6 +29,7 @@ import com.alee.laf.text.WebTextField;
 import com.alee.laf.toolbar.ToolbarStyle;
 import com.alee.laf.toolbar.WebToolBar;
 import java.awt.Dimension;
+import java.util.List;
 import javax.swing.ImageIcon;
 import ru.codemine.pos.entity.GenericEntity;
 import ru.codemine.pos.entity.document.Document;
@@ -110,6 +111,11 @@ public abstract class GenericDocumentWindow<T extends Document> extends WebFrame
         buttonsGroupPanel = new GroupPanel(10, saveButton, cancelButton);
         
         
+    }
+    
+    public void addItems(List<GenericEntity> items)
+    {
+        for(GenericEntity item : items) addItem(item);
     }
     
     public abstract void showWindow(T t);

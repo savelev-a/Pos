@@ -31,13 +31,10 @@ import net.sf.jasperreports.engine.JasperReport;
 import net.sf.jasperreports.engine.data.JRBeanCollectionDataSource;
 import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.swing.JRViewer;
-import org.joda.time.LocalDate;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.joda.time.DateTime;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.entity.document.Cheque;
-import ru.codemine.pos.reports.reportmodel.SalesByPtypeReportRecord;
-import ru.codemine.pos.service.ChequeService;
-import ru.codemine.pos.ui.windows.PeriodSelectable;
+import ru.codemine.pos.entity.Product;
+import ru.codemine.pos.reports.reportmodel.StickerReportRecord;
 
 /**
  *
@@ -45,43 +42,32 @@ import ru.codemine.pos.ui.windows.PeriodSelectable;
  */
 
 @Component
-public class SalesByPtypeReport implements PeriodSelectable
+public class StickersReport 
 {
-    @Autowired private ChequeService chequeService;
-
-    @Override
-    public void setPeriod(LocalDate startDate, LocalDate endDate)
+    public void showReport(List<Product> products)
     {
-        List<SalesByPtypeReportRecord> records = new ArrayList<>();
-        for(Map.Entry<Cheque.PaymentType, String> paymentEntry : Cheque.getAvaiblePaymentTypes().entrySet())
-        {
-            List<Cheque> chequesByPtype = chequeService.getByPeriod(startDate, endDate, paymentEntry.getKey());
-            Double sales = 0.0;
-            for(Cheque c : chequesByPtype) sales += c.getChequeTotal();
-            records.add(new SalesByPtypeReportRecord(paymentEntry.getValue(), chequesByPtype.size(), sales));
-        }
+        List<StickerReportRecord> records = new ArrayList<>();
+        
+        for(Product product : products) records.add(new StickerReportRecord(product));
         
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("startDate", startDate.toString("dd.MM.YY"));
-        parameters.put("endDate", endDate.toString("dd.MM.YY"));
+        parameters.put("datetime", DateTime.now().toString("dd.MM.YY HH:mm"));
         
         try
         {
-            JasperReport report = (JasperReport)JRLoader.loadObjectFromFile("reports/SalesByPtypeReport.jasper");
+            JasperReport report = (JasperReport)JRLoader.loadObjectFromFile("reports/StickerReport.jasper");
             JRBeanCollectionDataSource dataSource = new JRBeanCollectionDataSource(records);
             JasperPrint jasperPrint = JasperFillManager.fillReport(report, parameters, dataSource);
-            WebFrame reportFrame = new WebFrame("Отчет о выручке по типу оплат");
+            WebFrame reportFrame = new WebFrame("Печать этикеток");
             reportFrame.getContentPane().add(new JRViewer(jasperPrint));
             reportFrame.pack();
             reportFrame.setExtendedState(WebFrame.MAXIMIZED_BOTH);
             reportFrame.setVisible(true);
-        } 
+        }
         catch (JRException ex)
         {
             WebOptionPane.showMessageDialog(null, ex.getLocalizedMessage(), "Ошибка создания отчета", WebOptionPane.ERROR_MESSAGE);
         }
-        
-        
+
     }
-    
 }

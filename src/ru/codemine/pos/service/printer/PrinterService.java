@@ -27,6 +27,7 @@ import javax.print.PrintException;
 import javax.print.PrintService;
 import javax.print.PrintServiceLookup;
 import javax.print.SimpleDoc;
+import org.apache.log4j.Logger;
 
 /**
  *
@@ -37,10 +38,8 @@ import javax.print.SimpleDoc;
 public class PrinterService 
 {
 
-    /**
-     * Возвращает список имен всех принтеров
-     * @return
-     */
+    private static final Logger log = Logger.getLogger("PrinterService");
+    
     public static List<String> getAvaiblePrinterNames()
     {
         List<String> result = new ArrayList<>();
@@ -48,17 +47,13 @@ public class PrinterService
         PrintService[] services = PrintServiceLookup.lookupPrintServices(DocFlavor.INPUT_STREAM.AUTOSENSE, null);
         for(PrintService service : services)
         {
+            log.info("Добавление принтера: " + service); // Иногда падало с NullPointer на следующем шаге 
             result.add(service.getName());
         }
         
         return result;
     }
     
-    /**
-     * Возвращает объект PrintService по имени принтера
-     * @param name имя принтера
-     * @return
-     */
     public static PrintService getPrinterByName(String name)
     {
         PrintService[] services = PrintServiceLookup.lookupPrintServices(DocFlavor.INPUT_STREAM.AUTOSENSE, null);

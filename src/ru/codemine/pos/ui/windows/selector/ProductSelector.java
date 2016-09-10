@@ -19,15 +19,12 @@
 package ru.codemine.pos.ui.windows.selector;
 
 import com.alee.laf.optionpane.WebOptionPane;
-import com.alee.utils.swing.DocumentChangeListener;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import javax.swing.RowFilter;
-import javax.swing.event.DocumentEvent;
 import javax.swing.table.TableColumnModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -65,6 +62,7 @@ public class ProductSelector extends GenericSelector
         
         TableColumnModel columnModel = table.getColumnModel();
         columnModel.getColumn(0).setMaxWidth(10);
+        columnModel.getColumn(1).setMaxWidth(10);
         
         setTitle("Выберите товар для добавления");
         statusLabel.setText("Загружено " + products.size() + " строк");
@@ -84,15 +82,14 @@ public class ProductSelector extends GenericSelector
             {
                 sorter.setRowFilter(null); //иначе будет выделена не та строка
                 
-                int row = table.getSelectedRow();
-                if(row == -1)
+                List<Product> products = tableModel.getSelectedProducts();
+                if(products.isEmpty())
                 {
-                    WebOptionPane.showMessageDialog(rootPane, "Выберите товар для добавления", "Не выбран товар", WebOptionPane.WARNING_MESSAGE);
+                    WebOptionPane.showMessageDialog(rootPane, "Не выбрано товаров для добавления.\nДля выбора воспользуйтесь флажками слева от артикула", "Не выбран ни один товар", WebOptionPane.WARNING_MESSAGE);
                     return;
                 }
+                clientWindow.addItems(products);
                 
-                Product product = tableModel.getProductAt(table.getSelectedRow());
-                clientWindow.addItem(product);
                 setVisible(false);
             }
         });
