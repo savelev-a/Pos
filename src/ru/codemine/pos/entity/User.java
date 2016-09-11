@@ -19,11 +19,20 @@
 package ru.codemine.pos.entity;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
+import javax.persistence.CollectionTable;
 import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.Table;
 import org.hibernate.annotations.GenericGenerator;
 
@@ -36,6 +45,14 @@ import org.hibernate.annotations.GenericGenerator;
 @Table(name = "users")
 public class User extends GenericEntity
 {
+    
+    public enum Role
+    {
+        ROLE_SALESMAN,
+        ROLE_SHOPADMIN,
+        ROLE_SYSADMIN
+    }
+    
     @Id
     @GeneratedValue(generator = "increment")
     @GenericGenerator(name = "increment", strategy = "increment")
@@ -53,11 +70,16 @@ public class User extends GenericEntity
     
     @Column(name = "printName", nullable = false)
     private String printName;
+    
+    @ElementCollection(fetch = FetchType.EAGER)
+    @CollectionTable(name = "roles", joinColumns = @JoinColumn(name = "id_user"))
+    private Set<Role> roles;
 
     public User()
     {
         this.password = "";
         this.active = true;
+        this.roles = new HashSet<>();
     }
     
     public User(String username, String printname)
@@ -66,6 +88,7 @@ public class User extends GenericEntity
         this.printName = printname;
         this.password = "";
         this.active = true;
+        this.roles = new HashSet<>();
     }
     
     public Integer getId()
@@ -116,6 +139,42 @@ public class User extends GenericEntity
     public void setPrintName(String printName)
     {
         this.printName = printName;
+    }
+
+    public Set<Role> getRoles()
+    {
+        return roles;
+    }
+
+    public void setRoles(Set<Role> roles)
+    {
+        this.roles = roles;
+    }
+    
+    public void addRole(Role role)
+    {
+        this.roles.add(role);
+    }
+    
+    public void removeRole(Role role)
+    {
+        this.roles.remove(role);
+    }
+    
+    public boolean hasRole(Role role)
+    {
+        return roles.contains(role);
+    }
+    
+    public static Map<Role, String> getAvaibleRoles()
+    {
+        Map<Role, String> result = new LinkedHashMap<>();
+        
+        result.put(Role.ROLE_SALESMAN, "Кассир");
+        result.put(Role.ROLE_SHOPADMIN, "Администратор магазина");
+        result.put(Role.ROLE_SYSADMIN, "Системный администратор");
+        
+        return result;
     }
 
     @Override

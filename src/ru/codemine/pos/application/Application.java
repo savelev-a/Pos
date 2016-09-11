@@ -46,7 +46,7 @@ import ru.codemine.pos.ui.MainWindow;
 @Component
 public class Application 
 {
-    private static final Logger log = Logger.getLogger("Main");
+    private static final Logger log = Logger.getLogger("Application");
     
     @Autowired private UserService userService;
     @Autowired private StoreService storeService;
@@ -98,7 +98,6 @@ public class Application
         loadingScreen.show();
         loadingScreen.setLoadingStatus("Запуск программы", 0);
         
-        //Загрузка контекста Spring
         try
         {
             loadingScreen.setLoadingStatus("Загрузка контекста", 20);
@@ -166,6 +165,7 @@ public class Application
             
                 User defUser = new User("Администратор", "Администратор");
                 defUser.setPassword("admin");
+                defUser.addRole(User.Role.ROLE_SYSADMIN);
             
                 userService.create(defUser);
             }

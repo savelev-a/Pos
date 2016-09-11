@@ -19,10 +19,15 @@
 package ru.codemine.pos.ui.windows.users;
 
 import com.alee.extended.layout.TableLayout;
+import com.alee.extended.list.CheckBoxCellData;
+import com.alee.extended.list.CheckBoxListModel;
+import com.alee.extended.list.WebCheckBoxList;
 import com.alee.laf.checkbox.WebCheckBox;
 import com.alee.laf.label.WebLabel;
+import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.text.WebPasswordField;
 import com.alee.laf.text.WebTextField;
+import java.util.Map;
 import org.apache.commons.codec.binary.Base64;
 import org.apache.commons.codec.digest.DigestUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,6 +53,7 @@ public class UserWindow extends GenericEntityWindow<User>
     private final WebLabel passwordLabel;
     private final WebLabel retypeLabel;
     private final WebLabel printnameLabel;
+    private final WebLabel rolesLabel;
     
     private final WebLabel userIdField;
     private final WebTextField usernameField;
@@ -55,6 +61,7 @@ public class UserWindow extends GenericEntityWindow<User>
     private final WebPasswordField userRetypePassField;
     private final WebTextField userPrintnameField;
     private final WebCheckBox userActiveField;
+    private final WebCheckBoxList userRolesField;
     
     private User user;
 
@@ -68,6 +75,7 @@ public class UserWindow extends GenericEntityWindow<User>
         passwordLabel = new WebLabel("Пароль");
         retypeLabel = new WebLabel("Повторите пароль");
         printnameLabel = new WebLabel("Имя в чеке");
+        rolesLabel = new WebLabel("Роли");
 
         userIdField = new WebLabel();
         usernameField = new WebTextField();
@@ -75,13 +83,14 @@ public class UserWindow extends GenericEntityWindow<User>
         userRetypePassField = new WebPasswordField();
         userPrintnameField = new WebTextField();
         userActiveField = new WebCheckBox("Вход разрешен");
+        userRolesField = new WebCheckBoxList();
         
         TableLayout layout = new TableLayout(new double[][]{
             {10, TableLayout.PREFERRED, 10, TableLayout.FILL, 10, TableLayout.PREFERRED, 10, TableLayout.FILL, 10},
             {10, TableLayout.PREFERRED,                 // Id
              10, TableLayout.PREFERRED,                 // username, password
              10, TableLayout.PREFERRED,                 // printname, repeatPass
-             10, TableLayout.PREFERRED,                 // active
+             10, TableLayout.PREFERRED,                 // roles, active
              10, TableLayout.FILL,                      // ...
              10, TableLayout.PREFERRED, 10}             // buttons
         });
@@ -97,7 +106,9 @@ public class UserWindow extends GenericEntityWindow<User>
         add(userPrintnameField, "3, 5");
         add(retypeLabel, "5, 5");
         add(userRetypePassField, "7, 5");
-        add(userActiveField, "7, 7");
+        add(rolesLabel, "1, 7, L, T");
+        add(new WebScrollPane(userRolesField), "3, 7");
+        add(userActiveField, "7, 7, L, T");
         add(buttonsGroupPanel, "1, 11, 7, 11, C, T");
     }
     
@@ -116,6 +127,19 @@ public class UserWindow extends GenericEntityWindow<User>
         
         userPasswordField.clear();
         userRetypePassField.clear();
+        
+        userRolesField.getCheckBoxListModel().removeAllElements();
+        
+        for(Map.Entry<User.Role, String> entry : User.getAvaibleRoles().entrySet())
+        {
+            userRolesField.getCheckBoxListModel().addCheckBoxElementAt(entry.getKey().ordinal(), entry.getValue());
+        }
+        
+        for(Map.Entry<User.Role, String> entry : User.getAvaibleRoles().entrySet())
+        {
+            if(user.hasRole(entry.getKey())) 
+                userRolesField.getCheckBoxListModel().setCheckBoxSelected(entry.getKey().ordinal(), true);  
+        }
         
         setVisible(true);
     }
@@ -142,6 +166,17 @@ public class UserWindow extends GenericEntityWindow<User>
             byte[] hash = DigestUtils.md5(pass);
             String hashString = Base64.encodeBase64String(hash);
             user.setPassword(hashString);
+        }
+        
+        user.getRoles().clear();
+        
+        for(Object roleObj : userRolesField.getCheckedValues())
+        { 
+            for(Map.Entry<User.Role, String> entry : User.getAvaibleRoles().entrySet())
+            {
+                if(entry.getValue().equals(roleObj)) 
+                    user.addRole(entry.getKey());
+            }
         }
         
         return user;

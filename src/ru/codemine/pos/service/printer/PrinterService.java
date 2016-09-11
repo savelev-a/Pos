@@ -47,8 +47,9 @@ public class PrinterService
         PrintService[] services = PrintServiceLookup.lookupPrintServices(DocFlavor.INPUT_STREAM.AUTOSENSE, null);
         for(PrintService service : services)
         {
-            log.info("Добавление принтера: " + service); // Иногда падало с NullPointer на следующем шаге 
-            result.add(service.getName());
+            log.info("Найден системный принтер: " + service);  
+            result.add(service.getName()); // NullPointerException на linux машине тут происходит когда 
+                                           // ни один принтер не установлен по умолчанию
         }
         
         return result;
