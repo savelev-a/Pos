@@ -140,5 +140,5 @@ public class ChequeSetupPanel extends WebPanel
         
         return tableModel.getQuantityAt(table.getSelectedRow());
     }
-
+    
 }

@@ -28,7 +28,7 @@ import ru.codemine.pos.exception.KkmException;
 import ru.codemine.pos.service.kkm.template.SimpleChequeTemplate;
 import ru.codemine.pos.service.kkm.template.SimpleXReportTemplate;
 import ru.codemine.pos.service.kkm.template.SimpleZReportTemplate;
-import ru.codemine.pos.service.printer.PrinterService;
+import ru.codemine.pos.service.device.printer.PrinterService;
 
 /**
  *

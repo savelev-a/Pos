@@ -18,6 +18,7 @@
 
 package ru.codemine.pos.service.printer;
 
+import ru.codemine.pos.service.device.printer.PrinterService;
 import javax.print.PrintException;
 import org.apache.log4j.Logger;
 import org.junit.Test;

@@ -19,9 +19,15 @@
 package ru.codemine.pos.ui.salespanel;
 
 import com.alee.extended.layout.TableLayout;
+import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.panel.WebPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.entity.Product;
+import ru.codemine.pos.entity.document.Cheque;
+import ru.codemine.pos.service.ProductService;
+import ru.codemine.pos.service.StoreService;
+import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
 import ru.codemine.pos.ui.GenericPanelComponent;
 import ru.codemine.pos.ui.salespanel.listener.ChequeTableKeyListener;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
@@ -37,8 +43,9 @@ import ru.codemine.pos.ui.salespanel.modules.UpperStatusPanel;
 @Component
 public class SalesPanel extends WebPanel implements GenericPanelComponent
 {
-    @Autowired
-    private ButtonsPanel buttonsPanel;
+    @Autowired private ButtonsPanel buttonsPanel;
+    @Autowired private ProductService productService;
+    @Autowired private StoreService storeService;
     
     private final UpperStatusPanel upperStatusPanel;
     private final ChequeSetupPanel chequeSetupPanel;
@@ -94,6 +101,34 @@ public class SalesPanel extends WebPanel implements GenericPanelComponent
     public void setupActionListeners()
     {
         chequeSetupPanel.getTable().addKeyListener(new ChequeTableKeyListener(this));
+    }
+    
+    public void addProductByBarcode(String barcode)
+    {
+        Cheque setupCheque = getChequeSetupPanel().getTableModel().getCheque();
+        ChequeSetupTableModel tableModel = getChequeSetupPanel().getTableModel();
+        
+        Product product = productService.getByBarcode(barcode);
+            if(product != null)
+            {
+                // Товар найден, проверка остатков
+                Integer quantity = setupCheque.getQuantityOf(product) + 1;
+
+                if(storeService.checkStocks("Розница", product, quantity))
+                {
+                    tableModel.addItem(product, 1);
+                    calcsPanel.showByCheque(setupCheque);
+                    tableModel.fireTableDataChanged();
+                }
+                else
+                {
+                    WebOptionPane.showMessageDialog(getRootPane(), "Недостаточно товара на складе");
+                }
+            }
+            else
+            {
+                WebOptionPane.showMessageDialog(getRootPane(), "Товар по штрихкоду " + barcode + " не найден!");
+            }
     }
 
 }

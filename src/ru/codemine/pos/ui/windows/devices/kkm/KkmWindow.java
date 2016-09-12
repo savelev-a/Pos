@@ -31,7 +31,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.device.KkmDevice;
-import ru.codemine.pos.service.printer.PrinterService;
+import ru.codemine.pos.service.device.printer.PrinterService;
 import ru.codemine.pos.ui.windows.GenericEntityWindow;
 import ru.codemine.pos.ui.windows.devices.kkm.listener.ChangeKkmType;
 import ru.codemine.pos.ui.windows.devices.kkm.listener.DontSaveKkmDevice;

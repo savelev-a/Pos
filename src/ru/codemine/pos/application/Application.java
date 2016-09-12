@@ -28,9 +28,11 @@ import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.entity.User;
+import ru.codemine.pos.entity.device.BarcodeScannerDevice;
 import ru.codemine.pos.entity.device.KkmDevice;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.service.UserService;
+import ru.codemine.pos.service.device.barcodescanner.BarcodeScannerService;
 import ru.codemine.pos.service.kkm.Kkm;
 import ru.codemine.pos.service.kkm.KkmService;
 import ru.codemine.pos.service.kkm.SyslogChequePrinter;
@@ -51,6 +53,7 @@ public class Application
     @Autowired private UserService userService;
     @Autowired private StoreService storeService;
     @Autowired private KkmService kkmService;
+    @Autowired private BarcodeScannerService barcodeScannerService;
     
     @Autowired private LoginScreen loginScreen;
     @Autowired private MainWindow mainWindow;
@@ -58,6 +61,7 @@ public class Application
     private ApplicationContext appContext;
     private User activeUser;
     private Kkm currentKkm;
+    private BarcodeScannerDevice currentScanner;
     
     public ApplicationContext getAppContext()
     {
@@ -82,6 +86,16 @@ public class Application
     public void setCurrentKkm(Kkm kkm)
     {
         this.currentKkm = kkm;
+    }
+    
+    public BarcodeScannerDevice gerCurrentScanner()
+    {
+        return currentScanner;
+    }
+    
+    public void setCurrentScanner(BarcodeScannerDevice scanner)
+    {
+        this.currentScanner = scanner;
     }
     
     
@@ -118,14 +132,17 @@ public class Application
         
         loadingScreen.setLoadingStatus("Загрузка настроек", 50);
 
-        loadingScreen.setLoadingStatus("Загрузка пользователей", 70);
+        loadingScreen.setLoadingStatus("Загрузка пользователей", 60);
         app.initUsers();
 
-        loadingScreen.setLoadingStatus("Загрузка складов", 80);
+        loadingScreen.setLoadingStatus("Загрузка складов", 70);
         app.initStores();
 
-        loadingScreen.setLoadingStatus("Загрузка касс", 90);
+        loadingScreen.setLoadingStatus("Загрузка касс", 80);
         app.initKkm();
+        
+        loadingScreen.setLoadingStatus("Загрузка устройств", 90);
+        app.initDevices();
 
         loadingScreen.setLoadingStatus("Загрузка завершена", 100);
 
@@ -219,6 +236,17 @@ public class Application
             currentKkm = new SyslogChequePrinter();
             currentKkm.setDevice(new KkmDevice());
         }
+    }
+
+    private void initDevices()
+    {
+        currentScanner = barcodeScannerService.getActiveScanner();
+        if(currentScanner == null)
+        {
+            currentScanner = new BarcodeScannerDevice();
+        }
+        
+        barcodeScannerService.initDevice(currentScanner);
     }
 
 }

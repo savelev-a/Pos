@@ -18,21 +18,16 @@
 
 package ru.codemine.pos.ui.keydispatcher;
 
-import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.text.WebTextField;
 import java.awt.KeyEventDispatcher;
 import java.awt.event.KeyEvent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.entity.Product;
-import ru.codemine.pos.entity.document.Cheque;
-import ru.codemine.pos.service.ProductService;
-import ru.codemine.pos.service.StoreService;
-import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
+import ru.codemine.pos.application.Application;
+import ru.codemine.pos.entity.device.BarcodeScannerDevice;
 import ru.codemine.pos.ui.MainWindow;
 import ru.codemine.pos.ui.salespanel.SalesPanel;
 import ru.codemine.pos.ui.salespanel.modules.ButtonsPanel;
-import ru.codemine.pos.ui.salespanel.modules.CalcsPanel;
 
 /**
  *
@@ -42,60 +37,38 @@ import ru.codemine.pos.ui.salespanel.modules.CalcsPanel;
 @Component
 public class MainKeyDispatcher implements KeyEventDispatcher
 {
+    @Autowired private Application application;
     @Autowired private MainWindow mainWindow;
     @Autowired private SalesPanel salesPanel;
     @Autowired private ButtonsPanel buttonsPanel;
-    
-    @Autowired private ProductService productService;
-    @Autowired private StoreService storeService;
 
     @Override
     public boolean dispatchKeyEvent(KeyEvent e)
     {
         WebTextField inputField = salesPanel.getChequeSetupPanel().getInputField();
-        ChequeSetupTableModel tableModel = salesPanel.getChequeSetupPanel().getTableModel();
-        Cheque setupCheque = salesPanel.getChequeSetupPanel().getTableModel().getCheque();
-        CalcsPanel calcsPanel = salesPanel.getCalcsPanel();
         
         int tabIndex = mainWindow.getActiveTabIndex();
         boolean inputBlocked = mainWindow.isBarcodeInputBlocked();
 
         //Если на вводе число, при этом активно и является видимым окно набора чеков - 
         //вводим данное число в строку поиска
-        if(tabIndex == 0 && !inputBlocked
+        if(tabIndex == 0 
+                && !inputBlocked 
+                && application.gerCurrentScanner().getType() == BarcodeScannerDevice.BarcodeScannerType.KEYBOARD_SCANNER
                 && ("1234567890".indexOf(e.getKeyChar()) >= 0))
         {
             e.setSource(inputField);
         }
         //Если на вводе Enter и в строке поиска что-то есть
         //Ищем по ШК позицию и вставляем в чек
-        else if(tabIndex == 0 && !inputBlocked && !"".equals(inputField.getText())
+        else if(tabIndex == 0 
+                && !inputBlocked 
+                && !"".equals(inputField.getText())
                 && (e.getKeyCode() == KeyEvent.VK_ENTER))
         {
-            //TODO В отдельный класс/сервис/процедуру
             String barcode = inputField.getText();
             inputField.clear();
-            Product product = productService.getByBarcode(barcode);
-            if(product != null)
-            {
-                // Товар найден, проверка остатков
-                Integer quantity = setupCheque.getQuantityOf(product) + 1;
-
-                if(storeService.checkStocks("Розница", product, quantity))
-                {
-                    tableModel.addItem(product, 1);
-                    calcsPanel.showByCheque(setupCheque);
-                    tableModel.fireTableDataChanged();
-                }
-                else
-                {
-                    WebOptionPane.showMessageDialog(mainWindow, "Недостаточно товара на складе");
-                }
-            }
-            else
-            {
-                WebOptionPane.showMessageDialog(mainWindow, "Товар по штрихкоду " + barcode + " не найден!");
-            }
+            salesPanel.addProductByBarcode(barcode);
         }
         else
         {

@@ -16,7 +16,7 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.service.printer;
+package ru.codemine.pos.service.device.printer;
 
 import java.util.ArrayList;
 import java.util.List;

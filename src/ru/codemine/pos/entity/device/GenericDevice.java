@@ -75,7 +75,8 @@ public abstract class GenericDevice extends GenericEntity
     
     public enum DeviceType
     {
-        DEVICE_KKM
+        DEVICE_KKM,
+        DEVICE_BARCODE_SCANNER
     }
     
     public abstract DeviceType getDeviceType();
