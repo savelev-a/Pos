@@ -1,0 +1,121 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="ChequeTemplate" pageWidth="200" pageHeight="842" columnWidth="190" leftMargin="5" rightMargin="5" topMargin="5" bottomMargin="5" isFloatColumnFooter="true" isIgnorePagination="true" uuid="e9f98f1e-478e-4f4c-8b67-1bdbfee7e54f">
+	<property name="ireport.zoom" value="2.0"/>
+	<property name="ireport.x" value="0"/>
+	<property name="ireport.y" value="0"/>
+	<style name="defStyle" hAlign="Center" vAlign="Middle" fontName="Times New Roman" fontSize="10"/>
+	<parameter name="titleString" class="java.lang.String"/>
+	<parameter name="reqs" class="java.lang.String"/>
+	<parameter name="currentTime" class="java.lang.String"/>
+	<parameter name="currentUser" class="java.lang.String"/>
+	<parameter name="chequeNumber" class="java.lang.String"/>
+	<parameter name="chequeTotal" class="java.lang.String"/>
+	<parameter name="paymentType" class="java.lang.String"/>
+	<parameter name="fromClient" class="java.lang.String"/>
+	<parameter name="toClient" class="java.lang.String"/>
+	<field name="positionName" class="java.lang.String"/>
+	<field name="quantity" class="java.lang.Integer"/>
+	<field name="summ" class="java.lang.String"/>
+	<background>
+		<band splitType="Stretch"/>
+	</background>
+	<title>
+		<band height="100" splitType="Stretch">
+			<textField>
+				<reportElement style="defStyle" x="0" y="0" width="190" height="20" uuid="2e0110a8-14d1-45ee-8bdf-b1799d8c8a39"/>
+				<textFieldExpression><![CDATA[$P{titleString}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="defStyle" x="0" y="20" width="190" height="20" uuid="7f9d4b8f-3eec-442d-9178-edd0e5f3b429"/>
+				<textFieldExpression><![CDATA[$P{reqs}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="defStyle" x="0" y="40" width="190" height="20" uuid="9923e22d-5701-4ece-82f5-3d1e3ac56396"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{currentUser}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="defStyle" x="0" y="60" width="190" height="20" uuid="ced4b0af-4a3b-46d7-99df-7f4516dcb078"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{currentTime}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="defStyle" x="100" y="80" width="89" height="20" uuid="a58d862d-ec6f-4a2b-a716-3cdb088aea86"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{chequeNumber}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="defStyle" x="0" y="80" width="100" height="20" uuid="3e5a9ac8-dce1-4661-8f0e-f987553cbe57"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[ПРОДАЖА]]></text>
+			</staticText>
+		</band>
+	</title>
+	<columnHeader>
+		<band height="20" splitType="Stretch"/>
+	</columnHeader>
+	<detail>
+		<band height="40" splitType="Stretch">
+			<textField>
+				<reportElement style="defStyle" x="0" y="0" width="189" height="20" uuid="7aa7e31b-361b-49d9-920e-77067eeac829"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{positionName}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="defStyle" x="0" y="20" width="100" height="20" uuid="46cb2ae1-d179-47d0-aab4-5321394531af"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$F{quantity}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="defStyle" x="100" y="20" width="89" height="20" uuid="aa8946ab-e983-4f59-89ae-ad4f565460fe"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$F{summ}]]></textFieldExpression>
+			</textField>
+		</band>
+	</detail>
+	<columnFooter>
+		<band height="80" splitType="Stretch">
+			<staticText>
+				<reportElement style="defStyle" x="0" y="0" width="100" height="20" uuid="a3bda3e4-4a1e-4f81-9ec7-04599a35a4c2"/>
+				<textElement textAlignment="Left">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<text><![CDATA[ИТОГ]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="defStyle" x="100" y="0" width="89" height="20" uuid="71444261-19cd-491a-899f-b3811c47e936"/>
+				<textElement textAlignment="Right">
+					<font size="14" isBold="true"/>
+				</textElement>
+				<textFieldExpression><![CDATA[$P{chequeTotal}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="defStyle" x="0" y="20" width="100" height="20" uuid="9985e378-ddbb-4328-b23f-11b5587d2fdc"/>
+				<textElement textAlignment="Left"/>
+				<textFieldExpression><![CDATA[$P{paymentType}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement style="defStyle" x="100" y="20" width="89" height="20" uuid="bcf4733d-e0ff-4325-b6d4-11ff96d2a6d6"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{fromClient}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="defStyle" x="0" y="40" width="100" height="20" uuid="67e52073-fe5d-41a5-87ac-2d3cfd04246a"/>
+				<textElement textAlignment="Left"/>
+				<text><![CDATA[Сдача]]></text>
+			</staticText>
+			<textField>
+				<reportElement style="defStyle" x="100" y="40" width="89" height="20" uuid="a572b879-8669-4c91-8145-70e0f7d4d2cf"/>
+				<textElement textAlignment="Right"/>
+				<textFieldExpression><![CDATA[$P{toClient}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement style="defStyle" x="0" y="60" width="189" height="20" uuid="bee221a5-8bc2-4ad7-8bb5-d4bcc5520f1d"/>
+				<text><![CDATA[Спасибо за покупку!]]></text>
+			</staticText>
+		</band>
+	</columnFooter>
+	<summary>
+		<band height="20" splitType="Stretch"/>
+	</summary>
+</jasperReport>

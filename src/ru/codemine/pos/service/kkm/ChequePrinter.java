@@ -21,6 +21,7 @@ package ru.codemine.pos.service.kkm;
 import java.util.List;
 import java.util.logging.Level;
 import javax.print.PrintException;
+import net.sf.jasperreports.engine.JRException;
 import org.apache.log4j.Logger;
 import ru.codemine.pos.entity.Workday;
 import ru.codemine.pos.entity.document.Cheque;
@@ -29,6 +30,7 @@ import ru.codemine.pos.service.kkm.template.SimpleChequeTemplate;
 import ru.codemine.pos.service.kkm.template.SimpleXReportTemplate;
 import ru.codemine.pos.service.kkm.template.SimpleZReportTemplate;
 import ru.codemine.pos.service.device.printer.PrinterService;
+import ru.codemine.pos.service.kkm.template.JasperChequeTemplate;
 
 /**
  *
@@ -45,13 +47,26 @@ public class ChequePrinter extends Kkm
     @Override
     public void printCheque(Cheque cheque) throws KkmException
     {
-        SimpleChequeTemplate template = new SimpleChequeTemplate(cheque);
-
+//        SimpleChequeTemplate template = new SimpleChequeTemplate(cheque);
+//
+//        try
+//        {
+//            PrinterService.printPlainText(template.toString(), getDevice().getSysprinter());
+//        } 
+//        catch (PrintException ex)
+//        {
+//            log.error("Ошибка печати чека!");
+//            log.error(ex.getLocalizedMessage());
+//            
+//            throw new KkmException(ex.getLocalizedMessage());
+//        }
+        
+        JasperChequeTemplate template = new JasperChequeTemplate();
         try
         {
-            PrinterService.printPlainText(template.toString(), getDevice().getSysprinter());
+            template.print(cheque, getDevice().getSysprinter());
         } 
-        catch (PrintException ex)
+        catch (JRException ex)
         {
             log.error("Ошибка печати чека!");
             log.error(ex.getLocalizedMessage());

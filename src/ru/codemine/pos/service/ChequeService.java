@@ -161,6 +161,7 @@ public class ChequeService
         catch (KkmException e)
         {
             storeDAO.evict(retailStore);
+            workdayDAO.evict(currentWorkday);
             throw new ChequeProcessByKkmException(e.getLocalizedMessage());
         }
         
