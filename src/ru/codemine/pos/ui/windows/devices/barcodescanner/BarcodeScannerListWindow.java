@@ -16,28 +16,24 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.ui.windows.devices.kkm;
+package ru.codemine.pos.ui.windows.devices.barcodescanner;
 
-import com.alee.laf.button.WebButton;
-import com.alee.laf.menu.WebMenuItem;
 import java.awt.Point;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
-import javax.swing.ImageIcon;
 import javax.swing.table.TableColumnModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.entity.device.KkmDevice;
-import ru.codemine.pos.service.kkm.KkmService;
-import ru.codemine.pos.tablemodel.KkmListTableModel;
+import ru.codemine.pos.entity.device.BarcodeScannerDevice;
+import ru.codemine.pos.service.device.barcodescanner.BarcodeScannerService;
+import ru.codemine.pos.tablemodel.BarcodeScannersListTableModel;
 import ru.codemine.pos.ui.windows.devices.GenericDeviceListWindow;
-import ru.codemine.pos.ui.windows.devices.kkm.listener.DeleteKkm;
-import ru.codemine.pos.ui.windows.devices.kkm.listener.EditKkmDevice;
-import ru.codemine.pos.ui.windows.devices.kkm.listener.NewKkmDevice;
-import ru.codemine.pos.ui.windows.devices.kkm.listener.RefreshKkmDeviceList;
-import ru.codemine.pos.ui.windows.devices.kkm.listener.SetActiveKkm;
-import ru.codemine.pos.ui.windows.devices.kkm.listener.TestKkmDevice;
+import ru.codemine.pos.ui.windows.devices.barcodescanner.listener.DeleteBarcodeScannerDevice;
+import ru.codemine.pos.ui.windows.devices.barcodescanner.listener.EditBarcodeScannerDevice;
+import ru.codemine.pos.ui.windows.devices.barcodescanner.listener.NewBarcodeScannerDevice;
+import ru.codemine.pos.ui.windows.devices.barcodescanner.listener.RefreshBarcodeScannerDeviceList;
+import ru.codemine.pos.ui.windows.devices.barcodescanner.listener.SetActiveBarcodeScannerDevice;
 
 /**
  *
@@ -45,29 +41,21 @@ import ru.codemine.pos.ui.windows.devices.kkm.listener.TestKkmDevice;
  */
 
 @Component
-public class KkmListWindow extends GenericDeviceListWindow
+public class BarcodeScannerListWindow extends GenericDeviceListWindow
 {
-    @Autowired private KkmService kkmService;
-    @Autowired private KkmListTableModel tableModel;
+    @Autowired private BarcodeScannerService barcodeScannerService;
+    @Autowired private BarcodeScannersListTableModel tableModel;
     
-    @Autowired private NewKkmDevice newKkmDevice;
-    @Autowired private EditKkmDevice editKkmDevice;
-    @Autowired private DeleteKkm deleteKkm;
-    @Autowired private SetActiveKkm setActiveKkm;
-    @Autowired private RefreshKkmDeviceList refreshKkmDeviceList;
-    @Autowired private TestKkmDevice testKkmDevice;
-    
-    private final WebButton toolButtonTestCheque;
-    
-    public KkmListWindow()
+    @Autowired private NewBarcodeScannerDevice newBarcodeScannerDevice;
+    @Autowired private EditBarcodeScannerDevice editBarcodeScannerDevice;
+    @Autowired private DeleteBarcodeScannerDevice deleteBarcodeScannerDevice;
+    @Autowired private SetActiveBarcodeScannerDevice setActiveBarcodeScannerDevice;
+    @Autowired private RefreshBarcodeScannerDeviceList refreshBarcodeScannerDeviceList;
+
+    public BarcodeScannerListWindow()
     {
         super();
-        setTitle("Доступные кассовые аппараты");
-        
-        toolButtonTestCheque = new WebButton();
-        toolButtonTestCheque.setRolloverDecoratedOnly(true);
-        toolButtonTestCheque.setToolTip("Проверить работу ККМ");
-        toolButtonTestCheque.setIcon(new ImageIcon("images/icons/default/16x16/test-kkm.png"));
+        setTitle("Сканеры ШК");
         
         toolBar.removeAll();
         toolBar.add(toolButtonNew);
@@ -75,20 +63,20 @@ public class KkmListWindow extends GenericDeviceListWindow
         toolBar.addSeparator();
         toolBar.add(toolButtonEdit);
         toolBar.add(toolButtonProcess);
-        toolBar.add(toolButtonTestCheque);
         toolBar.addSeparator();
         toolBar.add(toolButtonRefresh);
         
         operationsMenu.remove(menuItemUnprocess);
-        
     }
+    
+    
 
     @Override
     public void showWindow()
     {
-        List<KkmDevice> kkms = kkmService.getAllKkmDevices();
+        List<BarcodeScannerDevice> devices = barcodeScannerService.getAllScanners();
         
-        tableModel.setKkmDevices(kkms);
+        tableModel.setBarcodeScannerDevices(devices);
         table.setModel(tableModel);
         
         TableColumnModel columnModel = table.getColumnModel();
@@ -98,23 +86,20 @@ public class KkmListWindow extends GenericDeviceListWindow
         
         if(!actionListenersInit) setupActionListeners();
         
-        statusLabel.setText("Загружено " + kkms.size() + " строк");
+        statusLabel.setText("Загружено " + devices.size() + " строк");
         
         setupSorter();
         setVisible(true);
-        
     }
 
     @Override
     public void setupActionListeners()
     {
-        setNewActionListener(newKkmDevice);
-        setEditActionListener(editKkmDevice);
-        setDeleteActionListener(deleteKkm);
-        setProcessActionListener(setActiveKkm);
-        setRefreshActionListener(refreshKkmDeviceList);
-        toolButtonTestCheque.addActionListener(testKkmDevice);
-        
+        setNewActionListener(newBarcodeScannerDevice);
+        setEditActionListener(editBarcodeScannerDevice);
+        setDeleteActionListener(deleteBarcodeScannerDevice);
+        setProcessActionListener(setActiveBarcodeScannerDevice);
+        setRefreshActionListener(refreshBarcodeScannerDeviceList);
         
         table.addMouseListener(new MouseAdapter()
         {
@@ -133,14 +118,14 @@ public class KkmListWindow extends GenericDeviceListWindow
         actionListenersInit = true;
     }
     
-    public KkmDevice getSelectedDevice()
+    public BarcodeScannerDevice getSelectedDevice()
     {
         if(table.getSelectedRow() == -1) return null;
         
         return tableModel.getDeviceAt(table.getSelectedRow());
     }
-
-    public KkmListTableModel getTableModel()
+    
+    public BarcodeScannersListTableModel getTableModel()
     {
         return tableModel;
     }

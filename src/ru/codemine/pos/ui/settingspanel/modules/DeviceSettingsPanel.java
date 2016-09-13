@@ -28,36 +28,45 @@ import com.alee.laf.panel.WebPanel;
  *
  * @author Alexander Savelev
  */
-public class CommonSettingsPanel extends WebPanel
+public class DeviceSettingsPanel extends WebPanel
 {
-    private final WebButton showUsersBtn;
-    
-    public CommonSettingsPanel()
+    private final WebButton showKkmsButton;
+    private final WebButton showBarcodeScannersButton;
+
+    public DeviceSettingsPanel()
     {
         setMargin(5);
         setUndecorated(false);
         setRound(StyleConstants.largeRound);
         
-        
         TableLayout layout = new TableLayout(new double[][]{
             {10, TableLayout.FILL, 10},
             {5, TableLayout.PREFERRED, 
-            10, TableLayout.PREFERRED,          //users
-            10, TableLayout.PREFERRED, 10}      //kkms
+            10, TableLayout.PREFERRED,          //kkms
+            10, TableLayout.PREFERRED, 10}      //barcodes
         });
         setLayout(layout);
         
-        showUsersBtn = new WebButton("Настройки пользователей");
-        showUsersBtn.setMargin(5);
-        showUsersBtn.setRound(StyleConstants.largeRound);
-
-        add(new WebLabel("-----Общие настройки-----"), "1, 1, C, T");
-        add(showUsersBtn, "1, 3");
+        showKkmsButton = new WebButton("Кассовые аппараты");
+        showBarcodeScannersButton = new WebButton("Сканеры ШК");
+        showKkmsButton.setMargin(5);
+        showBarcodeScannersButton.setMargin(5);
+        showKkmsButton.setRound(StyleConstants.largeRound);
+        showBarcodeScannersButton.setRound(StyleConstants.largeRound);
+        
+        add(new WebLabel("-----Подключенные устройства-----"), "1, 1, C, T");
+        add(showKkmsButton, "1, 3");
+        add(showBarcodeScannersButton, "1,5");
     }
     
-    public WebButton getShowUsersButton()
+    public WebButton getShowKkmsButton()
     {
-        return showUsersBtn;
+        return showKkmsButton;
     }
     
+    public WebButton getShowBarcodeScannersButton()
+    {
+        return showBarcodeScannersButton;
+    }
+
 }
