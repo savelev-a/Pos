@@ -44,8 +44,8 @@ public class ProductDAOImpl extends GenericDAOImpl<Product, Long> implements Pro
     @Override
     public Product getByBarcode(String barcode)
     {
-        Query query = getSession().createQuery("FROM Product p WHERE p.barcode = :barcode");
-        query.setString("barcode", barcode);
+        Query query = getSession().createQuery("FROM Product p WHERE p.barcode = " + barcode);
+        //query.setString("barcode", barcode); сюда попадают строки с разными окончаниями (\n, \r\n) и оно не работает
         
         return (Product)query.uniqueResult();
     }

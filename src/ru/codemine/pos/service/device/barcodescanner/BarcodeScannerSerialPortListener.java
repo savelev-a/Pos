@@ -21,6 +21,7 @@ package ru.codemine.pos.service.device.barcodescanner;
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
+import javax.swing.SwingUtilities;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.ui.MainWindow;
@@ -64,11 +65,19 @@ public class BarcodeScannerSerialPortListener implements SerialPortDataListener
         dataStr += new String(buffer);
         if(dataStr.endsWith("\n"))
         {
-            int tabIndex = mainWindow.getActiveTabIndex();
-            boolean inputBlocked = mainWindow.isBarcodeInputBlocked();
-            
-            if(tabIndex == 0 && !inputBlocked)
-                salesPanel.addProductByBarcode(dataStr.replace("\n", ""));
+            final String dataStrTransfer = dataStr;
+            SwingUtilities.invokeLater(new Runnable()
+            {
+                @Override
+                public void run()
+                {
+                    int tabIndex = mainWindow.getActiveTabIndex();
+                    boolean inputBlocked = mainWindow.isBarcodeInputBlocked();
+                    
+                    if(tabIndex == 0 && !inputBlocked)
+                        salesPanel.addProductByBarcode(dataStrTransfer.replace("\n", ""));
+                }
+            });
 
             dataStr = "";
         }
