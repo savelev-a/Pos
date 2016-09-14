@@ -18,9 +18,15 @@
 
 package ru.codemine.pos.ui.windows.devices.barcodescanner.listener;
 
+import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.application.Application;
+import ru.codemine.pos.entity.device.BarcodeScannerDevice;
+import ru.codemine.pos.service.device.barcodescanner.BarcodeScannerService;
+import ru.codemine.pos.ui.windows.devices.barcodescanner.BarcodeScannerListWindow;
 
 /**
  *
@@ -30,11 +36,34 @@ import org.springframework.stereotype.Component;
 @Component
 public class SetActiveBarcodeScannerDevice implements ActionListener
 {
+    @Autowired private Application application;
+    @Autowired private BarcodeScannerListWindow window;
+    @Autowired private BarcodeScannerService barcodeScannerService;
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BarcodeScannerDevice device = window.getSelectedDevice();
+        
+        if(device != null)
+        {
+            if(device.isEnabled())
+            {
+                WebOptionPane.showMessageDialog(window, "Это устройство уже активно", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+                return;
+            }
+            
+            
+            barcodeScannerService.setActiveScanner(device);
+            barcodeScannerService.initDevice(device);
+            application.setCurrentScanner(device);
+        }
+        else
+        {
+            WebOptionPane.showMessageDialog(window, "Не выбрано устройство!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+        }
+        
+        window.refresh();
     }
 
 }

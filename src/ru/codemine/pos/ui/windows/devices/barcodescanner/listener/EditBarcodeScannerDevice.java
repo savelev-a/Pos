@@ -18,9 +18,14 @@
 
 package ru.codemine.pos.ui.windows.devices.barcodescanner.listener;
 
+import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.entity.device.BarcodeScannerDevice;
+import ru.codemine.pos.ui.windows.devices.barcodescanner.BarcodeScannerListWindow;
+import ru.codemine.pos.ui.windows.devices.barcodescanner.BarcodeScannerWindow;
 
 /**
  *
@@ -30,11 +35,23 @@ import org.springframework.stereotype.Component;
 @Component
 public class EditBarcodeScannerDevice implements ActionListener
 {
+    @Autowired private BarcodeScannerListWindow listWindow;
+    @Autowired private BarcodeScannerWindow window;
+    
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        BarcodeScannerDevice device = listWindow.getSelectedDevice();
+        
+        if(device != null)
+        {
+            window.showWindow(device);
+        }
+        else
+        {
+            WebOptionPane.showMessageDialog(listWindow, "Не выбрано устройство!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+        }
     }
 
 }

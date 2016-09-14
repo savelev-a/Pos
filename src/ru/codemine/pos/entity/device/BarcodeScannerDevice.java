@@ -59,6 +59,7 @@ public class BarcodeScannerDevice extends GenericDevice
     {
         this.type = BarcodeScannerType.KEYBOARD_SCANNER;
         this.name = "USB сканер (эмуляция клавиатуры)";
+        this.speed = 0;
     }
 
     public String getName()

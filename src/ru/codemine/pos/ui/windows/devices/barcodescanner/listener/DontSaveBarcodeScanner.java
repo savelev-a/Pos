@@ -22,7 +22,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
-import ru.codemine.pos.entity.device.BarcodeScannerDevice;
 import ru.codemine.pos.ui.windows.devices.barcodescanner.BarcodeScannerWindow;
 
 /**
@@ -31,14 +30,14 @@ import ru.codemine.pos.ui.windows.devices.barcodescanner.BarcodeScannerWindow;
  */
 
 @Component
-public class NewBarcodeScannerDevice implements ActionListener
+public class DontSaveBarcodeScanner implements ActionListener
 {
     @Autowired private BarcodeScannerWindow window;
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        window.showWindow(new BarcodeScannerDevice());
+        window.setVisible(false);
     }
 
 }

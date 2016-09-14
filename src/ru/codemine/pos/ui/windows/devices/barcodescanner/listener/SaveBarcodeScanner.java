@@ -22,11 +22,13 @@ import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.application.Application;
 import ru.codemine.pos.entity.device.BarcodeScannerDevice;
+import ru.codemine.pos.exception.DuplicateDeviceDataException;
 import ru.codemine.pos.service.device.barcodescanner.BarcodeScannerService;
 import ru.codemine.pos.ui.windows.devices.barcodescanner.BarcodeScannerListWindow;
+import ru.codemine.pos.ui.windows.devices.barcodescanner.BarcodeScannerWindow;
 
 /**
  *
@@ -34,38 +36,37 @@ import ru.codemine.pos.ui.windows.devices.barcodescanner.BarcodeScannerListWindo
  */
 
 @Component
-public class DeleteBarcodeScannerDevice implements ActionListener
+public class SaveBarcodeScanner implements ActionListener
 {
-    @Autowired private BarcodeScannerListWindow window;
+    @Autowired private Application application;
+    @Autowired private BarcodeScannerListWindow listWindow;
+    @Autowired private BarcodeScannerWindow window;
     @Autowired private BarcodeScannerService barcodeScannerService;
 
     @Override
     public void actionPerformed(ActionEvent e)
     {
-        BarcodeScannerDevice device = window.getSelectedDevice();
-        if(device != null)
+        BarcodeScannerDevice device = window.getDevice();
+        
+        if(device == null) return;
+        
+        if(device.getId() == null)
         {
-            if(device.isEnabled())
-            {
-                WebOptionPane.showMessageDialog(window, "Невозможно удалить активное устройство!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
-                return;
-            }
-            
-            try
-            {
-                barcodeScannerService.deleteDevice(device);
-            } 
-            catch (DataIntegrityViolationException ex)
-            {
-                WebOptionPane.showMessageDialog(window, "Невозможно удалить данное устройство!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
-            }
+            barcodeScannerService.createDevice(device);
         }
         else
         {
-            WebOptionPane.showMessageDialog(window, "Не выбрано устройство!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
+            
+            barcodeScannerService.updateDevice(device);
+            if(device.isEnabled())
+            {
+                application.setCurrentScanner(device);
+                barcodeScannerService.initDevice(device);  
+            }
         }
         
-        window.refresh();
+        window.setVisible(false);
+        listWindow.refresh();
     }
 
 }
