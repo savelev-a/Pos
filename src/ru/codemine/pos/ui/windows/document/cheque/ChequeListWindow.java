@@ -18,6 +18,9 @@
 
 package ru.codemine.pos.ui.windows.document.cheque;
 
+import java.awt.Point;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.List;
 import javax.swing.table.TableColumnModel;
 import org.joda.time.LocalDate;
@@ -27,6 +30,7 @@ import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.service.ChequeService;
 import ru.codemine.pos.tablemodel.ChequeListTableModel;
 import ru.codemine.pos.ui.windows.document.GenericDocumentListWindow;
+import ru.codemine.pos.ui.windows.document.cheque.listener.ViewCheque;
 
 /**
  *
@@ -38,6 +42,8 @@ public class ChequeListWindow extends GenericDocumentListWindow
 {
     @Autowired private ChequeService chequeService;
     
+    @Autowired private ViewCheque viewCheque;
+    
     private ChequeListTableModel tableModel;
     
     public ChequeListWindow()
@@ -46,6 +52,8 @@ public class ChequeListWindow extends GenericDocumentListWindow
         setTitle("Чеки");
         setSize(800, 400);
         setReadOnly(true);
+        toolButtonRefresh.setEnabled(false);
+        menuItemRefresh.setEnabled(false);
     }
 
     @Override
@@ -72,6 +80,22 @@ public class ChequeListWindow extends GenericDocumentListWindow
     @Override
     public void setupActionListeners()
     {
+        setEditActionListener(viewCheque);
+        
+        table.addMouseListener(new MouseAdapter()
+        {
+            @Override
+            public void mousePressed(MouseEvent e)
+            {
+                Point p = e.getPoint();
+                int row = table.rowAtPoint(p);
+                if(e.getClickCount() == 2 && e.getButton() == MouseEvent.BUTTON1)
+                {
+                    menuItemEdit.doClick();
+                }
+            }
+        });
+        
         actionListenersInit = true;
     }
 
@@ -80,6 +104,13 @@ public class ChequeListWindow extends GenericDocumentListWindow
     {
         List<Cheque> cheques = chequeService.getByPeriod(startDate, endDate);
         showWindow(cheques);
+    }
+
+    public Cheque getSelectedDocument()
+    {
+        if(table.getSelectedRow() == -1) return null;
+        
+        return tableModel.getChequeAt(table.getSelectedRow());
     }
 
 }
