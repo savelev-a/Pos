@@ -117,6 +117,7 @@ public class BarcodeScannerDevice extends GenericDevice
     public int hashCode()
     {
         int hash = 3;
+        hash = 89 * hash + Objects.hashCode(this.id);
         hash = 89 * hash + Objects.hashCode(this.type);
         hash = 89 * hash + Objects.hashCode(this.port);
         return hash;
@@ -139,6 +140,10 @@ public class BarcodeScannerDevice extends GenericDevice
             return false;
         }
         if (!Objects.equals(this.port, other.port))
+        {
+            return false;
+        }
+        if (!Objects.equals(this.id, other.id))
         {
             return false;
         }

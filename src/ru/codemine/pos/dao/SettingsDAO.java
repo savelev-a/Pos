@@ -18,26 +18,14 @@
 
 package ru.codemine.pos.dao;
 
-import java.util.List;
 import ru.codemine.pos.entity.Settings;
 
 /**
  *
  * @author Alexander Savelev
  */
-public interface SettingsDAO extends GenericDAO<Settings, String>
+public interface SettingsDAO
 {
-
-    /**
-     * Загружает из БД настройку по соответствующему ключу
-     * @param key ключ настройки
-     * @return
-     */
-    public Settings getByKey(String key);
-    
-    /**
-     * Загружает из БД список всех настроек
-     * @return
-     */
-    public List<Settings> getAll();
+    public Settings getSettings();
+    public void saveSettings(Settings settings);
 }

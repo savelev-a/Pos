@@ -18,9 +18,6 @@
 
 package ru.codemine.pos.service;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -34,92 +31,20 @@ import ru.codemine.pos.entity.Settings;
  */
 
 @Service
+@Transactional
 public class SettingsService 
 {
     private static final Logger log = Logger.getLogger("SettingsService");
 
-    @Autowired
-    private SettingsDAO settingsDAO;
+    @Autowired private SettingsDAO settingsDAO;
     
-    /**
-     * Сохраняет или обновляет в БД заданную настройку
-     * @param key ключ настройки
-     * @param value значение настройки
-     */
-    @Transactional
-    public void updateSettings(String key, String value)
+    public Settings getSettings()
     {
-        Settings settings = settingsDAO.getByKey(key);
-        if(settings == null)
-        {
-            settingsDAO.create(new Settings(key, value));
-        }
-        else
-        {
-            settings.setValue(value);
-            settingsDAO.update(settings);
-        }
+        return settingsDAO.getSettings();
     }
     
-    /**
-     * Сохраняет или обновляет в БД заданные настройки
-     * @param settings пары ключ-значение
-     */
-    @Transactional
-    public void updateSettings(Map<String, String> settings)
+    public void saveSettings(Settings settings)
     {
-        for(Map.Entry<String, String> entry : settings.entrySet())
-        {
-            Settings s = settingsDAO.getByKey(entry.getKey());
-            if(s == null)
-            {
-                settingsDAO.create(new Settings(entry.getKey(), entry.getValue()));
-            }
-            else
-            {
-                s.setValue(entry.getValue());
-                settingsDAO.update(s);
-            }
-        }
-    }
-    
-    /**
-     * Удаляет настройку из БД по ключу
-     * @param key ключ
-     */
-    @Transactional
-    public void deleteSettings(String key)
-    {
-        Settings settings = settingsDAO.getByKey(key);
-        if(settings != null) settingsDAO.delete(settings);
-    }
-    
-    /**
-     * Возвращает значение настройки по ее ключу
-     * @param key ключ настройки
-     * @return значение настройки (строка)
-     */
-    @Transactional
-    public String getByKey(String key)
-    {
-        Settings s = settingsDAO.getByKey(key);
-        return s == null ? "" : s.getValue();
-    }
-    
-    /**
-     * Возвращает парами ключ-значение все сохраненные в БД настройки
-     * @return пары ключ-значение
-     */
-    @Transactional
-    public Map<String, String> getAll()
-    {
-        List<Settings> settingsList = settingsDAO.getAll();
-        Map<String, String> result = new HashMap<>();
-        for(Settings s : settingsList)
-        {
-            result.put(s.getKey(), s.getValue());
-        }
-        
-        return result;
+        settingsDAO.saveSettings(settings);
     }
 }

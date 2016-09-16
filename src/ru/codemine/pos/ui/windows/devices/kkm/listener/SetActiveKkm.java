@@ -22,7 +22,6 @@ import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.application.Application;
 import ru.codemine.pos.entity.device.KkmDevice;
@@ -50,7 +49,7 @@ public class SetActiveKkm implements ActionListener
         
         if(device != null)
         {
-            if(device.isEnabled())
+            if(kkmService.isCurrent(device))
             {
                 WebOptionPane.showMessageDialog(window, "Эта ККМ уже активна", "Ошибка", WebOptionPane.WARNING_MESSAGE);
                 return;
@@ -62,7 +61,7 @@ public class SetActiveKkm implements ActionListener
                 return;
             }
             
-            kkmService.setActiveKkm(device);
+            kkmService.setCurrentKkm(device);
             application.setCurrentKkm(kkmService.getCurrentKkm());
         }
         else

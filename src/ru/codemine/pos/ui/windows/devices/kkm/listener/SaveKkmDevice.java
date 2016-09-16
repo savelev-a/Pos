@@ -21,8 +21,6 @@ package ru.codemine.pos.ui.windows.devices.kkm.listener;
 import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.device.KkmDevice;
@@ -64,7 +62,7 @@ public class SaveKkmDevice implements ActionListener
         }
         else
         {
-            if(device.isEnabled())
+            if(kkmService.isCurrent(device))
             {
                 WebOptionPane.showMessageDialog(kkmWindow, "Нельзя изменять активную ККМ", "Ошибка сохранения устройства", WebOptionPane.ERROR_MESSAGE);
                 return; 

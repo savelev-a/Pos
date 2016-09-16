@@ -28,10 +28,6 @@ import ru.codemine.pos.entity.device.BarcodeScannerDevice;
  */
 public interface BarcodeScannerDeviceDAO extends GenericDAO<BarcodeScannerDevice, Long>
 {
-    public BarcodeScannerDevice getActive();
-    
-    public void setActive(BarcodeScannerDevice device);
-    
     public List<BarcodeScannerDevice> getByType(BarcodeScannerDevice.BarcodeScannerType type);
     public List<BarcodeScannerDevice> getAll();
 }

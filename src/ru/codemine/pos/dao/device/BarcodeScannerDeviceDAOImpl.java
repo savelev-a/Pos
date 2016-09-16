@@ -32,31 +32,7 @@ import ru.codemine.pos.entity.device.BarcodeScannerDevice;
 @Repository
 public class BarcodeScannerDeviceDAOImpl extends GenericDAOImpl<BarcodeScannerDevice, Long> implements BarcodeScannerDeviceDAO
 {
-
-    @Override
-    public BarcodeScannerDevice getActive()
-    {
-        Query query = getSession().createQuery("FROM BarcodeScannerDevice d WHERE d.enabled = true");
-        
-        return (BarcodeScannerDevice)query.uniqueResult();
-    }
-
-    @Override
-    public void setActive(BarcodeScannerDevice device)
-    {
-        if(device == null || device.getId() == null) return;
-        
-        device.setEnabled(true);
-        
-        Query querySetFalse = getSession().createQuery("UPDATE BarcodeScannerDevice SET enabled = FALSE");
-        Query querySetTrue = getSession().createQuery("UPDATE BarcodeScannerDevice SET enabled = TRUE WHERE id = :id");
-        querySetTrue.setLong("id", device.getId());
-        
-        querySetFalse.executeUpdate();
-        querySetTrue.executeUpdate();
-        
-    }
-
+    
     @Override
     public List<BarcodeScannerDevice> getByType(BarcodeScannerDevice.BarcodeScannerType type)
     {

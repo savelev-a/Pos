@@ -193,7 +193,7 @@ public class Cheque extends Document
     
     public void recalculateCheque()
     {
-        if(content != null && !content.isEmpty())
+        if(content != null)
         {
             chequeTotal = 0.0;
             for(ChequeLine line : content)

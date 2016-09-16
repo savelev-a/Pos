@@ -22,6 +22,7 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.codemine.pos.application.Application;
 import ru.codemine.pos.dao.device.KkmDeviceDAO;
 import ru.codemine.pos.entity.Workday;
 import ru.codemine.pos.entity.device.GenericDevice;
@@ -41,6 +42,7 @@ import ru.codemine.pos.service.WorkdayService;
 @Service
 public class KkmService 
 {
+    @Autowired private Application application;
     @Autowired private WorkdayService workdayService;
     @Autowired private ChequeService chequeService;
     @Autowired private KkmDeviceDAO kkmDeviceDAO;
@@ -48,9 +50,31 @@ public class KkmService
     @Transactional
     public Kkm getCurrentKkm()
     {
-        KkmDevice kkmDevice = kkmDeviceDAO.getActive();
+        return application.getCurrentKkm();
+    }
+    
+    @Transactional
+    public void setCurrentKkm(KkmDevice device)
+    {
+        application.setCurrentKkm(createKkm(device));
+    }
+    
+    @Transactional
+    public boolean isCurrent(Kkm kkm)
+    {
+        if(kkm == null || kkm.getDevice() == null) return false;
+        if(getCurrentKkm() == null) return false;
         
-        return createKkm(kkmDevice);
+        return (kkm.getDevice().equals(getCurrentKkm().getDevice()));
+    }
+    
+    @Transactional
+    public boolean isCurrent(KkmDevice device)
+    {
+        if(device == null) return false;
+        if(getCurrentKkm() == null) return false;
+        
+        return (device.equals(getCurrentKkm().getDevice()));
     }
     
     public Kkm createKkm(KkmDevice device)
@@ -77,7 +101,7 @@ public class KkmService
     
     public void printXReport() throws KkmException 
     {
-        printXReport(getCurrentKkm());
+        printXReport(application.getCurrentKkm());
     }
     
     public void printXReport(Kkm kkm) throws KkmException
@@ -93,7 +117,7 @@ public class KkmService
     @Transactional
     public void printZReport() throws KkmException, GeneralException
     {
-        Kkm kkm = getCurrentKkm();
+        Kkm kkm = application.getCurrentKkm();
         Workday currentWorkday = workdayService.getOpenWorkday();
         List<Cheque> cheques = chequeService.getByOpenWorkday();
         
@@ -105,7 +129,6 @@ public class KkmService
         
     }
     
-
     @Transactional
     public List<KkmDevice> getAllKkmDevices()
     {
@@ -146,11 +169,5 @@ public class KkmService
     public void deleteDevice(KkmDevice device)
     {
         kkmDeviceDAO.delete(device);
-    }
-
-    @Transactional
-    public void setActiveKkm(KkmDevice device)
-    {
-        kkmDeviceDAO.setActive(device);
     }
 }

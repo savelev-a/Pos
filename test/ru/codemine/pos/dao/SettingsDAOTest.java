@@ -27,6 +27,8 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.transaction.TransactionConfiguration;
 import org.springframework.transaction.annotation.Transactional;
 import ru.codemine.pos.entity.Settings;
+import ru.codemine.pos.entity.device.BarcodeScannerDevice;
+import ru.codemine.pos.entity.device.KkmDevice;
 
 /**
  *
@@ -45,13 +47,18 @@ public class SettingsDAOTest
     @Transactional
     public void testSettingsDao()
     {
-        Settings settings = new Settings("test_key", "TheTestValue");
+        Settings settings = new Settings();
         
-        settingsDAO.create(settings);
         
-        Settings s = settingsDAO.getByKey("test_key");
-        Assert.assertNotNull(s);
-        Assert.assertTrue("TheTestValue".equals(s.getValue()));
+        settingsDAO.saveSettings(settings);
+        
+        Settings s1 = settingsDAO.getSettings();
+        Assert.assertNotNull(s1);
+        Assert.assertTrue(s1.getId() == 1);
+        Assert.assertNull(s1.getCurrentKkmDevice());
+        Assert.assertNull(s1.getCurrentScannerDevice());
+        
+        
     }
 
 }

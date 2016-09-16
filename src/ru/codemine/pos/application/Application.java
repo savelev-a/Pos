@@ -26,10 +26,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.entity.Settings;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.entity.User;
 import ru.codemine.pos.entity.device.BarcodeScannerDevice;
 import ru.codemine.pos.entity.device.KkmDevice;
+import ru.codemine.pos.service.SettingsService;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.service.UserService;
 import ru.codemine.pos.service.device.barcodescanner.BarcodeScannerService;
@@ -50,6 +52,7 @@ public class Application
 {
     private static final Logger log = Logger.getLogger("Application");
     
+    @Autowired private SettingsService settingsService;
     @Autowired private UserService userService;
     @Autowired private StoreService storeService;
     @Autowired private KkmService kkmService;
@@ -59,6 +62,7 @@ public class Application
     @Autowired private MainWindow mainWindow;
     
     private ApplicationContext appContext;
+    private Settings settings;
     private User activeUser;
     private Kkm currentKkm;
     private BarcodeScannerDevice currentScanner;
@@ -86,9 +90,11 @@ public class Application
     public void setCurrentKkm(Kkm kkm)
     {
         this.currentKkm = kkm;
+        settings.setCurrentKkmDevice(kkm.getDevice());
+        settingsService.saveSettings(settings);
     }
     
-    public BarcodeScannerDevice gerCurrentScanner()
+    public BarcodeScannerDevice getCurrentScanner()
     {
         return currentScanner;
     }
@@ -96,6 +102,9 @@ public class Application
     public void setCurrentScanner(BarcodeScannerDevice scanner)
     {
         this.currentScanner = scanner;
+        settings.setCurrentScannerDevice(currentScanner);
+        settingsService.saveSettings(settings);
+        barcodeScannerService.initDevice(scanner);
     }
     
     
@@ -121,7 +130,7 @@ public class Application
         catch (Exception e)
         {
             WebOptionPane.showMessageDialog(null, 
-                    "<html><p style='width: 300px;'> Для решения проблемы обратитесь к разработчику.<br><br>" 
+                    "<html><p style='width: 600px;'> Для решения проблемы обратитесь к разработчику.<br><br>" 
                             + e.getLocalizedMessage(), 
                     "Ошибка при загрузке контекста!", WebOptionPane.ERROR_MESSAGE);
             e.printStackTrace();
@@ -131,6 +140,7 @@ public class Application
         Application app = appContext.getBean(Application.class);
         
         loadingScreen.setLoadingStatus("Загрузка настроек", 50);
+        app.initSettings();
 
         loadingScreen.setLoadingStatus("Загрузка пользователей", 60);
         app.initUsers();
@@ -167,8 +177,17 @@ public class Application
         System.exit(0);
     }
     
+    private void initSettings()
+    {
+        settings = settingsService.getSettings();
+        if(settings == null)
+        {
+            settings = new Settings();
+            settingsService.saveSettings(settings);
+        }
+    }
     
-    private  void initUsers()
+    private void initUsers()
     {
         try
         {
@@ -225,7 +244,7 @@ public class Application
 
     private void initKkm()
     {
-        currentKkm = kkmService.getCurrentKkm();
+        currentKkm = kkmService.createKkm(settings.getCurrentKkmDevice());
         if(currentKkm == null)
         {
             WebOptionPane.showMessageDialog(null,  
@@ -240,7 +259,7 @@ public class Application
 
     private void initDevices()
     {
-        currentScanner = barcodeScannerService.getActiveScanner();
+        currentScanner = settings.getCurrentScannerDevice();
         if(currentScanner == null)
         {
             currentScanner = new BarcodeScannerDevice();

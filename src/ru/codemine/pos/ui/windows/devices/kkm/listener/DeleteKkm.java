@@ -46,7 +46,7 @@ public class DeleteKkm implements ActionListener
         
         if(device != null)
         {
-            if(device.isEnabled())
+            if(kkmService.isCurrent(device))
             {
                 WebOptionPane.showMessageDialog(window, "Невозможно удалить активную ККМ!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
                 return;

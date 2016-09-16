@@ -18,8 +18,9 @@
 
 package ru.codemine.pos.dao;
 
-import java.util.List;
 import org.hibernate.Query;
+import org.hibernate.SessionFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 import ru.codemine.pos.entity.Settings;
 
@@ -29,24 +30,27 @@ import ru.codemine.pos.entity.Settings;
  */
 
 @Repository
-public class SettingsDAOImpl extends GenericDAOImpl<Settings, String> implements SettingsDAO
+public class SettingsDAOImpl implements SettingsDAO
 {
+    @Autowired
+    private SessionFactory sessionFactory;
 
     @Override
-    public Settings getByKey(String key)
+    public Settings getSettings()
     {
-        Query query = getSession().createQuery("FROM Settings s WHERE s.key = :key");
-        query.setString("key", key);
+        Query query = sessionFactory.getCurrentSession().createQuery("FROM Settings s WHERE s.id = 1");
         
         return (Settings)query.uniqueResult();
     }
 
     @Override
-    public List<Settings> getAll()
+    public void saveSettings(Settings settings)
     {
-        Query query = getSession().createQuery("FROM Settings");
+        Query deleteQuery = sessionFactory.getCurrentSession().createQuery("DELETE FROM Settings");
+        deleteQuery.executeUpdate();
         
-        return query.list();
+        sessionFactory.getCurrentSession().save(settings);
+        
     }
 
 }

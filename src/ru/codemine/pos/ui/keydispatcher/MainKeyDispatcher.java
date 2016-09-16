@@ -54,7 +54,7 @@ public class MainKeyDispatcher implements KeyEventDispatcher
         //вводим данное число в строку поиска
         if(tabIndex == 0 
                 && !inputBlocked 
-                && application.gerCurrentScanner().getType() == BarcodeScannerDevice.BarcodeScannerType.KEYBOARD_SCANNER
+                && application.getCurrentScanner().getType() == BarcodeScannerDevice.BarcodeScannerType.KEYBOARD_SCANNER
                 && ("1234567890".indexOf(e.getKeyChar()) >= 0))
         {
             e.setSource(inputField);

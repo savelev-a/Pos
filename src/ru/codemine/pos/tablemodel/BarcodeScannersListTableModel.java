@@ -106,7 +106,7 @@ public class BarcodeScannersListTableModel extends DefaultTableModel
         switch(column)
         {
             case 0 : return SCANNER_ICON;
-            case 1 : return application.gerCurrentScanner().equals(devices.get(row)) ? "A" : " ";
+            case 1 : return application.getCurrentScanner().equals(devices.get(row)) ? "A" : " ";
             case 2 : return devices.get(row).getId();
             case 3 : return devices.get(row).getName();
             case 4 : return devices.get(row).getDescription();

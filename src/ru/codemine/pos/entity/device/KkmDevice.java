@@ -66,7 +66,6 @@ public class KkmDevice extends GenericDevice
 
     public KkmDevice()
     {
-        this.enabled = false;
         this.type = KkmType.SYSLOG_PRINTER;
         this.name = "Печать в syslog (только для отладки)";
         this.speed = 0;

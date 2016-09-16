@@ -47,16 +47,13 @@ public class SetActiveBarcodeScannerDevice implements ActionListener
         
         if(device != null)
         {
-            if(device.isEnabled())
+            if(barcodeScannerService.isCurrent(device))
             {
                 WebOptionPane.showMessageDialog(window, "Это устройство уже активно", "Ошибка", WebOptionPane.WARNING_MESSAGE);
                 return;
             }
-            
-            
-            barcodeScannerService.setActiveScanner(device);
-            barcodeScannerService.initDevice(device);
-            application.setCurrentScanner(device);
+
+            barcodeScannerService.setCurrentScanner(device);
         }
         else
         {

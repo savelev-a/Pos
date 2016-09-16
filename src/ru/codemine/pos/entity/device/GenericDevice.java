@@ -44,8 +44,6 @@ public abstract class GenericDevice extends GenericEntity
     @Column(name = "id", nullable = false)
     protected Long id;
     
-    @Column(name = "enabled", nullable = false)
-    protected boolean enabled;
 
     public Long getId()
     {
@@ -55,16 +53,6 @@ public abstract class GenericDevice extends GenericEntity
     public void setId(Long id)
     {
         this.id = id;
-    }
-
-    public boolean isEnabled()
-    {
-        return enabled;
-    }
-
-    public void setEnabled(boolean enabled)
-    {
-        this.enabled = enabled;
     }
     
     @Override

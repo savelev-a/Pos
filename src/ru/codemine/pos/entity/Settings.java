@@ -19,10 +19,14 @@
 package ru.codemine.pos.entity;
 
 import java.io.Serializable;
-import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import ru.codemine.pos.entity.device.BarcodeScannerDevice;
+import ru.codemine.pos.entity.device.KkmDevice;
 
 /**
  *
@@ -34,40 +38,49 @@ import javax.persistence.Table;
 public class Settings implements Serializable
 {
     @Id
-    @Column(name = "s_key", nullable = false, unique = true, length = 64)
-    private String key;
+    private Integer id;
     
-    @Column(name = "s_value", nullable = false)
-    private String value;
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "kkm_id", nullable = true)
+    private KkmDevice currentKkmDevice;
+    
+    @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "scanner_id", nullable = true)
+    private BarcodeScannerDevice currentScannerDevice;
 
-    public Settings(){}
-    
-    public Settings(String key, String value)
+    public Settings()
     {
-        this.key = key;
-        this.value = value;
-    }
-    
-    public String getKey()
-    {
-        return key;
+        this.id = 1;
     }
 
-    public void setKey(String key)
+    public Integer getId()
     {
-        this.key = key;
+        return 1;
     }
 
-    public String getValue()
+    public void setId(Integer id)
     {
-        return value;
+        this.id = 1;
     }
 
-    public void setValue(String value)
+    public KkmDevice getCurrentKkmDevice()
     {
-        this.value = value;
+        return currentKkmDevice;
     }
-    
-    
-    
+
+    public void setCurrentKkmDevice(KkmDevice currentKkmDevice)
+    {
+        this.currentKkmDevice = currentKkmDevice;
+    }
+
+    public BarcodeScannerDevice getCurrentScannerDevice()
+    {
+        return currentScannerDevice;
+    }
+
+    public void setCurrentScannerDevice(BarcodeScannerDevice currentScannerDevice)
+    {
+        this.currentScannerDevice = currentScannerDevice;
+    }
+
 }

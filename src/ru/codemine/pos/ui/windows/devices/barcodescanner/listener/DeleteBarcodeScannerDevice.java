@@ -45,7 +45,7 @@ public class DeleteBarcodeScannerDevice implements ActionListener
         BarcodeScannerDevice device = window.getSelectedDevice();
         if(device != null)
         {
-            if(device.isEnabled())
+            if(barcodeScannerService.isCurrent(device))
             {
                 WebOptionPane.showMessageDialog(window, "Невозможно удалить активное устройство!", "Ошибка", WebOptionPane.WARNING_MESSAGE);
                 return;

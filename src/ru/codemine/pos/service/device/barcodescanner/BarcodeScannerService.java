@@ -24,6 +24,7 @@ import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import ru.codemine.pos.application.Application;
 import ru.codemine.pos.dao.device.BarcodeScannerDeviceDAO;
 import ru.codemine.pos.entity.device.BarcodeScannerDevice;
 
@@ -37,19 +38,26 @@ public class BarcodeScannerService
 {
     private static final Logger log = Logger.getLogger("BarcodeScannerService");
     
+    @Autowired private Application application;
     @Autowired private BarcodeScannerDeviceDAO bsdDao;
     @Autowired private BarcodeScannerSerialPortListener bssListener;
-    
+
     @Transactional
-    public BarcodeScannerDevice getActiveScanner()
+    public BarcodeScannerDevice getCurrentScanner()
     {
-        return bsdDao.getActive();
+        return application.getCurrentScanner();
     }
     
     @Transactional
-    public void setActiveScanner(BarcodeScannerDevice bsd)
+    public void setCurrentScanner(BarcodeScannerDevice bsd)
     {
-        bsdDao.setActive(bsd);
+        application.setCurrentScanner(bsd);
+    }
+    
+    @Transactional
+    public boolean isCurrent(BarcodeScannerDevice bsd)
+    {
+        return (bsd != null && bsd.equals(getCurrentScanner()));
     }
     
     @Transactional
@@ -81,7 +89,7 @@ public class BarcodeScannerService
     
     public void initCurrentDevice()
     {
-        initDevice(getActiveScanner());
+        initDevice(getCurrentScanner());
         
     }
     

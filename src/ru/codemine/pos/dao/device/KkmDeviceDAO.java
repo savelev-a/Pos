@@ -29,9 +29,6 @@ import ru.codemine.pos.entity.device.KkmDevice;
 public interface KkmDeviceDAO extends GenericDAO<KkmDevice, Long>
 {
     public KkmDevice getBySerialNumber(String serial);
-    public KkmDevice getActive();
-    
-    public void setActive(KkmDevice kkmDevice);
     
     public List<KkmDevice> getByType(KkmDevice.KkmType type);
     public List<KkmDevice> getAll();

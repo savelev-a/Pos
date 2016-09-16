@@ -18,14 +18,12 @@
 
 package ru.codemine.pos.ui.windows.devices.barcodescanner.listener;
 
-import com.alee.laf.optionpane.WebOptionPane;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.application.Application;
 import ru.codemine.pos.entity.device.BarcodeScannerDevice;
-import ru.codemine.pos.exception.DuplicateDeviceDataException;
 import ru.codemine.pos.service.device.barcodescanner.BarcodeScannerService;
 import ru.codemine.pos.ui.windows.devices.barcodescanner.BarcodeScannerListWindow;
 import ru.codemine.pos.ui.windows.devices.barcodescanner.BarcodeScannerWindow;
@@ -56,12 +54,10 @@ public class SaveBarcodeScanner implements ActionListener
         }
         else
         {
-            
             barcodeScannerService.updateDevice(device);
-            if(device.isEnabled())
+            if(barcodeScannerService.isCurrent(device))
             {
-                application.setCurrentScanner(device);
-                barcodeScannerService.initDevice(device);  
+                barcodeScannerService.setCurrentScanner(device);
             }
         }
         
