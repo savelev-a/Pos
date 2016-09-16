@@ -106,16 +106,16 @@ public class BarcodeScannerWindow extends GenericEntityWindow<BarcodeScannerDevi
         });
         setLayout(layout);
         
-        add(deviceTypeLabel, "1, 1, 3, 1, F, F");
+        add(deviceTypeLabel, "1, 1");
         add(deviceTypeBox, "3, 1, 7, 1, F, F");
         add(deviceTypeDescrPanel, "3, 3, 7, 3, F, F");
-        add(portLabel, "1, 7");
-        add(portField, "3, 7");
-        add(speedLabel, "5, 7");
-        add(speedField, "7, 7");
-        add(descrLabel, "1, 11");
-        add(new WebScrollPane(descriptionArea), "3, 11, 7, 11, F, F");
-        add(buttonsGroupPanel, "1, 13, 7, 13, C, T");
+        add(portLabel, "1, 5");
+        add(portField, "3, 5");
+        add(speedLabel, "5, 5");
+        add(speedField, "7, 5");
+        add(descrLabel, "1, 7");
+        add(new WebScrollPane(descriptionArea), "3, 7, 7, 7, F, F");
+        add(buttonsGroupPanel, "1, 9, 7, 9, C, T");
         
         for(Map.Entry<BarcodeScannerDevice.BarcodeScannerType, String> type : BarcodeScannerDevice.getAvaibleTypes().entrySet())
         {
