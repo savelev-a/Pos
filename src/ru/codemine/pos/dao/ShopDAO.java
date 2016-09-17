@@ -16,27 +16,18 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.entity;
+package ru.codemine.pos.dao;
 
-import java.io.Serializable;
+import java.util.List;
+import ru.codemine.pos.entity.Shop;
 
 /**
  *
  * @author Alexander Savelev
  */
-public abstract class GenericEntity implements Serializable
+public interface ShopDAO extends GenericDAO<Shop, Integer>
 {
-    public enum EntityType
-    {
-        USER,
-        WORKDAY,
-        STORE,
-        SHOP,
-        PRODUCT,
-        CHEQUE,
-        STARTBALANCE,
-        DEVICE
-    }
+    public Shop getByName(String name);
     
-    public abstract EntityType getEntityType();
+    public List<Shop> getAll();
 }

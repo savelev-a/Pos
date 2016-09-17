@@ -41,6 +41,10 @@ public class Settings implements Serializable
     private Integer id;
     
     @OneToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "shop_id", nullable = true)
+    private Shop currentShop;
+    
+    @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "kkm_id", nullable = true)
     private KkmDevice currentKkmDevice;
     
@@ -81,6 +85,16 @@ public class Settings implements Serializable
     public void setCurrentScannerDevice(BarcodeScannerDevice currentScannerDevice)
     {
         this.currentScannerDevice = currentScannerDevice;
+    }
+
+    public Shop getCurrentShop()
+    {
+        return currentShop;
+    }
+
+    public void setCurrentShop(Shop currentShop)
+    {
+        this.currentShop = currentShop;
     }
 
 }

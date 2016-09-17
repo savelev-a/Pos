@@ -21,17 +21,21 @@ package ru.codemine.pos.application;
 import com.alee.laf.WebLookAndFeel;
 import com.alee.laf.optionpane.WebOptionPane;
 import java.util.List;
+import java.util.logging.Level;
 import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.entity.Settings;
+import ru.codemine.pos.entity.Shop;
 import ru.codemine.pos.entity.Store;
 import ru.codemine.pos.entity.User;
 import ru.codemine.pos.entity.device.BarcodeScannerDevice;
 import ru.codemine.pos.entity.device.KkmDevice;
+import ru.codemine.pos.exception.DuplicateDataException;
 import ru.codemine.pos.service.SettingsService;
+import ru.codemine.pos.service.ShopService;
 import ru.codemine.pos.service.StoreService;
 import ru.codemine.pos.service.UserService;
 import ru.codemine.pos.service.device.barcodescanner.BarcodeScannerService;
@@ -57,6 +61,7 @@ public class Application
     @Autowired private StoreService storeService;
     @Autowired private KkmService kkmService;
     @Autowired private BarcodeScannerService barcodeScannerService;
+    @Autowired private ShopService shopService;
     
     @Autowired private LoginScreen loginScreen;
     @Autowired private MainWindow mainWindow;
@@ -66,6 +71,7 @@ public class Application
     private User activeUser;
     private Kkm currentKkm;
     private BarcodeScannerDevice currentScanner;
+    private Shop currentShop;
     
     public ApplicationContext getAppContext()
     {
@@ -105,6 +111,16 @@ public class Application
         settings.setCurrentScannerDevice(currentScanner);
         settingsService.saveSettings(settings);
         barcodeScannerService.initDevice(scanner);
+    }
+    
+    public Shop getCurrentShop()
+    {
+        return currentShop;
+    }
+    
+    public void setCurrentShop(Shop shop)
+    {
+        this.currentShop = shop;
     }
     
     
@@ -183,6 +199,27 @@ public class Application
         if(settings == null)
         {
             settings = new Settings();
+            settingsService.saveSettings(settings);
+        }
+        
+        currentShop = settings.getCurrentShop();
+        if(currentShop == null)
+        {
+            currentShop = new Shop();
+            try
+            {
+                shopService.create(currentShop);
+            }
+            catch (DuplicateDataException ex)
+            {
+                WebOptionPane.showMessageDialog(null, 
+                    "<html><p style='width: 300px;'> Для решения проблемы обратитесь к разработчику.<br><br>" 
+                            + ex.getLocalizedMessage(), 
+                    "Ошибка при инициализации текущей торговой точки!", WebOptionPane.ERROR_MESSAGE);
+            
+            System.exit(1);
+            }
+            settings.setCurrentShop(currentShop);
             settingsService.saveSettings(settings);
         }
     }

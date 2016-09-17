@@ -16,27 +16,37 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.entity;
+package ru.codemine.pos.dao;
 
-import java.io.Serializable;
+import java.util.List;
+import org.hibernate.Query;
+import org.springframework.stereotype.Repository;
+import ru.codemine.pos.entity.Shop;
 
 /**
  *
  * @author Alexander Savelev
  */
-public abstract class GenericEntity implements Serializable
+
+@Repository
+public class ShopDAOImpl extends GenericDAOImpl<Shop, Integer> implements ShopDAO
 {
-    public enum EntityType
+
+    @Override
+    public Shop getByName(String name)
     {
-        USER,
-        WORKDAY,
-        STORE,
-        SHOP,
-        PRODUCT,
-        CHEQUE,
-        STARTBALANCE,
-        DEVICE
+        Query query = getSession().createQuery("FROM Shop s WHERE s.name = :name");
+        query.setString("name", name);
+        
+        return (Shop)query.uniqueResult();
     }
-    
-    public abstract EntityType getEntityType();
+
+    @Override
+    public List<Shop> getAll()
+    {
+        Query query = getSession().createQuery("FROM Shop");
+        
+        return query.list();
+    }
+
 }
