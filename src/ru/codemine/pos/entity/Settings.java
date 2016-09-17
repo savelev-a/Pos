@@ -97,4 +97,12 @@ public class Settings implements Serializable
         this.currentShop = currentShop;
     }
 
+    @Override
+    public String toString()
+    {
+        return "Settings{" + "id=" + id + ", currentShop=" + currentShop + ", currentKkmDevice=" + currentKkmDevice + ", currentScannerDevice=" + currentScannerDevice + '}';
+    }
+    
+    
+
 }

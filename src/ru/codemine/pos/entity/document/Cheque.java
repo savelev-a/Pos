@@ -122,10 +122,10 @@ public class Cheque extends Document
     @Override
     public String toString()
     {
-        return "Cheque{" + "content=" + content + ", workday=" + workday + ", chequeTotal=" + chequeTotal + '}';
+        return "Cheque{" + "content=" + content + ", workday=" + workday + ", paymentType=" + paymentType + ", chequeTotal=" + chequeTotal + '}';
     }
-    
-    
+
+
     // Вычисляемые методы //
     
     public Integer getQuantityOf(Product product)

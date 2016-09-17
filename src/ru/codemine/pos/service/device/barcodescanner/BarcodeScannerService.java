@@ -100,10 +100,10 @@ public class BarcodeScannerService
         switch(device.getType())
         {
             case KEYBOARD_SCANNER :
-                log.info("Используется эмуляция клавиатуры");
+                log.info("Настраивается эмуляция клавиатуры");
                 break;
             case SERIAL_SCANNER :
-                log.info("Используется сканер для последовательного порта " + device.getPort());
+                log.info("Настраивается сканер для последовательного порта " + device.getPort());
                 initSerialScanner(device);
                 break;
         }

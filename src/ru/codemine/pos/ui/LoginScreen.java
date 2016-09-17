@@ -30,6 +30,7 @@ import com.alee.laf.text.WebPasswordField;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.ImageIcon;
+import org.apache.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import ru.codemine.pos.application.Application;
@@ -44,6 +45,7 @@ import ru.codemine.pos.service.UserService;
 @Component
 public class LoginScreen 
 {
+    private static final Logger log = Logger.getLogger("Login");
     @Autowired
     private Application application;
     
@@ -122,6 +124,7 @@ public class LoginScreen
                 }
                 else
                 {
+                    log.info("Попытка входа пользователя " + username + " завершилась неудачно - неверный пароль");
                     WebOptionPane.showMessageDialog(null,  
                         "Проверьте правильность пароля", 
                         "Ошибка входа", WebOptionPane.ERROR_MESSAGE);

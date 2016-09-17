@@ -154,6 +154,7 @@ public class Application
             
         }
         Application app = appContext.getBean(Application.class);
+        log.info("Контекст приложения загружен");
         
         loadingScreen.setLoadingStatus("Загрузка настроек", 50);
         app.initSettings();
@@ -190,6 +191,7 @@ public class Application
     
     public void close()
     {
+        log.info("Завершение работы\n");
         System.exit(0);
     }
     
@@ -198,6 +200,7 @@ public class Application
         settings = settingsService.getSettings();
         if(settings == null)
         {
+            log.info("Настройки не найдены. Создаются настройки по умолчанию.");
             settings = new Settings();
             settingsService.saveSettings(settings);
         }
@@ -205,6 +208,7 @@ public class Application
         currentShop = settings.getCurrentShop();
         if(currentShop == null)
         {
+            log.info("Текущий магазин не найден. Создается магазин по умолчанию.");
             currentShop = new Shop();
             try
             {
@@ -222,6 +226,8 @@ public class Application
             settings.setCurrentShop(currentShop);
             settingsService.saveSettings(settings);
         }
+        
+        log.debug("Загружены настройки: " + settings);
     }
     
     private void initUsers()
@@ -231,6 +237,7 @@ public class Application
             List<User> allusers = userService.getAllUsers();
             if(allusers.isEmpty())
             {
+                log.info("Пользователи не найдены. Создается пользователь Администратор.");
                 WebOptionPane.showMessageDialog(null,  
                         "Будет создан системный пользователь Администратор с паролем admin\n"
                        + "Не забудьте поменять пароль на вкладке настроек.", 
@@ -263,6 +270,7 @@ public class Application
             Store retailStore = storeService.getByName("Розница");
             if(retailStore == null)
             {
+                log.info("Склад Розница не найден. Создаются новый склад.");
                 retailStore = new Store("Розница");
                 storeService.create(retailStore);
             }
@@ -284,6 +292,7 @@ public class Application
         currentKkm = kkmService.createKkm(settings.getCurrentKkmDevice());
         if(currentKkm == null)
         {
+            log.info("Настроенная ККМ не найдена. Создается ККМ по умолчанию.");
             WebOptionPane.showMessageDialog(null,  
                         "После загрузки перейдите в Настройки -> Кассовые аппараты\n"
                        + "и настройте подключенный кассовый аппарат.", 
@@ -292,6 +301,8 @@ public class Application
             currentKkm = new SyslogChequePrinter();
             currentKkm.setDevice(new KkmDevice());
         }
+        
+        log.info("Используется ККМ: " + currentKkm.getDevice().getName());
     }
 
     private void initDevices()
@@ -299,10 +310,13 @@ public class Application
         currentScanner = settings.getCurrentScannerDevice();
         if(currentScanner == null)
         {
+            log.info("Настроенный сканер ШК не обнаружен. Создается сканер ШК по умолчанию.");
             currentScanner = new BarcodeScannerDevice();
         }
         
         barcodeScannerService.initDevice(currentScanner);
+        
+        log.info("Используется сканер ШК: " + currentScanner.getName());
     }
 
 }

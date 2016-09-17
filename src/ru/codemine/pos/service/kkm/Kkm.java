@@ -45,4 +45,12 @@ public abstract class Kkm
     {
         this.device = device;
     }
+
+    @Override
+    public String toString()
+    {
+        return "Kkm{" + "device=" + device + '}';
+    }
+    
+    
 }
