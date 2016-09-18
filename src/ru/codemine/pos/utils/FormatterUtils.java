@@ -16,8 +16,9 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.utils.formatter;
+package ru.codemine.pos.utils;
 
+import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import javax.swing.text.NumberFormatter;
 
@@ -25,20 +26,21 @@ import javax.swing.text.NumberFormatter;
  *
  * @author Alexander Savelev
  */
-public class InnFormatter extends NumberFormatter
+public class FormatterUtils 
 {
-
-    public InnFormatter()
-    {
-        super(NumberFormat.getInstance());
-        
-        setValueClass(Long.class);
-        setMinimum(0L);
-        setMaximum(999999999999L);
-        setAllowsInvalid(false);
-        setCommitsOnValidEdit(true);
-        
-    }
     
+    public static NumberFormatter getPriceFormatter()
+    {
+        NumberFormat format = new DecimalFormat("#,##0.00");
+        NumberFormatter formatter = new NumberFormatter(format);
+        
+        formatter.setValueClass(Double.class);
+        formatter.setMinimum(0.0);
+        formatter.setMaximum(Double.MAX_VALUE);
+        formatter.setAllowsInvalid(false);
+        formatter.setCommitsOnValidEdit(true);
+        
+        return formatter;
+    }
 
 }

@@ -19,23 +19,15 @@
 package ru.codemine.pos.ui.windows.products;
 
 import com.alee.extended.image.WebDecoratedImage;
-import com.alee.extended.image.WebImage;
 import com.alee.extended.layout.TableLayout;
-import com.alee.global.StyleConstants;
 import com.alee.laf.label.WebLabel;
 import com.alee.laf.optionpane.WebOptionPane;
-import com.alee.laf.panel.WebPanel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
+import com.alee.laf.text.WebFormattedTextField;
 import com.alee.laf.text.WebTextField;
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Image;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.LinkOption;
-import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.ImageIcon;
@@ -49,6 +41,7 @@ import ru.codemine.pos.tablemodel.ProductByStoresTableModel;
 import ru.codemine.pos.ui.windows.GenericEntityWindow;
 import ru.codemine.pos.ui.windows.products.listener.DontSaveProduct;
 import ru.codemine.pos.ui.windows.products.listener.SaveProduct;
+import ru.codemine.pos.utils.FormatterUtils;
 
 /**
  *
@@ -73,7 +66,7 @@ public class ProductWindow extends GenericEntityWindow<Product>
     private final WebTextField artikulField;
     private final WebTextField nameField;
     private final WebTextField barcodeField;
-    private final WebTextField priceField;
+    private final WebFormattedTextField priceField;
     
     private final WebLabel stocksLabel;
     private final WebTable stocksTable;
@@ -97,7 +90,7 @@ public class ProductWindow extends GenericEntityWindow<Product>
         artikulField = new WebTextField();
         nameField = new WebTextField();
         barcodeField = new WebTextField();
-        priceField = new WebTextField();
+        priceField = new WebFormattedTextField(FormatterUtils.getPriceFormatter());
         
         stocksLabel = new WebLabel("Остатки по складам");
         stocksTable = new WebTable();
@@ -146,7 +139,7 @@ public class ProductWindow extends GenericEntityWindow<Product>
         artikulField.setText(product.getArtikul());
         nameField.setText(product.getName());
         barcodeField.setText(product.getBarcode());
-        priceField.setText(product.getPrice() == null ? "0" : product.getPrice().toString());
+        priceField.setValue(product.getPrice());
         
         if(product.getId() == null)
         {
@@ -200,15 +193,7 @@ public class ProductWindow extends GenericEntityWindow<Product>
         product.setArtikul(artikulField.getText());
         product.setBarcode(barcodeField.getText());
         product.setName(nameField.getText());
-        try
-        {
-            product.setPrice(Double.parseDouble(priceField.getText()));
-        } 
-        catch (NumberFormatException ex)
-        {
-            WebOptionPane.showMessageDialog(rootPane, "Цена должна быть числом, копейки отделены точкой", "Неверный формат цены", WebOptionPane.ERROR_MESSAGE);
-            return null;
-        }
+        product.setPrice((Double)priceField.getValue());
         
         return product;
     }

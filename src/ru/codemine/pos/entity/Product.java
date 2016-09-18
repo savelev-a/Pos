@@ -55,7 +55,10 @@ public class Product extends GenericEntity
     private Double price;
 
     
-    public Product(){}
+    public Product()
+    {
+        this.price = 0.0;
+    }
     
     public Product(String artikul, String name, String barcode, Double price)
     {
