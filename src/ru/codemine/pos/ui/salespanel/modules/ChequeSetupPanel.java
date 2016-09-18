@@ -28,6 +28,9 @@ import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.table.WebTable;
 import com.alee.laf.text.WebTextField;
 import javax.swing.table.TableColumnModel;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import ru.codemine.pos.application.Application;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
@@ -36,8 +39,11 @@ import ru.codemine.pos.tablemodel.ChequeSetupTableModel;
  *
  * @author Alexander Savelev
  */
+@Component
 public class ChequeSetupPanel extends WebPanel
 {
+    @Autowired Application application;
+    
     private final WebTable table;
     private final WebTextField inputField;
     
@@ -58,18 +64,10 @@ public class ChequeSetupPanel extends WebPanel
         });
         setLayout(layout);
         
-        tableModel = new ChequeSetupTableModel(new Cheque());
-        table = new WebTable(tableModel);
+        table = new WebTable();
         table.setEditable(false); 
         table.setFontSize(22);
         table.setRowHeight(40);
-        
-        TableColumnModel columnModel = table.getColumnModel();
-        columnModel.getColumn(0).setPreferredWidth(50);
-        columnModel.getColumn(1).setMinWidth(300);
-        columnModel.getColumn(2).setPreferredWidth(100);
-        columnModel.getColumn(3).setPreferredWidth(100);
-        columnModel.getColumn(4).setPreferredWidth(100);
         
         WebScrollPane scrollPane = new WebScrollPane(table);
         add(scrollPane, "1, 1, 3, 1");
@@ -83,6 +81,18 @@ public class ChequeSetupPanel extends WebPanel
         add(new WebLabel("Поиск по штрих-коду: "), "1, 3");
         
 
+    }
+    
+    public void init()
+    {
+        newCheque();
+        
+        TableColumnModel columnModel = table.getColumnModel();
+        columnModel.getColumn(0).setPreferredWidth(50);
+        columnModel.getColumn(1).setMinWidth(300);
+        columnModel.getColumn(2).setPreferredWidth(100);
+        columnModel.getColumn(3).setPreferredWidth(100);
+        columnModel.getColumn(4).setPreferredWidth(100);
     }
     
     public WebTextField getInputField()
@@ -107,7 +117,10 @@ public class ChequeSetupPanel extends WebPanel
     
     public void newCheque()
     {
-        tableModel.newCheque();
+        Cheque cheque = new Cheque();
+        cheque.setShop(application.getCurrentShop());
+        tableModel = new ChequeSetupTableModel(cheque);
+        table.setModel(tableModel);
         
         tableModel.fireTableDataChanged();
     }

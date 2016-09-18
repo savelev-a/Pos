@@ -65,8 +65,12 @@ public class ShopService
     public void update(Shop shop) throws DuplicateDataException
     {
         if(shop == null) return;
+        
         Shop testName = shopDAO.getByName(shop.getName());
         if(testName != null && !testName.getId().equals(shop.getId())) throw new DuplicateDataException("Такой магазин уже существует", "Наименование", shop.getName());
+
+        shopDAO.evict(testName);
+        
         shopDAO.update(shop);
     }
     

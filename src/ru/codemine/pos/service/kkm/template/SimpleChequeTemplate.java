@@ -40,8 +40,8 @@ public class SimpleChequeTemplate
     {
         String itemStr = "";
         String head = ""
-                + "     ООО 'Рога И Копыта'    \n"
-                + "ИНН 123456789 КПП 000000000 \n"
+                + formTab(cheque.getShop().getOrgName(), "", 28)
+                + formTab("ИНН" + cheque.getShop().getOrgInn(), "КПП" + cheque.getShop().getOrgKpp(), 28)
                 + "----------------------------\n"
                 + "                            \n"
                 + formTab(DateTime.now().toString("dd.MM.YY HH:mm"), "", 28)

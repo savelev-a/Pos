@@ -18,7 +18,6 @@
 
 package ru.codemine.pos.service.kkm.template;
 
-import com.alee.laf.optionpane.WebOptionPane;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -27,10 +26,8 @@ import javax.print.attribute.HashPrintRequestAttributeSet;
 import javax.print.attribute.HashPrintServiceAttributeSet;
 import javax.print.attribute.PrintRequestAttributeSet;
 import javax.print.attribute.PrintServiceAttributeSet;
-import javax.print.attribute.standard.MediaSizeName;
 import javax.print.attribute.standard.PrinterName;
 import net.sf.jasperreports.engine.JRException;
-import net.sf.jasperreports.engine.JRExporterParameter;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -42,9 +39,10 @@ import net.sf.jasperreports.export.SimplePrintServiceExporterConfiguration;
 import org.joda.time.DateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.application.Application;
+import ru.codemine.pos.entity.Shop;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.entity.document.ChequeLine;
-import ru.codemine.pos.service.ChequeService;
 
 /**
  *
@@ -67,8 +65,8 @@ public class JasperChequeTemplate
         }
         
         Map<String, Object> parameters = new HashMap<>();
-        parameters.put("titleString", "ООО Рога и Копыта");
-        parameters.put("reqs", "ИНН 123456789 КПП 0000000000");
+        parameters.put("titleString", cheque.getShop().getOrgName());
+        parameters.put("reqs", cheque.getShop().getOrgInn() + "  " + cheque.getShop().getOrgKpp());
         parameters.put("currentTime", DateTime.now().toString("dd.MM.YY HH:mm"));
         parameters.put("currentUser", cheque.getCreator().getUsername());
         parameters.put("chequeNumber", "#0011");

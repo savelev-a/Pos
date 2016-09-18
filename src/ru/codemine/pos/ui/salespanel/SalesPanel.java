@@ -23,6 +23,7 @@ import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.panel.WebPanel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import ru.codemine.pos.application.Application;
 import ru.codemine.pos.entity.Product;
 import ru.codemine.pos.entity.document.Cheque;
 import ru.codemine.pos.service.ProductService;
@@ -43,12 +44,12 @@ import ru.codemine.pos.ui.salespanel.modules.UpperStatusPanel;
 @Component
 public class SalesPanel extends WebPanel implements GenericPanelComponent
 {
+    @Autowired private ChequeSetupPanel chequeSetupPanel;
     @Autowired private ButtonsPanel buttonsPanel;
     @Autowired private ProductService productService;
     @Autowired private StoreService storeService;
     
     private final UpperStatusPanel upperStatusPanel;
-    private final ChequeSetupPanel chequeSetupPanel;
     private final CalcsPanel calcsPanel;
     
     
@@ -64,11 +65,9 @@ public class SalesPanel extends WebPanel implements GenericPanelComponent
         setLayout(layout);
         
         upperStatusPanel = new UpperStatusPanel();
-        chequeSetupPanel = new ChequeSetupPanel();
         calcsPanel = new CalcsPanel();
         
         add(upperStatusPanel, "1, 1, 3, 1");
-        add(chequeSetupPanel, "1, 3");
         add(calcsPanel, "3, 3");
         
     }
@@ -78,6 +77,9 @@ public class SalesPanel extends WebPanel implements GenericPanelComponent
     {
         add(buttonsPanel, "1, 5, 3, 5");
         buttonsPanel.init();
+        
+        add(chequeSetupPanel, "1, 3");
+        chequeSetupPanel.init();
         
         setupActionListeners();
     }

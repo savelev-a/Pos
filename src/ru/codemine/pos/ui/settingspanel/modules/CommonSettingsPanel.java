@@ -31,6 +31,7 @@ import com.alee.laf.panel.WebPanel;
 public class CommonSettingsPanel extends WebPanel
 {
     private final WebButton showUsersBtn;
+    private final WebButton showShopBtn;
     
     public CommonSettingsPanel()
     {
@@ -43,21 +44,30 @@ public class CommonSettingsPanel extends WebPanel
             {10, TableLayout.FILL, 10},
             {5, TableLayout.PREFERRED, 
             10, TableLayout.PREFERRED,          //users
-            10, TableLayout.PREFERRED, 10}      //kkms
+            10, TableLayout.PREFERRED, 10}      //shop
         });
         setLayout(layout);
         
         showUsersBtn = new WebButton("Настройки пользователей");
+        showShopBtn = new WebButton("Настройки торговой точки");
         showUsersBtn.setMargin(5);
+        showShopBtn.setMargin(5);
         showUsersBtn.setRound(StyleConstants.largeRound);
+        showShopBtn.setRound(StyleConstants.largeRound);
 
         add(new WebLabel("-----Общие настройки-----"), "1, 1, C, T");
         add(showUsersBtn, "1, 3");
+        add(showShopBtn, "1, 5");
     }
     
     public WebButton getShowUsersButton()
     {
         return showUsersBtn;
+    }
+    
+    public WebButton getShowShopButton()
+    {
+        return showShopBtn;
     }
     
 }

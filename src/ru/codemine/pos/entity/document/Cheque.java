@@ -32,6 +32,7 @@ import javax.persistence.ManyToOne;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import ru.codemine.pos.entity.Product;
+import ru.codemine.pos.entity.Shop;
 import ru.codemine.pos.entity.Workday;
 
 /**
@@ -55,6 +56,10 @@ public class Cheque extends Document
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_workday", nullable = false)
     private Workday workday;
+    
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "id_shop", nullable = false)
+    private Shop shop;
     
     @Column(name = "ptype", nullable = false)
     private PaymentType paymentType;
@@ -97,6 +102,16 @@ public class Cheque extends Document
     public void setWorkday(Workday workday)
     {
         this.workday = workday;
+    }
+
+    public Shop getShop()
+    {
+        return shop;
+    }
+
+    public void setShop(Shop shop)
+    {
+        this.shop = shop;
     }
     
     public PaymentType getPaymentType()
