@@ -16,28 +16,41 @@
  * Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
  */
 
-package ru.codemine.pos.entity;
+package ru.codemine.pos.utils;
 
-import java.io.Serializable;
+import com.fazecast.jSerialComm.SerialPort;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  *
  * @author Alexander Savelev
  */
-public abstract class GenericEntity implements Serializable
+public class SerialPortUtils 
 {
-    public enum EntityType
+    public static List<String> getSerialPortNames()
     {
-        USER,
-        WORKDAY,
-        STORE,
-        SHOP,
-        PRODUCT,
-        CHEQUE,
-        STARTBALANCE,
-        SUPPLY,
-        DEVICE
+        List<String> portNames = new ArrayList<>();
+        SerialPort[] commPorts = SerialPort.getCommPorts();
+        for(SerialPort port : commPorts)
+        {
+            portNames.add(port.getSystemPortName());
+        }
+        
+        return portNames;
     }
     
-    public abstract EntityType getEntityType();
+    public static List<Integer> getSerialPortSpeeds()
+    {
+        List<Integer> speeds = new ArrayList<>();
+        
+        speeds.add(9600);
+        speeds.add(19200);
+        speeds.add(38400);
+        speeds.add(57600);
+        speeds.add(115200);
+        
+        return speeds;
+    }
+
 }

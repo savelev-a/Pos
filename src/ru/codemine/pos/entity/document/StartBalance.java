@@ -114,7 +114,7 @@ public class StartBalance extends Document
     @Override
     public String toString()
     {
-        return "StartBalance{" + "contents=" + contents + ", store=" + store + ", total=" + total + '}';
+        return "StartBalance{" + ", store=" + store + ", total=" + total + '}';
     }
 
     @Override

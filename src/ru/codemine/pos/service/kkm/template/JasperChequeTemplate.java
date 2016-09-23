@@ -66,7 +66,7 @@ public class JasperChequeTemplate
         
         Map<String, Object> parameters = new HashMap<>();
         parameters.put("titleString", cheque.getShop().getOrgName());
-        parameters.put("reqs", cheque.getShop().getOrgInn() + "  " + cheque.getShop().getOrgKpp());
+        parameters.put("reqs", "ИНН " + cheque.getShop().getOrgInn() + "   КПП " + cheque.getShop().getOrgKpp());
         parameters.put("currentTime", DateTime.now().toString("dd.MM.YY HH:mm"));
         parameters.put("currentUser", cheque.getCreator().getUsername());
         parameters.put("chequeNumber", "#0011");

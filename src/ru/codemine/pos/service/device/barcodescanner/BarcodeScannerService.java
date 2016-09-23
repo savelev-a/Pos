@@ -112,6 +112,8 @@ public class BarcodeScannerService
     private void initSerialScanner(BarcodeScannerDevice device)
     {
         SerialPort serialPort = SerialPort.getCommPort(device.getPort());
+        
+        serialPort.setBaudRate(device.getSpeed());
         serialPort.openPort();
         serialPort.addDataListener(bssListener);
     }

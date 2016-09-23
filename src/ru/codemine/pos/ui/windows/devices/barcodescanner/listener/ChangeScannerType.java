@@ -56,9 +56,10 @@ public class ChangeScannerType implements ActionListener
                 window.setPortVisible(false);
                 break;
             case SERIAL_SCANNER : 
-                window.setScannerTypeDescription("Этот сканер штрихкодов подключен через последовательный порт (COM).\n "
+                window.setScannerTypeDescription("Этот сканер штрихкодов подключен через последовательный порт (COM).\n"
                         + "Также поддерживаются USB-сканеры в режиме виртуального com-порта.\n"
-                        + "Данный тип сканеров требует выбора порта и скорости");
+                        + "Данный тип сканеров требует выбора порта и скорости.\n\n"
+                        + "Примечание: При изменении настроек активного сканера необходим перезапуск приложения.");
                 window.setPortVisible(true);
                 break;
         }

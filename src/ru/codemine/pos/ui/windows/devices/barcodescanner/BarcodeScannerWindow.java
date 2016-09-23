@@ -26,7 +26,6 @@ import com.alee.laf.optionpane.WebOptionPane;
 import com.alee.laf.panel.WebPanel;
 import com.alee.laf.scroll.WebScrollPane;
 import com.alee.laf.text.WebTextArea;
-import com.alee.laf.text.WebTextField;
 import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -35,6 +34,7 @@ import ru.codemine.pos.ui.windows.GenericEntityWindow;
 import ru.codemine.pos.ui.windows.devices.barcodescanner.listener.ChangeScannerType;
 import ru.codemine.pos.ui.windows.devices.barcodescanner.listener.DontSaveBarcodeScanner;
 import ru.codemine.pos.ui.windows.devices.barcodescanner.listener.SaveBarcodeScanner;
+import ru.codemine.pos.utils.SerialPortUtils;
 
 /**
  *
@@ -57,8 +57,8 @@ public class BarcodeScannerWindow extends GenericEntityWindow<BarcodeScannerDevi
     private final WebTextArea deviceTypeDescrArea;
     
     private final WebComboBox deviceTypeBox;
-    private final WebTextField portField;
-    private final WebTextField speedField;
+    private final WebComboBox portBox;
+    private final WebComboBox speedBox;
     private final WebTextArea descriptionArea;
     
     private BarcodeScannerDevice device;
@@ -77,8 +77,8 @@ public class BarcodeScannerWindow extends GenericEntityWindow<BarcodeScannerDevi
         deviceTypeDescrArea  = new WebTextArea();
     
         deviceTypeBox      = new WebComboBox();
-        portField       = new WebTextField();
-        speedField      = new WebTextField();
+        portBox            = new WebComboBox();
+        speedBox           = new WebComboBox();
         descriptionArea = new WebTextArea();
         
         descriptionArea.setLineWrap(true);
@@ -110,9 +110,9 @@ public class BarcodeScannerWindow extends GenericEntityWindow<BarcodeScannerDevi
         add(deviceTypeBox, "3, 1, 7, 1, F, F");
         add(deviceTypeDescrPanel, "3, 3, 7, 3, F, F");
         add(portLabel, "1, 5");
-        add(portField, "3, 5");
+        add(portBox, "3, 5");
         add(speedLabel, "5, 5");
-        add(speedField, "7, 5");
+        add(speedBox, "7, 5");
         add(descrLabel, "1, 7");
         add(new WebScrollPane(descriptionArea), "3, 7, 7, 7, F, F");
         add(buttonsGroupPanel, "1, 9, 7, 9, C, T");
@@ -121,6 +121,18 @@ public class BarcodeScannerWindow extends GenericEntityWindow<BarcodeScannerDevi
         {
             deviceTypeBox.addItem(type.getValue());
         }
+        
+        for(String name : SerialPortUtils.getSerialPortNames())
+        {
+            portBox.addItem(name);
+        }
+        
+        for(Integer speed : SerialPortUtils.getSerialPortSpeeds())
+        {
+            speedBox.addItem(speed);
+        }
+        
+        
 
     }
 
@@ -135,8 +147,8 @@ public class BarcodeScannerWindow extends GenericEntityWindow<BarcodeScannerDevi
         String t = BarcodeScannerDevice.getAvaibleTypes().get(device.getType());
         deviceTypeBox.setSelectedItem(t);
         
-        portField.setText(device.getPort());
-        speedField.setText(device.getSpeed().toString());
+        portBox.setSelectedItem(device.getPort());
+        speedBox.setSelectedItem(device.getSpeed());
         descriptionArea.setText(device.getDescription());
         
         setVisible(true);
@@ -159,16 +171,8 @@ public class BarcodeScannerWindow extends GenericEntityWindow<BarcodeScannerDevi
             if(entry.getValue().equals((String)deviceTypeBox.getSelectedItem())) type = entry.getKey();
         }
         device.setType(type);
-        device.setPort(portField.getText());
-        try
-        {
-            device.setSpeed(Integer.parseInt(speedField.getText()));
-        } 
-        catch (NumberFormatException ex)
-        {
-            WebOptionPane.showMessageDialog(rootPane, "Скорость должна быть целым числом", "Неверный формат числа", WebOptionPane.ERROR_MESSAGE);
-            return null;
-        }
+        device.setPort((String)portBox.getSelectedItem());
+        device.setSpeed((Integer)speedBox.getSelectedItem());
         device.setDescription(descriptionArea.getText());
         
         return device;
@@ -188,8 +192,8 @@ public class BarcodeScannerWindow extends GenericEntityWindow<BarcodeScannerDevi
     {
         portLabel.setVisible(b);
         speedLabel.setVisible(b);
-        portField.setVisible(b);
-        speedField.setVisible(b);
+        portBox.setVisible(b);
+        speedBox.setVisible(b);
     }
 
 }
