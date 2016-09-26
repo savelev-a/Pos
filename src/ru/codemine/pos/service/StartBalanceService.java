@@ -51,21 +51,14 @@ import ru.codemine.pos.exception.NegativeQuantityOnDeactivateException;
  */
 
 @Service
+@Transactional
 public class StartBalanceService
 {
-    @Autowired
-    private StartBalanceDAO sbDAO;
+    @Autowired private StartBalanceDAO sbDAO;
+    @Autowired private StoreDAO storeDAO;
+    @Autowired private ProductDAO productDAO;
+    @Autowired private Application application;
     
-    @Autowired
-    private StoreDAO storeDAO;
-    
-    @Autowired
-    private ProductDAO productDAO;
-    
-    @Autowired
-    private Application application;
-      
-    @Transactional
     public void create(StartBalance sb) throws GeneralException
     {
         User currentUser = application.getActiveUser();
@@ -77,7 +70,7 @@ public class StartBalanceService
         sb.setCreator(currentUser);
         
         sb.setTotal(0.0);
-        for(Map.Entry<Product, Integer> entry : sb.getContents().entrySet())
+        for(Map.Entry<Product, Integer> entry : sb.getContent().entrySet())
         {
             sb.setTotal(sb.getTotal() + entry.getKey().getPrice() * entry.getValue());
         }
@@ -85,21 +78,19 @@ public class StartBalanceService
         sbDAO.create(sb);
     }
     
-    @Transactional
     public void delete(StartBalance sb)
     {
         sbDAO.delete(sb);
     }
     
     
-    @Transactional
     public void update(StartBalance sb) throws ActiveDocumentEditException 
     {
         if(sb.isProcessed()) throw new ActiveDocumentEditException();
         
         sb = sbDAO.unproxyContents(sb);
         sb.setTotal(0.0);
-        for(Map.Entry<Product, Integer> entry : sb.getContents().entrySet())
+        for(Map.Entry<Product, Integer> entry : sb.getContent().entrySet())
         {
             sb.setTotal(sb.getTotal() + entry.getKey().getPrice() * entry.getValue());
         }
@@ -107,25 +98,21 @@ public class StartBalanceService
         sbDAO.update(sb);
     }
     
-    @Transactional
     public Document getById(Long id)
     {
         return sbDAO.getById(id);
     }
     
-    @Transactional
     public List<StartBalance> getAllByStore(Store store)
     {
         return sbDAO.getAllByStore(store);
     }
     
-    @Transactional
     public StartBalance getByStore(Store store)
     {
         return sbDAO.getByStore(store);
     }
 
-    @Transactional
     public void process(StartBalance sb) throws DuplicateProcessedDocumentException
     {
         Store store = sb.getStore();
@@ -139,7 +126,7 @@ public class StartBalanceService
         store = storeDAO.unproxyStocks(store);
         sb = sbDAO.unproxyContents(sb);
         
-        for(Map.Entry<Product, Integer> docStocks : sb.getContents().entrySet())
+        for(Map.Entry<Product, Integer> docStocks : sb.getContent().entrySet())
         {
             Product product = docStocks.getKey();
             if(store.getStocks().containsKey(product))
@@ -161,7 +148,6 @@ public class StartBalanceService
         
     }
 
-    @Transactional
     public void unprocess(StartBalance sb) throws GeneralException, NegativeQuantityOnDeactivateException
     {
         Store store = sb.getStore();
@@ -171,7 +157,7 @@ public class StartBalanceService
         store = storeDAO.unproxyStocks(store);
         sb = sbDAO.unproxyContents(sb);
         
-        for(Map.Entry<Product, Integer> docStocks : sb.getContents().entrySet())
+        for(Map.Entry<Product, Integer> docStocks : sb.getContent().entrySet())
         {
             Product product = docStocks.getKey();
             if(store.getStocks().containsKey(product))
@@ -209,16 +195,14 @@ public class StartBalanceService
      * @param sb Документ начальных остатков, содержимое которого нужно депроксировать
      * @return документ с депроксированным содержимым
      */
-    @Transactional
     public StartBalance unproxyContents(StartBalance sb)
     {
         return sbDAO.unproxyContents(sb);
     }
 
-    @Transactional
     public StartBalance loadFromCsv(StartBalance sb, String filename) throws IOException
     {
-        sb.setContents(new HashMap<Product, Integer>());
+        sb.setContent(new HashMap<Product, Integer>());
         sb.setTotal(0.0);
         
         InputStream is = new FileInputStream(filename);
@@ -287,7 +271,7 @@ public class StartBalanceService
                 productDAO.evict(testBarcode);
             }
             
-            sb.getContents().put(product, quantInt);
+            sb.getContent().put(product, quantInt);
             sb.setTotal(sb.getTotal() + priceDouble * quantInt);
             
 

@@ -67,7 +67,7 @@ public class StartBalanceDAOImpl extends GenericDAOImpl<StartBalance, Long> impl
     public StartBalance unproxyContents(StartBalance sb)
     {
         StartBalance startBalance = (StartBalance)getSession().merge(sb);
-        HibernateUtils.initAndUnproxy(startBalance.getContents());
+        HibernateUtils.initAndUnproxy(startBalance.getContent());
         
         return startBalance;
     }

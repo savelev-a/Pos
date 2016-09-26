@@ -170,7 +170,7 @@ public class StartBalanceWindow extends GenericDocumentWindow<StartBalance>
         startBalance.setCreationTime(new DateTime(creationTimeField.getDate()));
         startBalance.setDocumentTime(new DateTime(documentTimeField.getDate()));
         startBalance.setCreator(userService.getByUsername(creatorField.getText()));
-        startBalance.setContents(((StartBalanceContentTableModel)contentTable.getModel()).getContentMap());
+        startBalance.setContent(((StartBalanceContentTableModel)contentTable.getModel()).getContentMap());
         startBalance.calculateTotals();
         
         return startBalance;
@@ -182,13 +182,13 @@ public class StartBalanceWindow extends GenericDocumentWindow<StartBalance>
         if(item != null && item.getEntityType() == GenericEntity.EntityType.PRODUCT)
         {
             Product product = (Product)item;
-            if(startBalance.getContents().containsKey(product))
+            if(startBalance.getContent().containsKey(product))
             {
                 contentTable.setSelectedRow(tableModel.getProductIndex(product));
             }
             else
             {
-                startBalance.getContents().put(product, 1);
+                startBalance.getContent().put(product, 1);
                 startBalance.calculateTotals();
                 tableModel.setStartBalance(startBalance);
                 tableModel.fireTableDataChanged();

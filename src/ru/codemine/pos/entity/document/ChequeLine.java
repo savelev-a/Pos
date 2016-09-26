@@ -115,7 +115,7 @@ public class ChequeLine implements Serializable
 
     public Double getLineTotal()
     {
-        recalculateLine();
+        //recalculateLine();
         return lineTotal;
     }
 

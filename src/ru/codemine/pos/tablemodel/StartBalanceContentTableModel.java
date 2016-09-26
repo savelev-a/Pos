@@ -41,19 +41,19 @@ public class StartBalanceContentTableModel extends DefaultTableModel
     public StartBalanceContentTableModel()
     {
         startBalance = new StartBalance();
-        stocks = new ArrayList<>(startBalance.getContents().entrySet());
+        stocks = new ArrayList<>(startBalance.getContent().entrySet());
     }
     
     public StartBalanceContentTableModel(StartBalance sb)
     {
         this.startBalance = sb;
-        stocks = new ArrayList<>(sb.getContents().entrySet());
+        stocks = new ArrayList<>(sb.getContent().entrySet());
     }
 
     @Override
     public int getRowCount()
     {
-        return startBalance == null ? 0 : startBalance.getContents().size();
+        return startBalance == null ? 0 : startBalance.getContent().size();
     }
 
     @Override
@@ -120,15 +120,15 @@ public class StartBalanceContentTableModel extends DefaultTableModel
         if(value == null) return;
         
         Product product = stocks.get(row).getKey();
-        startBalance.getContents().put(product, value);
-        stocks = new ArrayList<>(startBalance.getContents().entrySet());
+        startBalance.getContent().put(product, value);
+        stocks = new ArrayList<>(startBalance.getContent().entrySet());
         
     }
     
     public void setStartBalance(StartBalance sb)
     {
         this.startBalance = sb;
-        stocks = new ArrayList<>(sb.getContents().entrySet());
+        stocks = new ArrayList<>(sb.getContent().entrySet());
     }
     
     public Map<Product, Integer> getContentMap()
@@ -158,9 +158,9 @@ public class StartBalanceContentTableModel extends DefaultTableModel
     {
         Product p = stocks.get(row).getKey();
         
-        startBalance.getContents().remove(p);
+        startBalance.getContent().remove(p);
         startBalance.calculateTotals();
-        stocks = new ArrayList<>(startBalance.getContents().entrySet());
+        stocks = new ArrayList<>(startBalance.getContent().entrySet());
     }
     
     

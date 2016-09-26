@@ -135,4 +135,16 @@ public class Supply extends Document
         return EntityType.SUPPLY;
     }
 
+    public void recalculateTotals()
+    {
+        documentTotal = 0.0;
+        realTotal = 0.0;
+        
+        for(SupplyLine line : content)
+        {
+            documentTotal += line.getDocumentLineTotal();
+            realTotal += line.getRealLineTotal();
+        }
+    }
+
 }

@@ -127,6 +127,7 @@ public class SupplyLine implements Serializable
     public void setPrice(Double price)
     {
         this.price = price;
+        recalculateLine();
     }
 
     public Integer getDocumentQuantity()
@@ -137,6 +138,7 @@ public class SupplyLine implements Serializable
     public void setDocumentQuantity(Integer documentQuantity)
     {
         this.documentQuantity = documentQuantity;
+        recalculateLine();
     }
 
     public Integer getRealQuantity()
@@ -147,6 +149,7 @@ public class SupplyLine implements Serializable
     public void setRealQuantity(Integer realQuantity)
     {
         this.realQuantity = realQuantity;
+        recalculateLine();
     }
 
     public Double getDocumentLineTotal()
@@ -214,6 +217,15 @@ public class SupplyLine implements Serializable
         return "SupplyLine{" + "id=" + id + ", supply=" + supply + ", product=" + product + ", price=" + price + ", documentQuantity=" + documentQuantity + ", realQuantity=" + realQuantity + ", documentLineTotal=" + documentLineTotal + ", realLineTotal=" + realLineTotal + '}';
     }
     
+    
+    private void recalculateLine()
+    {
+        if(price != null && documentQuantity != null)
+            documentLineTotal = price * documentQuantity;
+        
+        if(price != null && realLineTotal != null)
+            realLineTotal = price * realQuantity;
+    }
     
 
 }

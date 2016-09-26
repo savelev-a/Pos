@@ -71,8 +71,8 @@ public class StartBalanceDAOImplTest
         productDAO.create(p3);
         
         StartBalance sb = new StartBalance(store);
-        sb.getContents().put(p1, 2);
-        sb.getContents().put(p2, 4);
+        sb.getContent().put(p1, 2);
+        sb.getContent().put(p2, 4);
         sb.setCreationTime(DateTime.now());
         sb.setDocumentTime(DateTime.now());
         sb.setCreator(user);
@@ -83,15 +83,15 @@ public class StartBalanceDAOImplTest
         log.info("Тестирование загрузки из БД...");
         StartBalance sb1 = startBalanceDAO.getByStore(store);
         Assert.assertNotNull(sb1);
-        Assert.assertTrue(sb1.getContents().get(p1) == 2);
+        Assert.assertTrue(sb1.getContent().get(p1) == 2);
         log.info("...ok");
         
         log.info("Проверка обновления документа...");
-        sb.getContents().put(p3, 6);
+        sb.getContent().put(p3, 6);
         startBalanceDAO.update(sb);
         StartBalance sb2 = startBalanceDAO.getByStore(store);
         Assert.assertNotNull(sb2);
-        Assert.assertTrue(sb2.getContents().get(p3) == 6);
+        Assert.assertTrue(sb2.getContent().get(p3) == 6);
         log.info("...ok");
         
         log.info("Проверка удаления документа...");

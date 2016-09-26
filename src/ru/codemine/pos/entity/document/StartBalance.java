@@ -46,7 +46,7 @@ public class StartBalance extends Document
     @CollectionTable(name = "cdocStartBalance", joinColumns = @JoinColumn(name = "id_doc"))
     @Column(name = "quantity", nullable = false)
     @MapKeyJoinColumn(name = "id_product", referencedColumnName = "id")
-    private Map<Product, Integer> contents;
+    private Map<Product, Integer> content;
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_store", nullable = false)
@@ -57,25 +57,25 @@ public class StartBalance extends Document
     
     public StartBalance()
     {
-        contents = new HashMap<>();
+        content = new HashMap<>();
         total = 0.0;
     }
     
     public StartBalance(Store store)
     {
         this.store = store;
-        contents = new HashMap<>();
+        content = new HashMap<>();
         total = 0.0;
     }
     
-    public Map<Product, Integer> getContents()
+    public Map<Product, Integer> getContent()
     {
-        return contents;
+        return content;
     }
 
-    public void setContents(Map<Product, Integer> contents)
+    public void setContent(Map<Product, Integer> content)
     {
-        this.contents = contents;
+        this.content = content;
     }
 
     public Store getStore()
@@ -102,7 +102,7 @@ public class StartBalance extends Document
     {
         total = 0.0;
         
-        for (Map.Entry<Product, Integer> entrySet : contents.entrySet())
+        for (Map.Entry<Product, Integer> entrySet : content.entrySet())
         {
             Product product = entrySet.getKey();
             Integer quantity = entrySet.getValue();
